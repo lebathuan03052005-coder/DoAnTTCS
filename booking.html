@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt Bàn | The Velvet Table</title>
+
+    <link rel="stylesheet" href="styleBooking.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="bg-overlay"></div>
+
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <div class="main-logo">
+            The King<span class="vang"> Restaurant</span>
+          </div>
+          <span class="tagline">Trải nghiệm hoàng gia - Giá không xa hoa </span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="booking.html">Đặt Bàn</a></li>
+        </ul>
+        <a href="" class="btn-book">Đăng nhập</a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section class="booking-section">
+        <div class="container">
+          <h2 class="section-title">Đặt Bàn</h2>
+
+          <div class="booking-container">
+            <form action="#" method="POST">
+              <div class="form-row">
+                <input
+                  type="text"
+                  placeholder="Họ và tên của bạn *"
+                  required
+                  class="form-input"
+                />
+                <input
+                  type="tel"
+                  placeholder="Số điện thoại *"
+                  required
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-row">
+                <input type="date" required class="form-input" />
+                <input type="time" required class="form-input" />
+
+                <select class="form-input">
+                  <option value="">Số người</option>
+                  <option value="1-2">1 - 2 Người</option>
+                  <option value="3-4">3 - 4 Người</option>
+                  <option value="5+">5+ Người</option>
+                </select>
+              </div>
+
+              <textarea
+                placeholder="Ghi chú đặc biệt (Dị ứng, kỷ niệm, v.v...)"
+                rows="4"
+                class="form-input"
+              ></textarea>
+
+              <button type="submit" class="btn-submit">XÁC NHẬN ĐẶT BÀN</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact"></footer>
+
+    <script src="chatbot.js"></script>
+  </body>
+</html>
