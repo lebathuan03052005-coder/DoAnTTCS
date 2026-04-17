@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký | The King Restaurant</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="login-bg">
+    <div class="bg-overlay"></div>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <div class="main-logo">The King <span>Restaurant</span></div>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="booking.html">Đặt Bàn</a></li>
+        </ul>
+        <a href="login.html" class="btn-book">Đăng nhập</a>
+      </nav>
+    </header>
+
+    <main class="login-page">
+      <div class="login-box">
+        <h2>Đăng ký</h2>
+        <form id="register-form" class="login-form">
+          <label for="name">Họ và tên</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Họ và tên"
+            required
+          />
+
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Email"
+            required
+          />
+
+          <label for="password">Mật khẩu</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Mật khẩu"
+            required
+          />
+
+          <label for="confirm">Xác nhận mật khẩu</label>
+          <input
+            id="confirm"
+            name="confirm"
+            type="password"
+            placeholder="Xác nhận mật khẩu"
+            required
+          />
+
+          <div class="message" id="reg-message"></div>
+
+          <button type="submit" class="btn-submit login-btn">ĐĂNG KÝ</button>
+
+          <p class="signup">
+            Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+          </p>
+        </form>
+      </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="chatbot.js"></script>
+  </body>
+</html>

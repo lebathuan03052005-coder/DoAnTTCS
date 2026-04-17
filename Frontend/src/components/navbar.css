@@ -1,0 +1,80 @@
+/* ===== HEADER ===== */
+header {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #000;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.main-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.main-logo span {
+  color: #d4af37;
+}
+
+.tagline {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* ===== NAV LINKS ===== */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 50px;
+}
+
+.nav-links a {
+  color: rgb(180, 173, 46);
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: #d4af37;
+}
+
+/* ===== BUTTON ===== */
+.btn-book {
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-book:hover {
+  background: #d4af37;
+  color: #000;
+}

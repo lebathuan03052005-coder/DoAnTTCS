@@ -70,8 +70,7 @@ const toggleBtn = document.getElementById("chatbot-toggle");
 const chatbox = document.getElementById("chatbot-box");
 
 toggleBtn.onclick = () => {
-  chatbox.style.display =
-    chatbox.style.display === "none" ? "block" : "none";
+  chatbox.style.display = chatbox.style.display === "none" ? "block" : "none";
 };
 
 // Xử lý chat

@@ -1,0 +1,9 @@
+# Lờ đi thư viện của Node.js (Rất nặng)
+node_modules/
+
+# Lờ đi file cấu hình bảo mật (Chứa mật khẩu SQL Server)
+.env
+
+# Lờ đi các file tạm của hệ thống
+.DS_Store
+Thumbs.db

@@ -1,0 +1,43 @@
+.footer {
+  background: #000;
+  color: #fff;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+/* nội dung gọn lại cho đẹp */
+.footer-content p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+/* highlight chữ quan trọng */
+.footer-content strong {
+  color: #d4af37;
+}
+
+/* link hotline */
+.footer a {
+  color: #d4af37;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* đường kẻ */
+.footer-line {
+  margin: 15px auto;
+  width: 60%;
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* copyright */
+.copyright p {
+  font-size: 0.8rem;
+  color: #777;
+}
