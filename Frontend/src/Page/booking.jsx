@@ -1,11 +1,10 @@
 import React from "react";
 import Navbar from "../components/navbar";
-import "./styleBooking.css";
+import "./booking.css";
 
 const Booking = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: xử lý gửi form (API call)
     alert("Yêu cầu đặt bàn đã được gửi (demo)");
   };
 
@@ -22,37 +21,57 @@ const Booking = () => {
             <div className="booking-container">
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
-                  <input
-                    type="text"
-                    placeholder="Họ và tên của bạn *"
-                    required
-                    className="form-input"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Số điện thoại *"
-                    required
-                    className="form-input"
-                  />
+                  <div className="form-group">
+                    <label>Họ và tên</label>
+                    <input
+                      type="text"
+                      placeholder="Nhập họ tên"
+                      required
+                      className="form-input"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Số điện thoại</label>
+                    <input
+                      type="tel"
+                      placeholder="Nhập số điện thoại"
+                      required
+                      className="form-input"
+                    />
+                  </div>
                 </div>
 
                 <div className="form-row">
-                  <input type="date" required className="form-input" />
-                  <input type="time" required className="form-input" />
+                  <div className="form-group">
+                    <label>Ngày</label>
+                    <input type="date" required className="form-input" />
+                  </div>
 
-                  <select className="form-input">
-                    <option value="">Số người</option>
-                    <option value="1-2">1 - 2 Người</option>
-                    <option value="3-4">3 - 4 Người</option>
-                    <option value="5+">5+ Người</option>
-                  </select>
+                  <div className="form-group">
+                    <label>Giờ</label>
+                    <input type="time" required className="form-input" />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Số người</label>
+                    <select className="form-input">
+                      <option value="">Chọn số người</option>
+                      <option value="1-2">1 - 2 Người</option>
+                      <option value="3-4">3 - 4 Người</option>
+                      <option value="5+">5+ Người</option>
+                    </select>
+                  </div>
                 </div>
 
-                <textarea
-                  placeholder="Ghi chú đặc biệt (Dị ứng, kỷ niệm, v.v...)"
-                  rows="4"
-                  className="form-input"
-                ></textarea>
+                <div className="form-group">
+                  <label>Ghi chú</label>
+                  <textarea
+                    placeholder="Dị ứng, kỷ niệm..."
+                    rows="4"
+                    className="form-input"
+                  ></textarea>
+                </div>
 
                 <button type="submit" className="btn-submit">
                   XÁC NHẬN ĐẶT BÀN
@@ -63,7 +82,7 @@ const Booking = () => {
         </section>
       </main>
 
-      <footer id="contact"></footer>
+      <footer></footer>
     </div>
   );
 };

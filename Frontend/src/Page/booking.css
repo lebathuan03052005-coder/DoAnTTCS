@@ -1,0 +1,100 @@
+.booking-bg {
+  position: relative;
+  min-height: 100vh;
+  background-image: url("/anh/datban.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.4); /* làm tối nhẹ */
+  backdrop-filter: blur(6px); /* làm mờ nền */
+  -webkit-backdrop-filter: blur(6px); /* Safari */
+
+  z-index: 0;
+}
+
+.main-content {
+  padding-top: 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.booking-section {
+  text-align: center;
+  color: #fff;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.section-title {
+  font-size: 36px;
+  margin: 30px 0;
+  color: #d4af37;
+}
+
+.booking-container {
+  width: 90%;
+  max-width: 700px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 12px;
+}
+
+/* FORM */
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #000000;
+}
+
+.form-input {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+}
+
+textarea.form-input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* BUTTON */
+.btn-submit {
+  width: 100%;
+  background: #d4af37;
+  color: #000;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}
