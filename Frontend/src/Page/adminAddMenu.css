@@ -1,0 +1,100 @@
+/* Container chính của form */
+.admin-menu-page {
+  min-height: 100vh;
+  background-color: #ccc;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+}
+.admin-menu-container {
+  padding: 20px;
+  max-width: 700px;
+  font-family: sans-serif;
+  margin: 0 auto;
+}
+.form-group label b {
+  color: #333;
+}
+.admin-menu-title {
+  text-align: center;
+  color: #a90f0f;
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+
+/* Kiểu dáng của Form */
+.admin-menu-form {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Các hàng chứa nhiều input */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+/* Kiểu dáng chung cho Input và Textarea */
+.form-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box; /* Giúp input không bị tràn viền */
+}
+
+.form-textarea {
+  height: 60px;
+}
+
+/* Tiêu đề phần AI */
+.ai-section-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  color: #444;
+}
+
+/* Khu vực Checkbox */
+.checkbox-group {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.checkbox-label {
+  cursor: pointer;
+  color: #333;
+}
+
+/* Nút Submit */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}

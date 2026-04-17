@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./navbar.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const isAuth = localStorage.getItem("isAdminLoggedIn");
+    if (isAuth === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("isAdminLoggedIn");
+    localStorage.removeItem("adminName");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
   return (
     <header>
       <nav className="navbar">
@@ -24,11 +43,26 @@ const Navbar = () => {
           <li>
             <a href="/booking">Đặt Bàn</a>
           </li>
+
+          {/* --- THÊM LỰA CHỌN ADMIN Ở ĐÂY --- */}
+          {isLoggedIn && (
+            <li>
+              <a href="/admin" style={{ color: "rgb(180, 173, 46);#d4af37" }}>
+                Quản Lý
+              </a>
+            </li>
+          )}
         </ul>
 
-        <a href="/login" className="btn-book">
-          Đăng nhập
-        </a>
+        {isLoggedIn ? (
+          <a href="#" onClick={handleLogout} className="btn-book">
+            Đăng xuất
+          </a>
+        ) : (
+          <a href="/login" className="btn-book">
+            Đăng nhập
+          </a>
+        )}
       </nav>
     </header>
   );
