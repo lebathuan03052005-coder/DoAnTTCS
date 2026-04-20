@@ -86,7 +86,7 @@ router.post("/admin/menu", async (req, res) => {
     await request.query(query);
     res.json({
       success: true,
-      message: "✅ Đã nạp món ăn vào Database thành công!",
+      message: " Đã nạp món ăn vào Database thành công!",
     });
   } catch (err) {
     res

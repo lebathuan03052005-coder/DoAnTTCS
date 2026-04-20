@@ -145,7 +145,7 @@ export default function AdminAddMenu() {
           <div className="form-row">
             <div className="form-group">
               <label>
-                <b style={{ color: "#333" }}>Thành phần dễ gây dị ứng:</b>
+                <b style={{ color: "#333" }}>thực phẩm gây dị ứng:</b>
               </label>
               <input
                 type="text"
