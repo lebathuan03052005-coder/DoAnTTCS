@@ -1,267 +1,93 @@
-/* Cấu hình chung */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: "Poppins", sans-serif;
-  color: #fff;
-  line-height: 1.6;
-  background-color: #000;
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-}
+/* ================= TRANG MENU CHÍNH ================= */
 .menu-bg {
   position: relative;
   min-height: 100vh;
+  background-image: url("/anh/menu.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
 }
 
-.bg-overlay {
+.menu-bg .bg-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Làm tối nền để nổi bật chữ */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.7)
+  );
   z-index: 0;
 }
 
-.container {
-  max-width: 1000px;
+.menu-section {
+  position: relative;
+  z-index: 1;
+  padding: 140px 0 80px;
+  min-height: 80vh;
+}
+
+.menu-container {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Header & Nav */
-header {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 20px 0;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* TIÊU ĐỀ TRANG */
+.menu-title {
+  text-align: center;
+  font-family: "Playfair Display", serif;
+  font-size: 3.8rem;
+  color: #d4af37;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #000;
+.menu-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 60px;
+  font-style: italic;
 }
 
-/* Cấu trúc bao quanh toàn bộ Logo */
-.logo {
+.menu-subtitle::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 2px;
+  background: #d4af37;
+  margin: 20px auto 0;
+}
+
+/* KHUNG LƯỚI DANH SÁCH MÓN ĂN (Chuẩn bị sẵn) */
+.menu-grid {
+  display: grid;
+  /* Tự động chia cột: Ít nhất 280px 1 cột, nếu màn hình to sẽ tự thêm cột */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* THẺ MÓN ĂN (Card) */
+.menu-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s ease;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
 }
 
-/* Dòng chữ chính (The King Restaurant) */
-.main-logo {
-  font-family: "Playfair Display", serif;
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-}
-
-.main-logo span {
-  color: #d4af37;
-}
-
-.tagline {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #aaa;
-  margin-top: 2px;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 50px;
-}
-.hero-content h1 {
-  color: #d4af37;
-}
-.nav-links a {
-  color: rgb(180, 173, 46);
-  text-decoration: none;
-  margin: 0 15px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  transition: 0.3s;
-}
-
-.nav-links a:hover {
-  color: #d4af37;
-}
-
-.btn-book {
-  border: 1px solid #d4af37;
-  color: #d4af37;
-  padding: 8px 20px;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.btn-book:hover {
-  background: #d4af37;
-  color: #000;
-}
-
-/* Hero Section */
-.hero {
-  align-items: flex-start;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding-top: 100px;
-  text-align: center;
-}
-
-.hero h1 {
-  font-family: "Playfair Display", serif;
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-}
-
-.fade-in {
-  font-size: 1.25rem;
-}
-.btn-outline {
-  display: inline-block;
-  width: 200px;
-  height: 55px;
-  line-height: 51px;
-  text-align: center;
-  border: 2px solid #fff;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  text-transform: uppercase;
-  margin: 15px;
-  transition: 0.3s;
-  border-radius: 4px;
-}
-.hero-btns {
-  margin: 20px 0;
-}
-
-.btn-outline:hover {
-  background: #fff;
-  color: #000;
-}
-.hero-best-seller {
-  color: #d4af37;
-  text-align: center;
-}
-
-/* Section chung */
-.section-title {
-  font-family: "Playfair Display", serif;
-  font-size: 3.5rem;
-  text-align: center;
-  margin: 50px 0;
-  color: #d4af37;
-}
-.section-text {
-  font-size: 20px;
-  line-height: 1.8;
-  color: #f0f0f0;
-  max-width: 800px;
-  margin: 20px auto 0;
-  text-align: center;
-}
-
-.info-section {
-  padding: 100px 0;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-/* Gallery - Khung ảnh trống */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  padding: 0 5%;
-  width: 100%;
-  height: auto;
-  margin-top: 30px;
-}
-
-/* ĐỂ ẢNH NẰM GỌN TRONG KHUNG */
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.gallery-item {
-  height: 300px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px dashed #d4af37;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Booking Form */
-.booking-section {
-  padding: 100px 0;
-}
-
-.booking-container {
-  max-width: 600px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 40px;
-  border-radius: 10px;
-}
-
-.form-row {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 15px;
-  background: #d4af37;
-  border: none;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Footer */
-
-footer {
-  padding: 10px 0 1px 0;
-  text-align: center;
-  background: #000;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-.footer-content {
-  font-size: 0.8rem;
-}
-.br {
-  color: #d4af37;
-}
-.copyright {
-  margin-top: 20px;
-  font-size: 0.6rem;
-  color: #777;
+.menu-card:hover {
+  transform: translateY(-10px);
+  border-color: #d4af37;
+  box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 0.08);
 }

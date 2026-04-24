@@ -1,2 +1,44 @@
-.admin-page {
+/* 1. Khai báo "bảng điều khiển" ở đầu file */
+:root {
+  --bg-admin: #f4f7f6;
+  --sidebar-color: #2c3e50;
+  --text-white: #ffffff;
+  --hover-color: #34495e;
+  --accent-color: #e67e22;
+  --sidebar-width: 250px;
+}
+
+/* 2. Sử dụng các biến đã khai báo */
+.admin-bg {
+  background-color: var(--bg-admin);
+  min-height: 100vh;
+}
+
+.BangDK {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-color);
+  height: 100vh;
+  padding: 20px;
+  margin-top: 90px;
+}
+
+.BangDK_list {
+  list-style: none;
+  padding: 0;
+}
+
+.BangDK_list li a {
+  color: var(--text-white);
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.BangDK_list li a:hover {
+  background-color: var(--hover-color);
+  color: var(
+    --accent-color
+  ); /* Khi di chuột vào sẽ đổi sang màu cam nhấn mạnh */
 }

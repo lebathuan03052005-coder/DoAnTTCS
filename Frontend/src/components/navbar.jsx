@@ -26,7 +26,14 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="logo">
           <div className="main-logo">
-            The King <span>Restaurant</span>
+            <img
+              src="/logo1.png"
+              alt="The King Restaurant"
+              className="logo-img"
+            />
+            <div className="logo-text">
+              The King <span>Restaurant</span>
+            </div>
           </div>
           <span className="tagline">
             Trải nghiệm hoàng gia - Giá không xa hoa

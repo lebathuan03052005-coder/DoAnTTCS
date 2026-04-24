@@ -5,8 +5,8 @@ require("dotenv").config();
 
 // Nhập các module đã tách
 const { connectDB } = require("./config/database");
+console.log("🔥 ĐÃ LOAD adminRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-
 const app = express();
 
 // Middleware

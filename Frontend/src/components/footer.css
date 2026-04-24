@@ -1,43 +1,114 @@
+/* ===== TỔNG QUAN FOOTER ===== */
 .footer {
-  background: #000;
+  background-color: #111; /* Đen tuyền sang trọng */
   color: #fff;
-  padding: 30px 20px;
-  text-align: center;
+  padding: 60px 0 20px; /* Thêm khoảng trống phía trên cho thoáng */
+  font-family: sans-serif;
+  border-top: 2px solid #d4af37; /* Viền vàng hoàng gia chốt chặn ở trên */
 }
 
-/* nội dung gọn lại cho đẹp */
-.footer-content p {
-  margin: 8px 0;
-  font-size: 0.95rem;
-  color: #ddd;
+/* ===== BA CỘT CHÍNH (FLEXBOX) ===== */
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* Tự rớt dòng nếu màn hình điện thoại nhỏ */
+  max-width: 1200px;
+  margin: 0 auto; /* Căn giữa toàn bộ cụm nội dung */
+  padding: 0 20px;
+  gap: 30px;
 }
 
-/* highlight chữ quan trọng */
-.footer-content strong {
+.footer-col {
+  flex: 1;
+  min-width: 250px; /* Không cho cột bị bóp quá nhỏ */
+}
+
+.footer-col h4 {
+  color: #d4af37;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== CỘT 1: THƯƠNG HIỆU ===== */
+.footer-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.footer-logo span {
   color: #d4af37;
 }
 
-/* link hotline */
-.footer a {
+.footer-desc {
+  color: #aaa;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.social-links a {
+  font-size: 1.5rem;
+  margin-right: 15px;
+  text-decoration: none;
+  filter: grayscale(100%); /* Làm xám icon */
+  transition: 0.3s;
+}
+
+.social-links a:hover {
+  filter: grayscale(0%); /* Hiện màu thật khi trỏ chuột vào */
+  transform: scale(1.2);
+}
+
+/* ===== CỘT 2: LIÊN KẾT NHANH ===== */
+.links-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.links-col li {
+  margin-bottom: 12px;
+}
+
+.links-col a {
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.links-col a:hover {
+  color: #d4af37;
+  padding-left: 5px; /* Hiệu ứng thụt đầu dòng cực xịn khi hover */
+}
+
+/* ===== CỘT 3: LIÊN HỆ ===== */
+.contact-col p {
+  color: #ccc;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.contact-col a {
   color: #d4af37;
   text-decoration: none;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+/* ===== PHẦN BẢN QUYỀN (BOTTOM) ===== */
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding: 0 20px;
 }
 
-/* đường kẻ */
 .footer-line {
-  margin: 15px auto;
-  width: 60%;
   border: none;
   height: 1px;
-  background: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
 }
 
-/* copyright */
-.copyright p {
-  font-size: 0.8rem;
+.footer-bottom p {
   color: #777;
+  font-size: 0.9rem;
 }

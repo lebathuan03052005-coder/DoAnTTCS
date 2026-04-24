@@ -27,7 +27,7 @@ const Login = () => {
         localStorage.setItem("isAdminLoggedIn", "true");
         localStorage.setItem("adminName", result.user.full_name);
 
-        alert("Chào sếp " + result.user.full_name);
+        alert("Xin chào " + result.user.full_name);
 
         // Chuyển sang trang Admin
         navigate("/admin");

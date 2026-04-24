@@ -13,7 +13,7 @@ header {
 .navbar {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: center; /* Căn giữa theo chiều dọc cho toàn bộ thành phần */
   background-color: #000;
 }
 
@@ -26,6 +26,18 @@ header {
 }
 
 .main-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.logo-text {
   font-family: "Playfair Display", serif;
   font-size: 1.5rem;
   letter-spacing: 2px;
@@ -67,14 +79,21 @@ header {
 
 /* ===== BUTTON ===== */
 .btn-book {
+  display: inline-block;
   border: 1px solid #d4af37;
   color: #d4af37;
-  padding: 8px 20px;
+  padding: 10px 25px;
   text-decoration: none;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 30px; /* Bo tròn góc mềm mại */
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
 }
 
 .btn-book:hover {
   background: #d4af37;
   color: #000;
+  transform: translateY(-2px); /* Hiệu ứng nảy nhẹ khi trỏ chuột */
 }
