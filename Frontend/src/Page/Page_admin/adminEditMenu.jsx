@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 import "./adminAddMenu.css"; // Dùng chung file CSS của trang thêm món
+import Admin from "./admin";
 
 export default function AdminEditMenu() {
   const { id } = useParams(); // Lấy ID của món ăn từ thanh địa chỉ URL
@@ -123,12 +124,25 @@ export default function AdminEditMenu() {
   return (
     <main className="admin-menu-page">
       <Navbar />
+      <Admin />
       <div className="admin-menu-container">
-        <h2 className="admin-menu-title" style={{ color: "#d39e00" }}>
+        <h2
+          className="admin-menu-title"
+          style={{ color: "#d39e00", textAlign: "center", marginLeft: "160px" }}
+        >
           CẬP NHẬT MÓN ĂN (ID: {id})
         </h2>
 
-        <form onSubmit={handleSubmit} className="admin-menu-form">
+        <form
+          onSubmit={handleSubmit}
+          className="admin-menu-form"
+          style={{
+            marginTop: "20px",
+            marginLeft: "90px",
+            width: "100%",
+            maxWidth: "1000px",
+          }}
+        >
           <div className="form-row">
             <div className="form-group">
               <label>

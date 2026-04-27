@@ -48,10 +48,10 @@ const HomePage = () => {
         {/* Hero Section */}
         <section id="home" className="hero">
           <div className="hero-content">
-            <h1 className="fade-in">
-              <span style={{ color: "#f9f6f6" }}>
-                Chào Mừng Đến Với The King
-              </span>
+            <h1 className="fade-in1">
+              <span style={{ color: "#062c66" }}>Chào Mừng Đến Với </span>
+              <span style={{ color: "#f5ebe4" }}>The King</span>
+
               <span style={{ color: "#d4af37" }}>Restaurant</span>
             </h1>
             <p className="fade-in">
@@ -66,6 +66,19 @@ const HomePage = () => {
               <a href="#gallery" className="btn-outline">
                 Không Gian Quán
               </a>
+            </div>
+
+            <div className="concept">
+              <h3 className="mini-title">Phong Cách Bàn Ăn Được Ưu Chuộng</h3>
+              <div className="slider-container">
+                <button onClick={prevSlide} className="btn-nav">
+                  ❮
+                </button>
+
+                <button onClick={nextSlide} className="btn-nav">
+                  ❯
+                </button>
+              </div>
             </div>
 
             <div className="hero-best-seller">

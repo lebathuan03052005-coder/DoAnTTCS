@@ -4,7 +4,9 @@
   color: #fff;
   padding: 60px 0 20px; /* Thêm khoảng trống phía trên cho thoáng */
   font-family: sans-serif;
-  border-top: 2px solid #d4af37; /* Viền vàng hoàng gia chốt chặn ở trên */
+  border-top: 2px solid #d4af37;
+
+  /* Viền vàng hoàng gia chốt chặn ở trên */
 }
 
 /* ===== BA CỘT CHÍNH (FLEXBOX) ===== */
@@ -111,4 +113,20 @@
 .footer-bottom p {
   color: #777;
   font-size: 0.9rem;
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1; /* 🔥 đẩy footer xuống cuối */
+}
+/* Trong file CSS của Footer hoặc style trực tiếp */
+footer {
+  position: relative;
+  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
+  width: 100%;
+  background-color: #000; /* Đảm bảo có màu nền để không bị nhìn xuyên thấu */
 }

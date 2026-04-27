@@ -243,8 +243,63 @@ router.put("/admin/menu/:id", async (req, res) => {
 
 // 8. API: Lấy danh sách danh mục
 router.get("/categories", (req, res) => {
-  console.log("🔥 HIT CATEGORIES");
+  console.log(" HIT CATEGORIES");
   res.send("OK CATEGORY");
 });
+
+// 9. API: Lấy danh sách sơ đồ bàn
+// API: Lấy danh sách sơ đồ bàn
+router.get("/admin/restaurant_tables", async (req, res) => {
+  try {
+    const request = new sql.Request();
+
+    const result = await request.query(`
+      SELECT 
+        table_number,
+        style,
+        location,
+        capacity,
+        status
+      FROM restaurant_tables
+      ORDER BY location ASC, table_number ASC
+    `);
+
+    res.json({
+      success: true,
+      data: result.recordset,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi Database: " + err.message,
+    });
+  }
+});
+
+// 10. API: Cập nhật trạng thái bàn
+router.put(
+  "/admin/restaurant_tables/:table_number/status",
+  async (req, res) => {
+    try {
+      const { table_number } = req.params;
+      const { status } = req.body;
+
+      const query = `UPDATE restaurant_tables SET status = @status WHERE table_number = @table_number`;
+      const request = new sql.Request();
+      request.input("status", sql.NVarChar, status);
+      request.input("table_number", sql.NVarChar, table_number);
+
+      await request.query(query);
+      res.json({
+        success: true,
+        message: "Cập nhật trạng thái bàn thành công!",
+      });
+    } catch (err) {
+      res
+        .status(500)
+        .json({ success: false, message: "Lỗi Database: " + err.message });
+    }
+  },
+);
 
 module.exports = router; // Xuất cái router này ra

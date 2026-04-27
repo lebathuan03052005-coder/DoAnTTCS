@@ -30,7 +30,7 @@ const Login = () => {
         alert("Xin chào " + result.user.full_name);
 
         // Chuyển sang trang Admin
-        navigate("/admin");
+        navigate("/adminMenuList");
       } else {
         alert("Lỗi: " + result.message);
       }

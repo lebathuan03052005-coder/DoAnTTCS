@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./navbar.css";
 
 const Navbar = () => {
@@ -42,33 +42,33 @@ const Navbar = () => {
 
         <ul className="nav-links">
           <li>
-            <a href="/">Trang Chủ</a>
+            <Link to="/">Trang Chủ</Link>
           </li>
           <li>
-            <a href="/menu">Menu</a>
+            <Link to="/menu">Menu</Link>
           </li>
           <li>
-            <a href="/booking">Đặt Bàn</a>
+            <Link to="/booking">Đặt Bàn</Link>
           </li>
 
           {/* --- THÊM LỰA CHỌN ADMIN Ở ĐÂY --- */}
           {isLoggedIn && (
             <li>
-              <a href="/admin" style={{ color: "rgb(180, 173, 46);#d4af37" }}>
+              <Link to="/adminMenuList" style={{ color: "#d4af37" }}>
                 Quản Lý
-              </a>
+              </Link>
             </li>
           )}
         </ul>
 
         {isLoggedIn ? (
-          <a href="#" onClick={handleLogout} className="btn-book">
+          <button onClick={handleLogout} className="btn-book">
             Đăng xuất
-          </a>
+          </button>
         ) : (
-          <a href="/login" className="btn-book">
+          <Link to="/login" className="btn-book">
             Đăng nhập
-          </a>
+          </Link>
         )}
       </nav>
     </header>
