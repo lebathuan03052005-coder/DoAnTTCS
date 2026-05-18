@@ -15,7 +15,6 @@
 .admin-menu-container {
   padding: 20px;
   max-width: 700px;
-  font-family: sans-serif;
   margin: 0 auto;
 }
 .form-group label b {
@@ -81,7 +80,6 @@
 }
 
 .checkbox-label {
-  cursor: pointer;
   color: #333;
 }
 
@@ -95,10 +93,19 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
   transition: background-color 0.3s;
 }
 
 .submit-btn:hover {
   background-color: #0056b3;
+}
+.admin-menu-container {
+  font-family:
+    "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Đổi kiểu chữ cho cả trang */
+  color: #333; /* Màu chữ mặc định */
+}
+
+.admin-menu-title {
+  font-weight: bold; /* Làm tiêu đề đậm lên */
+  text-transform: uppercase; /* Viết hoa toàn bộ tiêu đề */
 }

@@ -74,13 +74,13 @@ export default function AdminEditMenu() {
         }
 
         const result = await response.json();
-        console.log("✅ Categories:", result);
+        console.log(" Categories:", result);
 
         if (result.success) {
           setCategories(result.data);
         }
       } catch (error) {
-        console.error("❌ Lỗi khi tải danh mục:", error);
+        console.error(" Lỗi khi tải danh mục:", error);
       }
     };
     fetchCategories();

@@ -19,10 +19,10 @@ async function connectDB() {
   try {
     await sql.connect(dbConfig);
     console.log("-----------------------------------------");
-    console.log("✅ KẾT NỐI DATABASE THEKING_TTCS THÀNH CÔNG!");
+    console.log("KẾT NỐI DATABASE THEKING_TTCS THÀNH CÔNG!");
     console.log("-----------------------------------------");
   } catch (err) {
-    console.error("❌ LỖI KẾT NỐI SQL SERVER:", err.message);
+    console.error(" LỖI KẾT NỐI SQL SERVER:", err.message);
   }
 }
 

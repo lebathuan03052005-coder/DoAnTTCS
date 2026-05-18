@@ -247,21 +247,30 @@ router.get("/categories", (req, res) => {
   res.send("OK CATEGORY");
 });
 
-// 9. API: Lấy danh sách sơ đồ bàn
-// API: Lấy danh sách sơ đồ bàn
+/// 9. API: Lấy danh sách sơ đồ bàn
 router.get("/admin/restaurant_tables", async (req, res) => {
   try {
+    // THÊM DÒNG NÀY ĐỂ KHỞI TẠO REQUEST
     const request = new sql.Request();
 
     const result = await request.query(`
       SELECT 
-        table_number,
-        style,
-        location,
-        capacity,
-        status
-      FROM restaurant_tables
-      ORDER BY location ASC, table_number ASC
+        rt.table_number,
+        rt.location,
+        rt.capacity,
+        rt.status,
+
+        ts.id AS style_id,
+        ts.style_name,
+        ts.description,
+        ts.image_url
+
+      FROM restaurant_tables rt
+
+      LEFT JOIN table_styles ts
+      ON rt.style_id = ts.id
+
+      ORDER BY rt.location ASC, rt.table_number ASC
     `);
 
     res.json({
@@ -301,5 +310,121 @@ router.put(
     }
   },
 );
+// 11: API lấy style bàn ăn
+router.get("/admin/table_styles", async (req, res) => {
+  try {
+    const request = new sql.Request();
 
+    const result = await request.query(`
+      SELECT *
+      FROM table_styles
+      ORDER BY id DESC
+    `);
+
+    res.json({
+      success: true,
+      data: result.recordset,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+// API: Lấy 1 style theo id
+router.get("/admin/table_styles/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = new sql.Request();
+    request.input("id", sql.Int, id);
+    const result = await request.query(
+      `SELECT * FROM table_styles WHERE id = @id`,
+    );
+    if (result.recordset.length > 0) {
+      res.json({ success: true, data: result.recordset[0] });
+    } else {
+      res.status(404).json({ success: false, message: "Không tìm thấy style" });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// API: Xóa 1 style bàn ăn
+router.delete("/admin/table_styles/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = new sql.Request();
+    request.input("id", sql.Int, id);
+    await request.query(`DELETE FROM table_styles WHERE id = @id`);
+    res.json({ success: true, message: "Xóa style bàn thành công" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+// 12: API: Thêm sửa style bàn ăn
+router.put("/admin/table_styles/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // LỖI 1 ĐÃ SỬA: Lấy thêm trường bestseller (hoặc is_best_seller tùy Frontend của bạn gửi lên) từ req.body
+    const { style_name, description, image_url, bestseller } = req.body;
+
+    const request = new sql.Request();
+
+    await request
+      .input("id", sql.Int, id)
+      .input("style_name", sql.NVarChar, style_name)
+      .input("description", sql.NVarChar, description)
+      .input("image_url", sql.VarChar, image_url)
+      .input("bestseller", sql.Bit, bestseller ? 1 : 0) // Truyền tham số @bestseller
+      .query(`
+        UPDATE table_styles
+        SET
+          style_name = @style_name,
+          description = @description,
+          image_url = @image_url,
+          bestseller = @bestseller 
+        WHERE id = @id
+      `);
+
+    res.json({
+      success: true,
+      message: "Cập nhật style thành công",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+// API: THÊM MỚI style bàn ăn (Đón request POST từ Frontend)
+router.post("/admin/table_styles", async (req, res) => {
+  try {
+    const { style_name, description, image_url, bestseller } = req.body;
+
+    const request = new sql.Request();
+
+    await request
+      .input("style_name", sql.NVarChar, style_name)
+      .input("description", sql.NVarChar, description)
+      .input("image_url", sql.VarChar, image_url)
+      .input("bestseller", sql.Bit, bestseller ? 1 : 0).query(`
+        INSERT INTO table_styles (style_name, description, image_url, bestseller)
+        VALUES (@style_name, @description, @image_url, @bestseller)
+      `);
+
+    res.json({
+      success: true,
+      message: "Thêm style bàn mới thành công",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 module.exports = router; // Xuất cái router này ra

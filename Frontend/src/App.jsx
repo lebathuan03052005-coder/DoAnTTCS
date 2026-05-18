@@ -12,6 +12,9 @@ import AdminManageTables from "./Page/Page_admin/adminManageTables";
 import AdminAddMenu from "./Page/Page_admin/adminAddMenu";
 import AdminEditMenu from "./Page/Page_admin/adminEditMenu";
 import AdminMenuList from "./Page/Page_admin/adminMenuList";
+import AdminTablesList from "./Page/Page_admin/adminTablesList";
+import AdminEditTableStyle from "./Page/Page_admin/adminEditTableStyle";
+import AdminAddTableStyle from "./Page/Page_admin/adminAddTableStyle";
 //Component Bảo vệ: Kiểm tra xem đã (đăng nhập) chưa
 const ProtectedRoute = ({ children }) => {
   const isAuth = localStorage.getItem("isAdminLoggedIn");
@@ -38,7 +41,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             {/* 3. Trang Đặt bàn */}
             <Route path="/booking" element={<Booking />} />
-            {/* 4. Trang thêm menu (Đã được bọc ổ khóa bảo vệ) */}
             {/* 5. Trang Menu  */}
             <Route path="/menu" element={<Menu />} />{" "}
             <Route
@@ -70,6 +72,30 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminMenuList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/adminTablesList"
+              element={
+                <ProtectedRoute>
+                  <AdminTablesList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/adminAddTableStyle"
+              element={
+                <ProtectedRoute>
+                  <AdminAddTableStyle />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/adminEditTableStyle/:id"
+              element={
+                <ProtectedRoute>
+                  <AdminEditTableStyle />
                 </ProtectedRoute>
               }
             />

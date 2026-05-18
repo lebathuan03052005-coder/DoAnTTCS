@@ -10,7 +10,7 @@ const AdminManageTables = () => {
   const [selectedTable, setSelectedTable] = useState(null);
   const [newStatus, setNewStatus] = useState("");
 
-  // 🔥 Gọi API
+  // Gọi API
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -43,7 +43,7 @@ const AdminManageTables = () => {
     return true;
   });
 
-  // 🔥 Map status -> class màu
+  //  Map status -> class màu
   const getStatusClass = (status) => {
     switch (status) {
       case "Con trong":

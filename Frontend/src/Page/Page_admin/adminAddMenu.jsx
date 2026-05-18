@@ -72,7 +72,7 @@ export default function AdminAddMenu() {
             <h2 className="admin-menu-title">QUẢN LÝ THỰC ĐƠN CỦA NHÀ HÀNG </h2>
 
             <form onSubmit={handleSubmit} className="admin-menu-form">
-              <div className="form-row">
+              <div className="form-row ">
                 <div className="form-group">
                   <label>
                     <b>Tên món ăn (*):</b>
