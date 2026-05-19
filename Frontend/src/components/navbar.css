@@ -1,6 +1,6 @@
 /* ===== HEADER ===== */
 header {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(239, 233, 233, 0.8);
   padding: 20px 0;
   position: fixed;
   width: 100%;
@@ -9,12 +9,29 @@ header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Visible / hidden states controlled via classes added by JS */
+.navbar.visible {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+.navbar.hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  transition:
+    transform 420ms ease,
+    opacity 420ms ease;
+  pointer-events: none;
+}
+
 /* ===== NAVBAR ===== */
 .navbar {
   display: flex;
   justify-content: space-around;
   align-items: center; /* Căn giữa theo chiều dọc cho toàn bộ thành phần */
-  background-color: #000;
+  background-color: #252618;
 }
 .navbar {
   position: fixed;
@@ -63,6 +80,7 @@ header {
   letter-spacing: 1px;
   color: #aaa;
   margin-top: 2px;
+  margin-left: 15px;
 }
 
 /* ===== NAV LINKS ===== */

@@ -54,7 +54,7 @@ const Navbar = () => {
           {/* --- THÊM LỰA CHỌN ADMIN Ở ĐÂY --- */}
           {isLoggedIn && (
             <li>
-              <Link to="/adminMenuList" style={{ color: "#d4af37" }}>
+              <Link to="/adminMenuList" style={{ color: "rgb(180, 173, 46)" }}>
                 Quản Lý
               </Link>
             </li>

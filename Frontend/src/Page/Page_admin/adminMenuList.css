@@ -53,6 +53,7 @@
   border-bottom: 1px solid #ddd;
   color: #333;
   vertical-align: middle;
+  width: auto;
 }
 
 .menu-table th {

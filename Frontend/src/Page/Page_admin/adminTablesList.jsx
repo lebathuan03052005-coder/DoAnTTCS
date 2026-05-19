@@ -116,7 +116,8 @@ const AdminTablesList = () => {
                     <th>Hình ảnh</th>
                     <th>Phong cách bàn</th>
                     <th>Mô tả</th>
-                    <th>Được yêu thích</th>
+                    <th>Yêu thích</th>
+                    <th>Hành động</th>
                   </tr>
                 </thead>
                 <tbody>

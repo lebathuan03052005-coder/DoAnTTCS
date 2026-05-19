@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/navbar";
 import "./homePage.css";
 
 const HomePage = () => {
-  // Tạo state để lưu URL của ảnh khi người dùng muốn phóng to
+  // Tạo state để lưu ảnh đã chọn (object: { src, caption, desc })
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState("gallery"); // 'gallery' or 'styles'
+  const [selectedIndex, setSelectedIndex] = useState(0);
   // Tạo State lưu trữ danh sách món ăn Best Seller
   const [bestSellers, setBestSellers] = useState([]);
   // Tạo State lưu trữ phong cách bàn ăn
@@ -23,17 +25,36 @@ const HomePage = () => {
   // --- LOGIC CHO SLIDER BÀN ĂN ---
   // Tạo state để lưu vị trí hiện tại (nếu bạn đang dùng CSS transform để trượt)
   const [currentStyleIndex, setCurrentStyleIndex] = useState(0);
+  const styleGridRef = useRef(null);
 
   // Hàm lùi
   const prevStyleSlide = () => {
-    const slider = document.getElementById("style-grid-display");
-    if (slider) slider.scrollBy({ left: -300, behavior: "smooth" });
+    const count = tableStyles.length;
+    const newIndex = Math.max(0, currentStyleIndex - 1);
+    setCurrentStyleIndex(newIndex);
+    const slider = styleGridRef.current;
+    const card = slider && slider.children[newIndex];
+    if (card)
+      card.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
   };
 
   // Hàm tới
   const nextStyleSlide = () => {
-    const slider = document.getElementById("style-grid-display");
-    if (slider) slider.scrollBy({ left: 300, behavior: "smooth" });
+    const count = tableStyles.length;
+    const newIndex = Math.min(count - 1, currentStyleIndex + 1);
+    setCurrentStyleIndex(newIndex);
+    const slider = styleGridRef.current;
+    const card = slider && slider.children[newIndex];
+    if (card)
+      card.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
   };
 
   // --- LOGIC CHO SLIDER BÀN ĂN ---
@@ -87,6 +108,96 @@ const HomePage = () => {
     fetchTableStyles();
   }, []);
 
+  // Danh sách ảnh gallery tĩnh (có thể chuyển thành dynamic nếu cần)
+  const galleryImages = [
+    {
+      src: "/anh/khongGian (1).jpg",
+      caption: "Không Gian Nhà Hàng - Góc 1",
+      desc: "Không gian ấm cúng với ánh đèn vàng và bàn ghế gỗ",
+    },
+    {
+      src: "/anh/khongGian (2).jpg",
+      caption: "Không Gian Nhà Hàng - Góc 2",
+      desc: "Khu vực booth riêng tư, thích hợp cho gia đình và bạn bè",
+    },
+    {
+      src: "/anh/khongGian(3).jpg",
+      caption: "Không Gian Nhà Hàng - Góc 3",
+      desc: "Góc window ánh sáng tự nhiên, phù hợp cho bữa trưa nhẹ nhàng",
+    },
+    {
+      src: "/anh/khongGian(4).jpg",
+      caption: "Không Gian Nhà Hàng - Góc 4",
+      desc: "Khu vực bar với thiết kế hiện đại, phục vụ cocktail đặc sắc",
+    },
+    {
+      src: "/anh/khongGian(5).jpg",
+      caption: "Không Gian Nhà Hàng - Góc 5",
+      desc: "Sảnh chính rộng rãi với trần cao và đèn chùm sang trọng",
+    },
+  ];
+
+  // initial selection: gallery at index 0 (selectedImage may be null)
+
+  // Hàm chuyển ảnh tiếp theo / trước đó
+  const showImageAt = (group, index) => {
+    if (group === "gallery") {
+      const img = galleryImages[index];
+      if (!img) return;
+      setSelectedImage(img);
+      setSelectedGroup("gallery");
+      setSelectedIndex(index);
+    } else if (group === "styles") {
+      const style = tableStyles[index];
+      if (!style) return;
+      setSelectedImage({
+        src: style.image_url || "/anh/ban_an/default-table.jpg",
+        caption: style.name,
+        desc: "",
+      });
+      setSelectedGroup("styles");
+      setSelectedIndex(index);
+    }
+  };
+
+  const nextImage = () => {
+    if (!selectedGroup) return;
+    if (selectedGroup === "gallery") {
+      const next = (selectedIndex + 1) % galleryImages.length;
+      showImageAt("gallery", next);
+    } else if (selectedGroup === "styles") {
+      if (tableStyles.length === 0) return;
+      const next = (selectedIndex + 1) % tableStyles.length;
+      showImageAt("styles", next);
+    }
+  };
+
+  const prevImage = () => {
+    if (!selectedGroup) return;
+    if (selectedGroup === "gallery") {
+      const prev =
+        (selectedIndex - 1 + galleryImages.length) % galleryImages.length;
+      showImageAt("gallery", prev);
+    } else if (selectedGroup === "styles") {
+      if (tableStyles.length === 0) return;
+      const prev =
+        (selectedIndex - 1 + tableStyles.length) % tableStyles.length;
+      showImageAt("styles", prev);
+    }
+  };
+
+  // Bắt phím mũi tên và Escape khi modal mở
+  useEffect(() => {
+    if (!selectedImage) return;
+    const handler = (e) => {
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [selectedImage, selectedIndex, selectedGroup, tableStyles]);
+
   return (
     <div className="homepage-container">
       <Navbar />
@@ -115,10 +226,20 @@ const HomePage = () => {
                 </button>
 
                 {/* Danh sách phong cách bàn ăn */}
-                <div id="style-grid-display" className="style-grid">
+                <div
+                  id="style-grid-display"
+                  ref={styleGridRef}
+                  className="style-grid"
+                >
                   {tableStyles.length > 0 ? (
-                    tableStyles.map((style) => (
-                      <div key={style.id} className="style-card">
+                    tableStyles.map((style, idx) => (
+                      <div
+                        key={style.id}
+                        className={
+                          "style-card" +
+                          (idx === currentStyleIndex ? " active" : "")
+                        }
+                      >
                         <img
                           src={
                             style.image_url || "/anh/ban_an/default-table.jpg"
@@ -129,18 +250,25 @@ const HomePage = () => {
                           }}
                           alt="Phong cách bàn ăn"
                           className="style-img"
-                          onClick={() =>
-                            setSelectedImage(
-                              style.image_url ||
-                                "/anh/ban_an/default-table.jpg",
-                            )
-                          }
+                          onClick={() => {
+                            showImageAt("styles", idx);
+                            setCurrentStyleIndex(idx);
+                            const card =
+                              styleGridRef.current &&
+                              styleGridRef.current.children[idx];
+                            if (card)
+                              card.scrollIntoView({
+                                behavior: "smooth",
+                                inline: "center",
+                                block: "nearest",
+                              });
+                          }}
                           style={{
-                            width: "100%", // Sẽ ăn theo 320px của .style-card
-                            height: "220px", // Đổi thành 220px cho cân đối (tỷ lệ chuẩn)
-                            objectFit: "cover", // Cắt cúp ảnh gọn gàng không méo
-                            borderRadius: "12px", // Bo góc tròn hơn một chút cho sang trọng
-                            boxShadow: "0 4px 8px rgba(0,0,0,0.1)", // Thêm chút bóng đổ cho nổi bật
+                            width: "100%",
+                            height: "220px",
+                            objectFit: "cover",
+                            borderRadius: "12px",
+                            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                           }}
                         />
                         <div className="style-caption">{style.name}</div>
@@ -267,15 +395,34 @@ const HomePage = () => {
         <section id="gallery" className="gallery-section">
           <h2 className="title-gallery">Không Gian Nhà Hàng</h2>
           <div className="gallery-grid">
-            <div className="gallery-item">
-              <img src="/anh/khongGian (1).jpg" alt="Gallery 1" />
-            </div>
-            <div className="gallery-item">
-              <img src="/anh/khongGian (2).jpg" alt="Gallery 2" />
-            </div>
-            <div className="gallery-item">
-              <img src="/anh/khongGian(3).jpg" alt="Gallery 3" />
-            </div>
+            {galleryImages.map((img, i) => (
+              <div
+                className={
+                  "gallery-item" +
+                  (i === selectedIndex && selectedGroup === "gallery"
+                    ? " active-thumb"
+                    : "")
+                }
+                key={i}
+              >
+                <img
+                  src={img.src}
+                  alt={img.caption}
+                  onClick={() => showImageAt("gallery", i)}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+          <div className="gallery-about">
+            <p className="gallery-text">
+              <h2 className="title-gallery">Tận hưởng không gian như ở nhà</h2>
+              Nhà hàng mang đến không gian ấm cúng, gần gũi, nơi mỗi thực khách
+              đều có thể tận hưởng những khoảnh khắc riêng theo cách thoải mái
+              nhất. Từ cách bố trí bàn ăn, ánh sáng đến phong cách phục vụ, mọi
+              chi tiết đều được chăm chút nhằm tạo nên trải nghiệm thư giãn,
+              riêng tư và đáng nhớ cho khách hàng.
+            </p>
           </div>
         </section>
       </main>
@@ -294,11 +441,37 @@ const HomePage = () => {
             >
               &times;
             </span>
+            <button
+              className="modal-nav-btn left"
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImage();
+              }}
+              aria-label="Previous image"
+            >
+              ❮
+            </button>
             <img
-              src={selectedImage}
-              alt="Ảnh phóng to"
+              src={selectedImage.src || selectedImage}
+              alt={selectedImage.caption || "Ảnh phóng to"}
               className="full-size-img"
             />
+            <button
+              className="modal-nav-btn right"
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImage();
+              }}
+              aria-label="Next image"
+            >
+              ❯
+            </button>
+            {selectedImage.caption && (
+              <h3 className="modal-caption">{selectedImage.caption}</h3>
+            )}
+            {selectedImage.desc && (
+              <p className="modal-desc">{selectedImage.desc}</p>
+            )}
           </div>
         </div>
       )}
