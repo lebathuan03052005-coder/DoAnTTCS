@@ -1,0 +1,167 @@
+/* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Nền toàn trang */
+.login-bg {
+  background: url("https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070")
+    no-repeat center center/cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+}
+
+/* Lớp phủ làm tối nền để nổi bật form */
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+/* Navbar */
+.navbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+}
+
+.main-logo {
+  font-family: "Playfair Display", serif;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.main-logo span {
+  color: #ffb400; /* Màu vàng thương hiệu */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ddd;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: #ffb400;
+}
+
+/* Box chứa Form */
+.login-page {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px); /* Hiệu ứng kính mờ */
+  padding: 40px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.login-box h2 {
+  font-family: "Playfair Display", serif;
+  color: #ffb400;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+/* Form inputs */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.login-form label {
+  color: #ccc;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.login-form input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: #fff;
+  margin-bottom: 20px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login-form input:focus {
+  border-color: #ffb400;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Button */
+.btn-submit {
+  background: #ffb400;
+  color: #000;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-submit:hover {
+  background: #e6a200;
+  transform: translateY(-2px);
+}
+
+/* Điều hướng quay lại */
+.signup {
+  margin-top: 20px;
+  color: #bbb;
+  font-size: 14px;
+  text-align: center;
+}
+
+.signup a {
+  color: #ffb400;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup a:hover {
+  text-decoration: underline;
+}
+
+/* Thông báo lỗi/thành công */
+.message {
+  font-size: 13px;
+  margin-bottom: 15px;
+  text-align: center;
+}
