@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ════════════════════════════════════════════════════════════
    THE KING RESTAURANT — Menu Styles
    Theme: Dark Royal Gold
@@ -115,11 +116,47 @@
 }
 
 .menu-controls__inner {
+=======
+/* ================= TRANG MENU CHÍNH ================= */
+.menu-bg {
+  position: relative;
+  min-height: 100vh;
+  background-image: url("/anh/menu.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
+}
+
+.menu-bg .bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.7)
+  );
+  z-index: 0;
+}
+
+.menu-section {
+  position: relative;
+  z-index: 1;
+  padding: 140px 0 80px;
+  min-height: 80vh;
+}
+
+.menu-container {
+>>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
+<<<<<<< HEAD
 /* ── Search ─────────────────────────────────────────────────── */
 .menu-search {
   display: flex;
@@ -915,4 +952,60 @@
 
 @media (max-width: 400px) {
   .menu-grid { grid-template-columns: 1fr; }
+=======
+/* TIÊU ĐỀ TRANG */
+.menu-title {
+  text-align: center;
+  font-family: "Playfair Display", serif;
+  font-size: 3.8rem;
+  color: #d4af37;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.menu-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 60px;
+  font-style: italic;
+}
+
+.menu-subtitle::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 2px;
+  background: #d4af37;
+  margin: 20px auto 0;
+}
+
+/* KHUNG LƯỚI DANH SÁCH MÓN ĂN (Chuẩn bị sẵn) */
+.menu-grid {
+  display: grid;
+  /* Tự động chia cột: Ít nhất 280px 1 cột, nếu màn hình to sẽ tự thêm cột */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* THẺ MÓN ĂN (Card) */
+.menu-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-card:hover {
+  transform: translateY(-10px);
+  border-color: #d4af37;
+  box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+>>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
 }

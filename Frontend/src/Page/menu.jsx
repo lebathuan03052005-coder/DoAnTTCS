@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect, useCallback } from "react";
 import Navbar from "../components/navbar";
 import "./menu.css";
@@ -162,10 +163,38 @@ const ItemModal = ({ item, onClose }) => {
           <button className="modal__order-btn">Thêm vào order</button>
         </div>
       </div>
+=======
+import React from "react";
+import Navbar from "../components/navbar";
+import "./menu.css";
+
+const Menu = () => {
+  return (
+    <div className="menu-bg">
+      <div className="bg-overlay"></div>
+
+      <Navbar />
+
+      <main className="menu-section">
+        <div className="menu-container">
+          <h2 className="menu-title">Thực Đơn Tinh Hoa</h2>
+          <p className="menu-subtitle">
+            Trải nghiệm hương vị hoàng gia qua từng món ăn được chế biến từ
+            những nguyên liệu thượng hạng nhất.
+          </p>
+
+          {/* Khu vực Lưới (Grid) này đã được setup CSS sẵn sàng để tự động dàn hàng ngang/dọc cho món ăn */}
+          <div className="menu-grid">
+            {/* Dữ liệu món ăn sẽ được đổ vào đây bằng vòng lặp map() */}
+          </div>
+        </div>
+      </main>
+>>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
     </div>
   );
 };
 
+<<<<<<< HEAD
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function Menu() {
   const [menuItems, setMenuItems]       = useState([]);
@@ -303,3 +332,6 @@ export default function Menu() {
     </div>
   );
 }
+=======
+export default Menu;
+>>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
