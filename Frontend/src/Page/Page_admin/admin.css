@@ -20,6 +20,7 @@
   padding: 20px;
 
   overflow-y: auto;
+  border-radius: 10px;
 }
 
 /* Style cho từng thẻ a */
@@ -36,12 +37,15 @@
 
   transition: all 0.25s ease;
 }
+.BangDK_list li {
+  list-style: none;
+}
 
 /* Hover: nổi lên + đổi màu */
 .BangDK_list li a:hover {
   background-color: var(--hover-color);
   color: var(--accent-color);
-  transform: translateX(5px); /* 🔥 trượt nhẹ qua phải */
+  transform: translateX(5px);
 }
 
 /* Khi đang active (trang hiện tại) */
@@ -50,5 +54,5 @@
   color: var(--accent-color);
   font-weight: bold;
 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 🔥 hiệu ứng nổi */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

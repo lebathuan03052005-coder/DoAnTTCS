@@ -1,4 +1,5 @@
 .booking-bg {
+  padding-top: 100px;
   position: relative;
   min-height: 100vh;
   background-color: #eee;
@@ -14,9 +15,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(6px); /* làm mờ nền */
-  -webkit-backdrop-filter: blur(6px); /* Safari */
-
   z-index: 0;
 }
 

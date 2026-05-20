@@ -16,13 +16,10 @@ export default function AdminAddMenu() {
     is_spicy: false,
     is_vegetarian: false,
     serving_size: "",
-<<<<<<< HEAD
     is_new: false,
     is_chef_special: false,
     is_healthy: false,
     is_seafood: false,
-=======
->>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
   });
 
   const handleChange = (e) => {
@@ -59,13 +56,10 @@ export default function AdminAddMenu() {
           is_spicy: false,
           is_vegetarian: false,
           serving_size: "",
-<<<<<<< HEAD
           is_new: false,
           is_chef_special: false,
           is_healthy: false,
           is_seafood: false,
-=======
->>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
         });
       } else {
         alert("Lỗi: " + result.message);
@@ -198,11 +192,7 @@ export default function AdminAddMenu() {
                     checked={formData.is_best_seller}
                     onChange={handleChange}
                   />{" "}
-<<<<<<< HEAD
                   ⭐ Best Seller
-=======
-                  Best Seller
->>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
                 </label>
                 <label className="checkbox-label">
                   <input
@@ -211,11 +201,7 @@ export default function AdminAddMenu() {
                     checked={formData.is_spicy}
                     onChange={handleChange}
                   />{" "}
-<<<<<<< HEAD
                   🌶️ Món cay
-=======
-                  Món cay
->>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
                 </label>
                 <label className="checkbox-label">
                   <input
@@ -224,8 +210,7 @@ export default function AdminAddMenu() {
                     checked={formData.is_vegetarian}
                     onChange={handleChange}
                   />{" "}
-<<<<<<< HEAD
-                  🥬 Món chay
+                  {/* 🥬 Món chay */}
                 </label>
                 <label className="checkbox-label">
                   <input
@@ -262,9 +247,6 @@ export default function AdminAddMenu() {
                     onChange={handleChange}
                   />{" "}
                   🦞 Hải sản
-=======
-                  Món chay
->>>>>>> 904e7733212a6ab0c2941e1ea68d04c7d6923e8b
                 </label>
               </div>
 
@@ -275,6 +257,6 @@ export default function AdminAddMenu() {
           </div>
         </div>
       </div>
-    </main>
+    </main> 
   );
 }

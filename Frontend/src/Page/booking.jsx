@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/navbar";
 import "./booking.css";
+import Admin from "./Page_admin/admin";
 
 const Booking = () => {
   const handleSubmit = (e) => {
@@ -14,6 +15,7 @@ const Booking = () => {
       <Navbar />
 
       <main className="main-content">
+        <Admin />
         <section className="booking-section">
           <div className="container">
             <h2 className="section-title">Đặt Bàn</h2>

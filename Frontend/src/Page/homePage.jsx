@@ -214,7 +214,7 @@ const HomePage = () => {
             </h1>
             <p className="fade-in">
               Nơi khởi đầu của những trải nghiệm ẩm thực đẳng cấp và không gian
-              ấm cúng.
+              ấm cúng
             </p>
             <div className="concept">
               <h3 className="mini-title">Phong Cách Bàn Ăn Được Ưu Chuộng</h3>

@@ -16,9 +16,6 @@ const BangDK = () => {
       </p>
       <ul className="BangDK_list">
         <li>
-          <a href="#">Thực Đơn</a>
-        </li>
-        <li>
           <a href="/adminManageTables">Quản lý bàn</a>
         </li>
         <li>

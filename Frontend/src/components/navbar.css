@@ -1,7 +1,6 @@
 /* ===== HEADER ===== */
 header {
   background: rgba(239, 233, 233, 0.8);
-  padding: 20px 0;
   position: fixed;
   width: 100%;
   top: 0;
@@ -31,7 +30,11 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center; /* Căn giữa theo chiều dọc cho toàn bộ thành phần */
-  background-color: #252618;
+  background-color: #0e0e0e;
+  box-shadow: #6a6868 0px 4px 12px -1px;
+  border-radius: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 .navbar {
   position: fixed;
@@ -78,7 +81,6 @@ header {
   font-weight: 300;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #aaa;
   margin-top: 2px;
   margin-left: 15px;
 }
