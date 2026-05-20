@@ -1,0 +1,103 @@
+.booking-bg {
+  position: relative;
+  min-height: 100vh;
+  background-color: #eee;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px); /* làm mờ nền */
+  -webkit-backdrop-filter: blur(6px); /* Safari */
+
+  z-index: 0;
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+.booking-section {
+  text-align: center;
+  color: #fff;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #d4af37;
+}
+
+.booking-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto 80px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 50px;
+  border-radius: 16px;
+}
+
+/* FORM */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #eee;
+}
+
+.form-input {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+textarea.form-input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* BUTTON */
+.btn-submit {
+  width: 100%;
+  background: #d4af37;
+  color: #000;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-submit:hover {
+  background: #e5c158;
+  transform: translateY(-2px);
+}
