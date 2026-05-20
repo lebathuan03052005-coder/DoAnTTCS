@@ -1,0 +1,160 @@
+.admin-menu-list-page {
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding-bottom: 50px;
+  margin-top: 90px;
+  margin-left: 250px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.btn-add {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.menu-table {
+  width: 100%;
+  background: #fff;
+  border-collapse: collapse;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.menu-table th,
+.menu-table td {
+  padding: 18px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  color: #333;
+  vertical-align: middle;
+}
+
+.menu-table th {
+  background-color: #343a40;
+  color: white;
+}
+
+.menu-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-bestseller {
+  background: #e0e0e0;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #333;
+  font-weight: 600;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+.btn-bestseller.active {
+  background: #d4af37;
+  color: white;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
+}
+
+.btn-edit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: 0.3s;
+}
+.btn-edit:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-delete:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Styles cho trang sửa Style Bàn */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 700px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+}
+.admin-form label {
+  font-weight: 600;
+  color: #333;
+}
+.admin-form input[type="text"],
+.admin-form input,
+.admin-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+.admin-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.admin-form .btn-add {
+  background-color: #28a745;
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.admin-form .btn-delete {
+  padding: 10px 16px;
+}
+
+.admin-form .actions {
+  display: flex;
+  gap: 8px;
+}

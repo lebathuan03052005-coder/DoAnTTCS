@@ -1,0 +1,476 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap");
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* QUAN TRỌNG: Sửa lỗi tràn viền, lệch bố cục */
+}
+
+body {
+  font-family: "Cinzel", serif;
+}
+
+/* ================= BIẾN ================= */
+:root {
+  --gap-size: 30px; /* giảm từ 60 -> 30 */
+  --border-radius: 16px; /* bo mềm hơn */
+}
+
+/* ================= CONTAINER (QUAN TRỌNG) ================= */
+.container {
+  max-width: 1500px; /* từ 1200 -> 1400 */
+  width: 94%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ================= BACKGROUND ================= */
+.homepage-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url("/anh/nen2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
+  height: auto;
+}
+
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  z-index: 10; /* Đẩy khu vực Hero lên trên cùng để không bị che khuất */
+  padding: 140px 0 60px 0;
+  text-align: center;
+  min-height: 80vh;
+  background: rgba(
+    13,
+    13,
+    13,
+    0.7
+  ); /* Tạo lớp phủ đen mờ giú  p chữ nổi bật hơn */
+}
+
+.hero-content {
+  position: relative;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.hero h1 {
+  font-size: 3.8rem; /* to hơn cho sang */
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero h1 span {
+  color: #d4af37;
+}
+
+.fade-in {
+  font-size: 1.5rem;
+  max-width: 850px;
+  margin: 0 auto;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+.fade-in1 {
+  font-family: "Playfair Display", serif; /* sang trọng */
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.3;
+
+  /* hiệu ứng nổi */
+  text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.4);
+
+  /* animation nhẹ */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease forwards;
+}
+
+/* animation */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-btns {
+  margin: 40px 0 50px;
+}
+
+/* ================= BUTTON ================= */
+.btn-outline {
+  display: inline-block;
+  width: 200px;
+  height: 55px;
+  line-height: 55px;
+  border: 2px solid #fff;
+  color: #fff;
+  text-decoration: none;
+  margin: 10px;
+  transition: 0.3s;
+  border-radius: 30px; /* thêm cho sang */
+}
+
+.btn-outline:hover {
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #000;
+}
+
+/* ================= INFO SECTION ================= */
+.info-section {
+  position: relative; /* Nhốt lớp gradient mờ lại, không cho tràn lên Hero */
+  padding: 0; /* Để ảnh tràn viền */
+}
+.about-wrapper.banner-style {
+  position: relative;
+  height: 750px; /* Tăng kịch kim chiều cao khung ảnh */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+.overlay-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none; /* Cho phép click chuột xuyên qua lớp màu mờ */
+}
+.overlay-gradient.right {
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.5) 20%,
+    transparent 100%
+  );
+}
+.overlay-gradient.left {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.5) 40%,
+    transparent 100%
+  );
+}
+/* TEXT */
+.section-title {
+  font-family: "Playfair Display", serif; /* Font chữ có chân sang trọng */
+  font-size: 4.5rem; /* Tiêu đề siêu to khổng lồ */
+  line-height: 1.2;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.section-text {
+  font-size: 20px; /* Chữ to rõ, bề thế */
+  line-height: 2.2; /* Khoảng cách dòng rộng rãi */
+  color: #e0e0e0;
+  text-align: justify;
+}
+
+.section-text strong {
+  color: #d4af37;
+}
+
+/* Tạo hiệu ứng so le: Cột chẵn thì chữ căn phải */
+.about-wrapper:nth-child(even) .about-content .section-text,
+.about-wrapper:nth-child(even) .about-content .section-title {
+  text-align: right;
+}
+
+.about-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  max-width: 100%;
+  width: 100%; /* Phủ kín toàn bộ chiều ngang của khung chứa */
+  padding: 100px 120px; /* Lề trong cực lớn để khung phình to tối đa */
+  /* Hiệu ứng kính mờ (Glassmorphism) mềm mại hơn */
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.box-right {
+  margin-left: auto; /* Đẩy box chữ sang phải */
+  border-right: 4px solid #d4af37;
+}
+.box-left {
+  margin-right: auto; /* Đẩy box chữ sang trái */
+  border-left: 4px solid #d4af37;
+}
+
+.sub-title {
+  letter-spacing: 3px;
+  font-size: 18px; /* Tăng kích thước thẻ tag phụ */
+  color: #d4af37;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* ================= GALLERY ================= */
+.gallery-section {
+  padding: 80px 0 100px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+
+.gallery-item {
+  height: 250px;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.08);
+}
+.title-gallery {
+  font-family: "Playfair Display", serif;
+  font-size: 3.5rem;
+  color: #d4af37;
+  text-align: center;
+}
+
+/* ================= BEST SELLER (FOOD GRID) ================= */
+.food-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px;
+  flex: 1;
+  scroll-behavior: smooth;
+
+  /* Ẩn thanh cuộn xấu xí ngang màn hình */
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* ================= STYLE GRID (PHONG CÁCH BÀN ĂN) ================= */
+.style-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px;
+  scroll-behavior: smooth;
+  width: 70%;
+  max-width: 900px;
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.style-grid::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.style-card {
+  flex: 0 0 220px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+}
+
+.style-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.style-caption {
+  text-align: center;
+  color: #d4af37;
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 6px;
+}
+
+.food-grid::-webkit-scrollbar {
+  display: none; /* Ẩn scrollbar trên Chrome/Safari */
+}
+
+.mini-title {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #d4af37;
+}
+
+.hero-best-seller {
+  margin-top: 50px; /* Đẩy Slider xuống một chút, cách ly khỏi phần nút bấm */
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.btn-nav {
+  font-size: 3rem;
+  background: none;
+  border: none;
+  color: #d4af37;
+  cursor: pointer;
+  padding: 0 15px;
+  flex-shrink: 0; /* Không cho phép 2 nút mũi tên bị bóp méo */
+  transition: transform 0.2s; /* Thêm hiệu ứng di chuột mượt mà */
+}
+
+.btn-nav:hover {
+  transform: scale(1.1); /* Phóng to mũi tên một chút khi di chuột */
+}
+
+.food-card {
+  flex: 0 0 250px; /* Ép cứng kích thước Card món ăn không bị co giãn vỡ khung */
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.food-card:hover {
+  transform: translateY(-10px); /* Hiệu ứng nảy lên khi di chuột */
+  border-color: #d4af37;
+}
+
+.food-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.food-title {
+  color: #d4af37;
+  margin: 15px 0 10px 0;
+  font-size: 1.3rem;
+}
+
+.food-price {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.loading-text {
+  color: #fff;
+  font-style: italic;
+  margin: 0 auto;
+}
+
+/* ================= ĐÁP ỨNG GIAO DIỆN (RESPONSIVE) ================= */
+/* Tự động thu gọn bố cục khi xem trên điện thoại/màn hình nhỏ */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+  .about-content {
+    width: 95%;
+    padding: 30px 20px; /* Thu gọn lề khung kính lại khi ở trên điện thoại */
+  }
+  .section-title {
+    font-size: 2rem;
+  }
+  .section-text {
+    font-size: 15px;
+  }
+  .about-wrapper,
+  .about-wrapper:nth-child(even) {
+    flex-direction: column; /* Đẩy ảnh xuống dưới chữ trên điện thoại */
+    text-align: center;
+  }
+  .about-wrapper:nth-child(even) .about-content .section-text,
+  .about-wrapper:nth-child(even) .about-content .section-title {
+    text-align: center;
+  }
+  .section-text {
+    text-align: center;
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr; /* Ảnh xếp dọc 1 cột trên điện thoại */
+  }
+}
+/* Lớp màng đen phủ kín màn hình */
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* RẤT QUAN TRỌNG: Ép nó nổi lên trên tất cả */
+  cursor: pointer;
+}
+
+/* Khung chứa ảnh và nút tắt */
+.image-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+}
+
+/* Ảnh hiển thị nguyên bản */
+.full-size-img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Nút X tắt modal */
+.close-modal-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-modal-btn:hover {
+  color: #d4af37;
+}
