@@ -15,6 +15,7 @@ import AdminMenuList from "./Page/Page_admin/adminMenuList";
 import AdminTablesList from "./Page/Page_admin/adminTablesList";
 import AdminEditTableStyle from "./Page/Page_admin/adminEditTableStyle";
 import AdminAddTableStyle from "./Page/Page_admin/adminAddTableStyle";
+import AdminBooking from "./Page/Page_admin/adminBooking";
 //Component Bảo vệ: Kiểm tra xem đã (đăng nhập) chưa
 const ProtectedRoute = ({ children }) => {
   const isAuth = localStorage.getItem("isAdminLoggedIn");
@@ -84,6 +85,14 @@ function App() {
               }
             />
             <Route
+              path="/adminBooking"
+              element={
+                <ProtectedRoute>
+                  <AdminBooking />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/adminAddTableStyle"
               element={
                 <ProtectedRoute>
@@ -105,7 +114,6 @@ function App() {
             <Route path="/register" element={<Register />} />
           </Routes>
         </div>
-        <Footer />
       </div>
     </BrowserRouter>
   );

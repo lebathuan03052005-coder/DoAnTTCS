@@ -157,6 +157,16 @@
   font-size: 1rem;
 }
 
+.modal-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 14px;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;

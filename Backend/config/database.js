@@ -1,30 +1,28 @@
-// File: config/db.js
-const sql = require("mssql");
-require("dotenv").config();
+// File: config/database.js
+import sql from "mssql";
+import dotenv from "dotenv";
 
-const dbConfig = {
+dotenv.config();
+
+const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
   database: process.env.DB_DATABASE,
-  port: parseInt(process.env.DB_PORT),
+  server: process.env.DB_SERVER,
   options: {
     encrypt: true,
     trustServerCertificate: true,
   },
 };
 
-// Hàm kết nối
-async function connectDB() {
+const connectDB = async () => {
   try {
-    await sql.connect(dbConfig);
-    console.log("-----------------------------------------");
-    console.log("KẾT NỐI DATABASE THEKING_TTCS THÀNH CÔNG!");
-    console.log("-----------------------------------------");
-  } catch (err) {
-    console.error(" LỖI KẾT NỐI SQL SERVER:", err.message);
+    await sql.connect(config);
+    console.log(" Kết nối SQL Server thành công!");
+  } catch (error) {
+    console.error(" Lỗi kết nối SQL Server:", error);
   }
-}
+};
 
-// Xuất biến sql và hàm connectDB ra để file khác dùng
-module.exports = { sql, connectDB };
+// Đã đổi sang export mới
+export { sql, connectDB };

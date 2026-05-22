@@ -5,10 +5,13 @@ import Admin from "./admin";
 const AdminManageTables = () => {
   const [filterType, setFilterType] = useState("all");
   const [tables, setTables] = useState([]);
+  const [styles, setStyles] = useState([]);
 
   // State điều khiển Modal cập nhật
   const [selectedTable, setSelectedTable] = useState(null);
   const [newStatus, setNewStatus] = useState("");
+  const [newStyleId, setNewStyleId] = useState(null);
+  const [newNote, setNewNote] = useState("");
 
   // Gọi API
   useEffect(() => {
@@ -30,6 +33,17 @@ const AdminManageTables = () => {
     };
 
     fetchTables();
+    // fetch styles for selection
+    const fetchStyles = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/table_styles");
+        const data = await res.json();
+        if (data.success) setStyles(data.data);
+      } catch (err) {
+        console.error("Không lấy được styles:", err);
+      }
+    };
+    fetchStyles();
   }, []);
 
   // Filter theo trạng thái + khu vực
@@ -61,6 +75,8 @@ const AdminManageTables = () => {
   const handleOpenModal = (table) => {
     setSelectedTable(table);
     setNewStatus(table.status);
+    setNewStyleId(table.style_id || null);
+    setNewNote(table.note || "");
   };
 
   // Đóng modal
@@ -71,12 +87,17 @@ const AdminManageTables = () => {
   // Gửi API cập nhật trạng thái lên Backend
   const handleUpdateStatus = async () => {
     try {
+      // call unified update endpoint to set status, style and note
       const response = await fetch(
-        `http://localhost:5000/api/admin/restaurant_tables/${selectedTable.table_number}/status`,
+        `http://localhost:5000/api/admin/restaurant_tables/${selectedTable.table_number}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newStatus }),
+          body: JSON.stringify({
+            status: newStatus,
+            style_id: newStyleId,
+            note: newNote,
+          }),
         },
       );
       const result = await response.json();
@@ -85,7 +106,14 @@ const AdminManageTables = () => {
         setTables((prev) =>
           prev.map((t) =>
             t.table_number === selectedTable.table_number
-              ? { ...t, status: newStatus }
+              ? {
+                  ...t,
+                  status: newStatus,
+                  style_id: newStyleId,
+                  note: newNote,
+                  style_name: styles.find((s) => s.id === newStyleId)
+                    ?.style_name,
+                }
               : t,
           ),
         );

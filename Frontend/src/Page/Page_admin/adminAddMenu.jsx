@@ -257,6 +257,6 @@ export default function AdminAddMenu() {
           </div>
         </div>
       </div>
-    </main> 
+    </main>
   );
 }

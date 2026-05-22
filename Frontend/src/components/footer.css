@@ -1,10 +1,10 @@
 /* ===== TỔNG QUAN FOOTER ===== */
 .footer {
-  background-color: #111; /* Đen tuyền sang trọng */
   color: #fff;
   padding: 60px 0 20px; /* Thêm khoảng trống phía trên cho thoáng */
   font-family: sans-serif;
   border-top: 2px solid #d4af37;
+  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
 
   /* Viền vàng hoàng gia chốt chặn ở trên */
 }

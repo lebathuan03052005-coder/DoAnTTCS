@@ -28,7 +28,7 @@ const BangDK = () => {
           <a href="/adminMenuList">Danh sách món ăn</a>
         </li>
         <li>
-          <a href="#">Danh Sách khách đặt bàn</a>
+          <a href="/adminBooking">Danh Sách khách đặt bàn</a>
         </li>
       </ul>
     </div>
