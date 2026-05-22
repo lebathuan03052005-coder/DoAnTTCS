@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/navbar";
-import "./adminAddMenu.css"; // Gọi file CSS vào đây
-import "./admin";
+import "./adminCommon.css";
+import "./adminAddMenu.css";
 import Admin from "./admin";
 export default function AdminAddMenu() {
   const [formData, setFormData] = useState({
@@ -202,6 +202,7 @@ export default function AdminAddMenu() {
                     checked={formData.is_vegetarian}
                     onChange={handleChange}
                   />{" "}
+                  🥬 Món chay
                 </label>
               </div>
 
@@ -215,4 +216,3 @@ export default function AdminAddMenu() {
     </main>
   );
 }
-  

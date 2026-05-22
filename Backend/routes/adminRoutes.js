@@ -288,12 +288,17 @@ router.get("/admin/restaurant_tables", async (req, res) => {
         ts.id AS style_id,
         ts.style_name,
         ts.description,
-        ts.image_url
+        ts.image_url,
+
+        r.note
 
       FROM restaurant_tables rt
 
       LEFT JOIN table_styles ts
       ON rt.style_id = ts.id
+
+      LEFT JOIN reservations r
+      ON rt.id = r.table_id
 
       ORDER BY rt.location ASC, rt.table_number ASC
     `);
@@ -520,7 +525,6 @@ router.post("/admin/reservations", async (req, res) => {
 });
 
 // API: Xếp bàn cho khách (Lưu table_id vào reservations)
-// API: Xếp bàn cho khách (Lưu table_id vào reservations + Đổi status bàn)
 router.put("/admin/reservations/:id/assign-table", async (req, res) => {
   try {
     const { id } = req.params;
@@ -560,12 +564,10 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
     if (result.recordset[0]?.success_flag === 1) {
       res.json({ success: true, message: "Xếp bàn thành công!" });
     } else {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: `Không tìm thấy bàn ${table_number} trong CSDL!`,
-        });
+      res.status(400).json({
+        success: false,
+        message: `Không tìm thấy bàn ${table_number} trong CSDL!`,
+      });
     }
   } catch (err) {
     console.error(">>> Lỗi ngầm khi xếp bàn:", err);
@@ -639,6 +641,123 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
     res.json({ success: true, message: "Xếp bàn và lưu Database thành công!" });
   } catch (err) {
     console.error("Lỗi khi xếp bàn:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// API: Duyệt hoặc từ chối thông báo đặt bàn và xử lý gửi Gmail thông báo
+router.put("/admin/reservations/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // Giá trị: "Confirmed" hoặc "Cancelled"
+
+    const request = new sql.Request();
+    request.input("id", sql.Int, id);
+
+    // 1. Kiểm tra đơn đặt bàn có tồn tại không & Lấy thông tin lịch đặt
+    const reservationResult = await request.query(
+      `SELECT * FROM reservations WHERE id = @id`,
+    );
+
+    if (reservationResult.recordset.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy đặt bàn." });
+    }
+
+    const reservation = reservationResult.recordset[0];
+
+    // 2. Cập nhật trạng thái mới vào Cơ sở dữ liệu
+    request.input("status", sql.NVarChar, status);
+    await request.query(`
+      UPDATE reservations
+      SET status = @status
+      WHERE id = @id
+    `);
+
+    // 3. Xử lý gửi Gmail thông báo tự động (Đã bọc try-catch để tránh sập server khi lỗi mail)
+    const recipientEmail = String(
+      reservation.email || req.body.email || "",
+    ).trim();
+    let emailStatusMsg = "Khách hàng không đăng ký địa chỉ email.";
+
+    if (
+      recipientEmail &&
+      recipientEmail !== "undefined" &&
+      recipientEmail !== "null"
+    ) {
+      try {
+        const isApproved = status === "Confirmed" || req.body.approved === true;
+
+        // Chuẩn hóa định dạng ngày hiển thị (dd/mm/yyyy)
+        const displayDate = reservation.booking_date
+          ? new Date(reservation.booking_date).toLocaleDateString("vi-VN")
+          : "Không có";
+
+        // Chuẩn hóa định dạng giờ hiển thị (hh:mm)
+        let displayTime = "Không có";
+        if (reservation.booking_time) {
+          const timeStr =
+            reservation.booking_time instanceof Date
+              ? reservation.booking_time.toISOString()
+              : String(reservation.booking_time);
+          displayTime = timeStr.includes("T")
+            ? timeStr.split("T")[1].substring(0, 5)
+            : timeStr.substring(0, 5);
+        }
+
+        const subject = isApproved
+          ? "Yêu cầu đặt bàn của bạn đã được duyệt - The King Restaurant"
+          : "Thông báo về yêu cầu đặt bàn - The King Restaurant";
+
+        const html = `
+          <p>Xin chào <strong>${reservation.customer_name || "khách hàng"}</strong>,</p>
+          <p>Yêu cầu đặt bàn của bạn vào ngày <strong>${displayDate}</strong> lúc <strong>${displayTime}</strong> đã được nhà hàng <strong>${
+            isApproved ? "DUYỆT THÀNH CÔNG" : "TỪ CHỐI TIẾP NHẬN"
+          }</strong>.</p>
+          
+          <hr style="border: none; border-top: 1px solid #eee;" />
+          <p><strong>Chi tiết thông tin lịch đặt của bạn:</strong></p>
+          <ul style="list-style-type: none; padding-left: 0;">
+            <li style="margin-bottom: 8px;">• <strong>Tên khách hàng:</strong> ${reservation.customer_name || "Khách hàng"}</li>
+            <li style="margin-bottom: 8px;">• <strong>Số điện thoại:</strong> ${reservation.phone || "Không có"}</li>
+            <li style="margin-bottom: 8px;">• <strong>Ngày đặt bàn:</strong> ${displayDate}</li>
+            <li style="margin-bottom: 8px;">• <strong>Giờ nhận bàn:</strong> ${displayTime}</li>
+            <li style="margin-bottom: 8px;">• <strong>Số lượng khách:</strong> ${reservation.guests || 1} người</li>
+            <li style="margin-bottom: 8px;">• <strong>Ghi chú đi kèm:</strong> ${reservation.note || "Không có"}</li>
+          </ul>
+          <hr style="border: none; border-top: 1px solid #eee;" />
+
+          <p>Cảm ơn bạn đã tin tưởng sử dụng dịch vụ của chúng tôi.</p>
+          <p>Mọi thắc mắc hoặc cần hỗ trợ thay đổi thông tin gấp, vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
+          <br />
+          <p>Trân trọng,</p>
+          <p><strong>Ban quản lý The King Restaurant</strong></p>
+          <p style="font-size: 0.8rem; color: #888;">(Email này được gửi tự động, vui lòng không trả lời trực tiếp. Xin cảm ơn)</p>
+        `;
+
+        // Thực thi gọi hàm cấu hình Nodemailer
+        await sendStatusEmail({
+          to: recipientEmail,
+          subject,
+          html,
+        });
+
+        emailStatusMsg = "Đã gửi email thông báo tới khách hàng thành công!";
+      } catch (emailErr) {
+        console.error(">>> Lỗi khi gửi Email:", emailErr.message);
+        emailStatusMsg =
+          "Lỗi hệ thống gửi mail (Vui lòng kiểm tra lại thông tin cấu hình Nodemailer).";
+      }
+    }
+
+    // 4. Phản hồi kết quả về phía Frontend React
+    res.json({
+      success: true,
+      message: `Cập nhật trạng thái đơn đặt bàn thành công! (${emailStatusMsg})`,
+    });
+  } catch (err) {
+    console.error(">>> Lỗi cập nhật trạng thái đơn:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 });

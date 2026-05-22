@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Admin from "./admin";
 import Navbar from "../../components/navbar";
+import "./adminCommon.css";
 import "./adminAddTableStyle.css";
 
 const AdminAddTableStyle = () => {

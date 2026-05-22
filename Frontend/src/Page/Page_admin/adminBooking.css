@@ -18,15 +18,12 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
-/* Đảm bảo tính toán kích thước chuẩn xác, không bị kích padding */
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
 }
 
 /* ==========================================
-   BỐ CỤC CHUNG (LINH HOẠT - RESPONSIVE)
+   BOOKING PAGE SPECIFIC STYLES
 ========================================== */
 .admin-booking-page {
   padding: 105px 24px 32px 24px; /* Giảm nhẹ padding trên mobile */
@@ -132,7 +129,7 @@
 
 .booking-table {
   width: 100%;
-  min-width: 1000px; /* Bảng giữ độ rộng tối thiểu để thông tin không bị co cụm */
+  min-width: 1200px; /* Tăng độ rộng tối thiểu để hiển thị đầy đủ hành động */
   border-collapse: collapse;
 }
 
@@ -212,89 +209,53 @@
 }
 
 /* ==========================================
-   HỆ THỐNG NÚT BẤM (BUTTONS)
+   ANIMATIONS (MODAL SPECIFIC)
 ========================================== */
-.btn-primary,
-.btn-secondary,
-.btn-outline,
-.btn-approve,
-.btn-reject,
-.btn-details,
-.btn-delete {
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.table-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: nowrap;
-  align-items: center;
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-/* Primary */
-.btn-primary {
-  background-color: var(--admin-primary);
-  color: white;
-}
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--admin-primary-hover);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+.admin-modal-backdrop {
+  animation: fadeIn 0.2s ease-out;
 }
 
-/* Secondary */
-.btn-secondary {
-  background-color: #e2e8f0;
-  color: var(--admin-secondary);
-}
-.btn-secondary:hover:not(:disabled) {
-  background-color: #cbd5e1;
+.admin-modal {
+  animation: slideUp 0.3s ease-out;
 }
 
-/* Approve */
-.btn-approve {
-  background-color: var(--admin-success);
-  color: white;
-}
-.btn-approve:hover:not(:disabled) {
-  background-color: #059669;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--admin-muted);
+  font-size: 1rem;
 }
 
-/* Details */
-.btn-details {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1d4ed8;
-}
-.btn-details:hover:not(:disabled) {
-  background-color: #dbeafe;
-  border-color: #93c5fd;
-}
-
-/* Delete */
-.btn-delete {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+/* Modal feedback */
+.modal-feedback {
   color: var(--admin-danger);
-}
-.btn-delete:hover:not(:disabled) {
-  background-color: var(--admin-danger);
-  color: white;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fee2e2;
+  border-radius: 6px;
+  border-left: 3px solid var(--admin-danger);
 }
 
 /* ==========================================
@@ -323,64 +284,7 @@ button:disabled {
 }
 
 .details-modal {
-  max-width: 600px; /* Đổi width thành max-width */
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--admin-border);
-  background-color: #f8fafc;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: var(--admin-text);
-  font-weight: 700;
-}
-
-.close-button {
-  border: none;
-  background: transparent;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--admin-muted);
-  transition: color 0.2s;
-}
-
-.close-button:hover {
-  color: var(--admin-danger);
-}
-
-.modal-body {
-  padding: 24px;
-}
-
-.modal-body label {
-  display: block;
-  color: var(--admin-text);
-  font-weight: 600;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-}
-
-.modal-body select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--admin-border);
-  background-color: white;
-  font-size: 1rem;
-  color: var(--admin-text);
-  cursor: pointer;
-}
-
-.modal-body select:focus {
-  outline: none;
-  border-color: var(--admin-primary);
+  max-width: 600px;
 }
 
 /* Khu vực thông tin trong Modal Chi tiết */
@@ -393,7 +297,7 @@ button:disabled {
 }
 
 .details-info-box p {
-  display: flex; /* Dùng flex để text bên phải tự căn đều hàng */
+  display: flex;
   flex-wrap: wrap;
   margin: 0 0 10px 0;
   color: var(--admin-secondary);
@@ -408,7 +312,7 @@ button:disabled {
   color: var(--admin-text);
   display: inline-block;
   width: 130px;
-  flex-shrink: 0; /* Giữ nguyên độ rộng nhãn */
+  flex-shrink: 0;
 }
 
 .details-label {
@@ -439,9 +343,6 @@ button:disabled {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 20px 24px;
-  background-color: #f8fafc;
-  border-top: 1px solid var(--admin-border);
 }
 
 .empty-state {
@@ -452,25 +353,4 @@ button:disabled {
   background-color: #f8fafc;
   border-radius: 12px;
   border: 2px dashed #cbd5e1;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

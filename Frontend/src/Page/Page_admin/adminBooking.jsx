@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar";
 import Admin from "./admin";
+import "./adminCommon.css";
 import "./adminBooking.css";
 
 const API_BASE = "http://localhost:5000/api";
@@ -118,7 +119,7 @@ export default function AdminBooking() {
       }
     } catch (err) {
       console.error(err);
-      alert("❌ Lỗi kết nối API! Hãy kiểm tra Server Backend.");
+      alert(" Lỗi kết nối API! Hãy kiểm tra Server Backend.");
       setFeedback("Lỗi kết nối đến máy chủ.");
     }
   };
@@ -131,7 +132,7 @@ export default function AdminBooking() {
         reservation.table_id;
       if (!hasTable) {
         alert(
-          "⚠️ CHÚ Ý: Vui lòng [Xếp bàn] cho khách hàng này trước khi bấm Duyệt đơn!",
+          " CHÚ Ý: Vui lòng [Xếp bàn] cho khách hàng này trước khi bấm Duyệt đơn!",
         );
         return;
       }
@@ -198,16 +199,10 @@ export default function AdminBooking() {
     }
   };
 
-  // ==========================================
-  // HÀM MỚI: XEM CHI TIẾT
-  // ==========================================
   const openDetails = (reservation) => {
     setViewDetailsModal(reservation);
   };
 
-  // ==========================================
-  // LOGIC CHI TIẾT BÀN CỘT PHẢI
-  // ==========================================
   const openTableDetailsModal = (table) => {
     setSelectedTableDetails(table);
     setEditTableStyle(table.table_style || table.style_name || "");
@@ -327,14 +322,14 @@ export default function AdminBooking() {
                   >
                     <thead>
                       <tr>
-                        <th style={{ width: "16%" }}>Khách hàng</th>
-                        <th style={{ width: "12%" }}>Điện thoại</th>
-                        <th style={{ width: "18%" }}>Ghi chú</th>
-                        <th style={{ width: "8%" }}>Giờ</th>
-                        <th style={{ width: "8%" }}>Khách</th>
-                        <th style={{ width: "13%" }}>Trạng thái</th>
-                        <th style={{ width: "8%" }}>Bàn</th>
-                        <th style={{ width: "17%", textAlign: "center" }}>
+                        <th style={{ width: "10%" }}>Khách hàng</th>
+                        <th style={{ width: "10%" }}>Điện thoại</th>
+                        <th style={{ width: "15%" }}>Ghi chú</th>
+                        <th style={{ width: "6%" }}>Giờ</th>
+                        <th style={{ width: "6%" }}>Khách</th>
+                        <th style={{ width: "7%" }}>Trạng thái</th>
+                        <th style={{ width: "6%" }}>Bàn</th>
+                        <th style={{ width: "40%", textAlign: "center" }}>
                           Hành động
                         </th>
                       </tr>
@@ -366,7 +361,7 @@ export default function AdminBooking() {
                                     borderTop: "2px solid #cbd5e1",
                                   }}
                                 >
-                                  📅 Ngày: {currentDateStr}
+                                  Ngày: {currentDateStr}
                                 </td>
                               </tr>
                             )}
@@ -533,6 +528,7 @@ export default function AdminBooking() {
                   padding: "16px 20px",
                   borderRadius: "12px",
                   marginBottom: "10px",
+                  color: "#333",
                 }}
               >
                 <p style={{ margin: "0 0 10px 0" }}>

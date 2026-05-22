@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "./adminCommon.css";
 import "./adminMenuList.css";
 import Admin from "./admin";
 import Navbar from "../../components/navbar";

@@ -524,10 +524,17 @@ html, body {
 .modal__close:hover { border-color: var(--gold-border); color: var(--gold); background: rgba(212,175,55,0.1); }
 
 .modal__image-wrap {
-  position: relative; aspect-ratio: 1; min-height: 300px;
-  overflow: hidden; border-radius: 20px 0 0 20px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px 0 0 20px;
+  align-self: stretch;   /* stretch theo chiều cao cột text */
+  min-height: 280px;
 }
-.modal__image { width: 100%; height: 100%; object-fit: cover; }
+.modal__image {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
 .modal__image-placeholder {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -560,8 +567,12 @@ html, body {
   color: var(--gold); letter-spacing: 0.06em;
 }
 .modal__desc {
-  font-size: 15px; color: var(--txt-m); line-height: 1.7;
+  font-size: 14px; color: var(--txt-m); line-height: 1.7;
   font-style: italic; font-weight: 300;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .modal__divider {
   height: 1px;

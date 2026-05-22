@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
-import "./adminAddMenu.css"; // Dùng chung file CSS của trang thêm món
+import "./adminCommon.css";
+import "./adminAddMenu.css";
 import Admin from "./admin";
 
 export default function AdminEditMenu() {

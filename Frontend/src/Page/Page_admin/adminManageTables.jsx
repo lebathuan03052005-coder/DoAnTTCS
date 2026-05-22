@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
+import "./adminCommon.css";
 import "./adminManageTables.css";
 import Admin from "./admin";
 const AdminManageTables = () => {
@@ -11,7 +12,6 @@ const AdminManageTables = () => {
   const [selectedTable, setSelectedTable] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [newStyleId, setNewStyleId] = useState(null);
-  const [newNote, setNewNote] = useState("");
 
   // Gọi API
   useEffect(() => {
@@ -76,7 +76,6 @@ const AdminManageTables = () => {
     setSelectedTable(table);
     setNewStatus(table.status);
     setNewStyleId(table.style_id || null);
-    setNewNote(table.note || "");
   };
 
   // Đóng modal
@@ -87,7 +86,7 @@ const AdminManageTables = () => {
   // Gửi API cập nhật trạng thái lên Backend
   const handleUpdateStatus = async () => {
     try {
-      // call unified update endpoint to set status, style and note
+      // call unified update endpoint to set status and style
       const response = await fetch(
         `http://localhost:5000/api/admin/restaurant_tables/${selectedTable.table_number}`,
         {
@@ -96,7 +95,6 @@ const AdminManageTables = () => {
           body: JSON.stringify({
             status: newStatus,
             style_id: newStyleId,
-            note: newNote,
           }),
         },
       );
@@ -110,7 +108,6 @@ const AdminManageTables = () => {
                   ...t,
                   status: newStatus,
                   style_id: newStyleId,
-                  note: newNote,
                   style_name: styles.find((s) => s.id === newStyleId)
                     ?.style_name,
                 }
@@ -196,10 +193,12 @@ const AdminManageTables = () => {
                   </div>
 
                   <div className="table-body">
-                    <p>
-                      Số chỗ: <strong>{table.capacity}</strong>
-                    </p>
                     <p className="status-text">{table.status}</p>
+                    {table.note && (
+                      <p className="note-text">
+                        <strong>Ghi chú:</strong> {table.note}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -219,6 +218,39 @@ const AdminManageTables = () => {
                 >
                   Cập nhật Bàn {selectedTable.table_number}
                 </h3>
+
+                {selectedTable.note && (
+                  <div
+                    style={{
+                      backgroundColor: "#f5f5f5",
+                      padding: "12px",
+                      borderRadius: "6px",
+                      marginBottom: "15px",
+                      borderLeft: "4px solid #2c3e50",
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: "0 0 8px 0",
+                        color: "#666",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      <strong>Ghi chú hiện tại:</strong>
+                    </p>
+                    <p
+                      style={{
+                        margin: "0",
+                        color: "#333",
+                        fontSize: "0.95rem",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      {selectedTable.note}
+                    </p>
+                  </div>
+                )}
+
                 <select
                   className="modal-select"
                   value={newStatus}
