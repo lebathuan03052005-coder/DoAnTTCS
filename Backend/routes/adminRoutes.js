@@ -241,12 +241,15 @@ router.put("/admin/menu/:id", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // 8. API: Lấy danh sách danh mục
 router.get("/categories", (req, res) => {
   console.log(" HIT CATEGORIES");
   res.send("OK CATEGORY");
 });
 
+=======
+>>>>>>> 093cda5 (up menu)
 /// 9. API: Lấy danh sách sơ đồ bàn
 router.get("/admin/restaurant_tables", async (req, res) => {
   try {
