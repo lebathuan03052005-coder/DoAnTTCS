@@ -1,3 +1,6 @@
+/* ==========================================
+   HỆ THỐNG BIẾN & THIẾT LẬP TOÀN CỤC
+========================================== */
 :root {
   --admin-bg: #f8fafc;
   --admin-card: #ffffff;
@@ -15,14 +18,19 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
+/* Đảm bảo tính toán kích thước chuẩn xác, không bị kích padding */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* ==========================================
-   BỐ CỤC CHUNG (CỐ ĐỊNH)
+   BỐ CỤC CHUNG (LINH HOẠT - RESPONSIVE)
 ========================================== */
 .admin-booking-page {
-  padding: 105px 32px 32px 30px;
+  padding: 105px 24px 32px 24px; /* Giảm nhẹ padding trên mobile */
   min-height: 100vh;
-  /* Ép chiều rộng tối thiểu toàn trang để không bị co lại */
-  min-width: 1200px;
   background-color: var(--admin-bg);
   font-family:
     "Inter",
@@ -33,10 +41,18 @@
 
 .admin-panel-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* Mặc định xếp dọc trên mobile */
   gap: 16px;
-  align-items: flex-start;
   margin-bottom: 24px;
+}
+
+/* Khi màn hình lớn hơn, tự động dàn hàng ngang */
+@media (min-width: 768px) {
+  .admin-panel-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }
 
 .admin-panel-header h2 {
@@ -49,18 +65,25 @@
 .admin-panel-header p {
   margin: 0;
   color: var(--admin-muted);
-  width: 600px; /* Khóa cứng chiều rộng đoạn text */
+  max-width: 600px; /* Thay width thành max-width để không bị vỡ màn hình nhỏ */
   font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .action-row {
   display: flex;
   gap: 12px;
-  flex-wrap: nowrap; /* Không cho rớt dòng */
+  flex-wrap: wrap; /* Cho phép rớt dòng trên thiết bị nhỏ để không tràn màn hình */
+}
+
+@media (min-width: 480px) {
+  .action-row {
+    flex-wrap: nowrap; /* Màn hình vừa trở lên giữ nguyên hàng ngang */
+  }
 }
 
 /* ==========================================
-   BLOCK GIAO DIỆN & BẢNG
+   BLOCK GIAO DIỆN & BẢNG (CHỐNG TRÀN TOÀN TRANG)
 ========================================== */
 .booking-grid-fullwidth {
   display: block;
@@ -99,15 +122,17 @@
   font-weight: 500;
 }
 
+/* Bọc bảng lại để cuộn nội bộ khi màn hình quá nhỏ */
 .table-wrapper {
-  /* Bỏ overflow-x để bảng bung ra theo chiều rộng thật */
+  overflow-x: auto;
   border: 1px solid var(--admin-border);
   border-radius: 12px;
+  background-color: var(--admin-card);
 }
 
 .booking-table {
-  /* Khóa cứng chiều rộng của bảng */
-  width: 1200px;
+  width: 100%;
+  min-width: 1000px; /* Bảng giữ độ rộng tối thiểu để thông tin không bị co cụm */
   border-collapse: collapse;
 }
 
@@ -149,7 +174,7 @@
 
 /* Cột Ghi chú */
 .note-cell {
-  width: 180px; /* Khóa cứng chiều rộng cột ghi chú */
+  max-width: 200px; /* Đổi thành max-width */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -218,7 +243,7 @@
   background-color: var(--admin-primary);
   color: white;
 }
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   background-color: var(--admin-primary-hover);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
@@ -248,7 +273,7 @@
   border: 1px solid #bfdbfe;
   color: #1d4ed8;
 }
-.btn-details:hover {
+.btn-details:hover:not(:disabled) {
   background-color: #dbeafe;
   border-color: #93c5fd;
 }
@@ -259,7 +284,7 @@
   border: 1px solid #fecaca;
   color: var(--admin-danger);
 }
-.btn-delete:hover {
+.btn-delete:hover:not(:disabled) {
   background-color: var(--admin-danger);
   color: white;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
@@ -273,7 +298,7 @@ button:disabled {
 }
 
 /* ==========================================
-   MODAL TÙY CHỈNH (ÉP CỨNG WIDTH)
+   MODAL TÙY CHỈNH (RESPONSIVE MODAL)
 ========================================== */
 .admin-modal-backdrop {
   position: fixed;
@@ -283,13 +308,13 @@ button:disabled {
   display: grid;
   place-items: center;
   z-index: 999;
-  padding: 20px;
+  padding: 16px; /* Khoảng cách an toàn chống dính viền màn hình mobile */
   animation: fadeIn 0.2s ease-out;
 }
 
 .admin-modal {
-  /* Khóa cứng kích thước Modal mặc định */
-  width: 500px;
+  width: 100%;
+  max-width: 500px; /* Đổi width thành max-width */
   background: white;
   border-radius: 20px;
   box-shadow: var(--admin-modal-shadow);
@@ -298,8 +323,7 @@ button:disabled {
 }
 
 .details-modal {
-  /* Khóa cứng kích thước Modal Chi Tiết */
-  width: 600px;
+  max-width: 600px; /* Đổi width thành max-width */
 }
 
 .modal-header {
@@ -369,6 +393,8 @@ button:disabled {
 }
 
 .details-info-box p {
+  display: flex; /* Dùng flex để text bên phải tự căn đều hàng */
+  flex-wrap: wrap;
   margin: 0 0 10px 0;
   color: var(--admin-secondary);
   font-size: 0.95rem;
@@ -381,7 +407,8 @@ button:disabled {
 .details-info-box strong {
   color: var(--admin-text);
   display: inline-block;
-  min-width: 130px;
+  width: 130px;
+  flex-shrink: 0; /* Giữ nguyên độ rộng nhãn */
 }
 
 .details-label {
@@ -393,15 +420,13 @@ button:disabled {
 
 .details-textarea {
   width: 100%;
-  /* Fix box-sizing để textarea không trào ra khỏi modal */
-  box-sizing: border-box;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid var(--admin-border);
   background-color: white;
   font-family: inherit;
   font-size: 0.95rem;
-  resize: none; /* Khóa không cho kéo giãn textarea */
+  resize: none;
   min-height: 100px;
 }
 

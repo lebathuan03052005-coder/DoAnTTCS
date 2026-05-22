@@ -1,22 +1,22 @@
-const express = require("express");
+import express from "express";
+import { sql } from "../config/database.js"; // Import kết nối DB có sẵn từ file config
+
 const router = express.Router();
-const sql = require("mssql");
-const config = require("../config/database");
 
 router.get("/", async (req, res) => {
   try {
-    await sql.connect(config);
-
-    const result = await sql.query(`
+    // Không cần gọi sql.connect ở đây nữa vì đã kết nối ở server.js rồi
+    const request = new sql.Request();
+    const result = await request.query(`
       SELECT * FROM categories
     `);
 
+    // Trả về thẳng mảng dữ liệu
     res.json(result.recordset);
   } catch (err) {
-    console.log(err);
-    // SỬA DÒNG NÀY: Trả về JSON thay vì text thuần
-    res.status(500).json({ success: false, message: err.message }); 
+    console.error("Lỗi khi lấy danh mục:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-module.exports = router;
+export default router;
