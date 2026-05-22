@@ -16,10 +16,13 @@ export default function AdminAddMenu() {
     is_spicy: false,
     is_vegetarian: false,
     serving_size: "",
+<<<<<<< HEAD
     is_new: false,
     is_chef_special: false,
     is_healthy: false,
     is_seafood: false,
+=======
+>>>>>>> 093cda5 (up menu)
   });
 
   const handleChange = (e) => {
@@ -56,10 +59,13 @@ export default function AdminAddMenu() {
           is_spicy: false,
           is_vegetarian: false,
           serving_size: "",
+<<<<<<< HEAD
           is_new: false,
           is_chef_special: false,
           is_healthy: false,
           is_seafood: false,
+=======
+>>>>>>> 093cda5 (up menu)
         });
       } else {
         alert("Lỗi: " + result.message);
@@ -210,6 +216,7 @@ export default function AdminAddMenu() {
                     checked={formData.is_vegetarian}
                     onChange={handleChange}
                   />{" "}
+<<<<<<< HEAD
                   {/* 🥬 Món chay */}
                 </label>
                 <label className="checkbox-label">
@@ -247,6 +254,9 @@ export default function AdminAddMenu() {
                     onChange={handleChange}
                   />{" "}
                   🦞 Hải sản
+=======
+                  🥬 Món chay
+>>>>>>> 093cda5 (up menu)
                 </label>
               </div>
 
