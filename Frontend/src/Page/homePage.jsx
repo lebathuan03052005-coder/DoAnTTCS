@@ -415,8 +415,13 @@ const HomePage = () => {
             ))}
           </div>
           <div className="gallery-about">
+<<<<<<< HEAD
             <h2 className="title-gallery">Tận hưởng không gian như ở nhà</h2>
             <p className="gallery-text">
+=======
+            <p className="gallery-text">
+              <h2 className="title-gallery">Tận hưởng không gian như ở nhà</h2>
+>>>>>>> 8db61718420d4a354702b0b9fa7586c47e330e91
               Nhà hàng mang đến không gian ấm cúng, gần gũi, nơi mỗi thực khách
               đều có thể tận hưởng những khoảnh khắc riêng theo cách thoải mái
               nhất. Từ cách bố trí bàn ăn, ánh sáng đến phong cách phục vụ, mọi

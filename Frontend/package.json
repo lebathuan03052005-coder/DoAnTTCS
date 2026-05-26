@@ -12,8 +12,12 @@
   "dependencies": {
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+<<<<<<< HEAD
     "react-router-dom": "^7.14.1",
     "sweetalert2": "^11.26.25"
+=======
+    "react-router-dom": "^7.14.1"
+>>>>>>> 8db61718420d4a354702b0b9fa7586c47e330e91
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
