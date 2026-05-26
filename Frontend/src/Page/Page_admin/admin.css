@@ -1,0 +1,58 @@
+:root {
+  --bg-admin: #f4f7f6;
+  --sidebar-color: #2c3e50;
+  --text-white: #ffffff;
+  --hover-color: #34495e;
+  --accent-color: #e67e22;
+  --sidebar-width: 190px;
+}
+
+.BangDK {
+  position: fixed;
+
+  top: 90px;
+  left: 0;
+
+  width: var(--sidebar-width);
+  height: calc(100vh - 90px);
+
+  background-color: var(--sidebar-color);
+  padding: 10px;
+
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+/* Style cho từng thẻ a */
+.BangDK_list li a {
+  display: block;
+  padding: 12px 16px;
+
+  color: var(--text-white);
+  text-decoration: none;
+
+  border-radius: 8px;
+
+  background-color: transparent;
+
+  transition: all 0.25s ease;
+}
+.BangDK_list li {
+  list-style: none;
+}
+
+/* Hover: nổi lên + đổi màu */
+.BangDK_list li a:hover {
+  background-color: var(--hover-color);
+  color: var(--accent-color);
+  transform: translateX(5px);
+}
+
+/* Khi đang active (trang hiện tại) */
+.BangDK_list li a.active {
+  background-color: var(--hover-color);
+  color: var(--accent-color);
+  font-weight: bold;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
