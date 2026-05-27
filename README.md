@@ -10,7 +10,7 @@ Hệ thống ứng dụng Web Full-Stack quản lý thực đơn, điều phối
 - Trần Cao Nguyên; đảm nhiệm phần chatBox, menu.
 - Đậu Quốc Dũng; hỗ trợ viết file báo cáo lần 2.
 
-# Với sự hướng dẫn của giảng viên: Nguyên Anh Hào
+# Với sự hướng dẫn của giảng viên: Nguyễn Anh Hào
 
 ---
 
