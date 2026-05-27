@@ -49,6 +49,19 @@ body {
   pointer-events: none;
 }
 
+/* Darken bottom area of the background so footer/edge appears black */
+.homepage-container::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 220px; /* adjust to control how much of the bottom is darkened */
+  background: linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.65) 35%, rgba(0,0,0,0) 100%);
+  z-index: 1; /* sit above the background but below main content (hero z-index:10) */
+  pointer-events: none;
+}
+
 /* ================= HERO ================= */
 .hero {
   position: relative;
@@ -216,6 +229,20 @@ body {
   border-radius: 16px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive: giảm padding trên màn hình nhỏ để tránh tràn ngang */
+@media (max-width: 1200px) {
+  .about-content {
+    padding: 48px 24px;
+  }
+  .about-wrapper.banner-style {
+    height: auto;
+    padding: 40px 0;
+  }
+  .gallery-grid {
+    max-width: 100%;
+  }
 }
 .box-right {
   margin-left: auto; /* Đẩy box chữ sang phải */

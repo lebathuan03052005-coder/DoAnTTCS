@@ -6,6 +6,7 @@
   padding: 60px 0 20px;
   font-family: sans-serif;
   border-top: 2px solid #d4af37;
+<<<<<<< HEAD
   background-color: #0e0c09 !important; /* Đảm bảo màu đen hoàng gia */
   width: 100%;
   box-sizing: border-box;
@@ -18,6 +19,15 @@
   /* Lớp nổi */
   position: relative;
   z-index: 9995 !important;
+=======
+  z-index: 99;
+
+  /* ✅ FIX: Đảm bảo footer luôn có nền đen đặc trên MỌI trang,
+     không bị ảnh nền fixed của homepage xuyên thấu qua */
+  background-color: #000;
+  position: relative;
+  width: 100%;
+>>>>>>> cf679b6a4ef43a14ab83b69125781bcf7d26acb4
 }
 
 /* ==========================================================================
@@ -132,5 +142,26 @@
 .footer-bottom p {
   color: #777;
   font-size: 0.9rem;
+<<<<<<< HEAD
   margin: 0;
+=======
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1; /* 🔥 đẩy footer xuống cuối */
+}
+/* ✅ Áp dụng cho cả thẻ <footer> HTML lẫn class .footer
+   để không trang nào bị trong suốt dù dùng cách nào */
+footer,
+.footer {
+  position: relative;
+  z-index: 99;
+  width: 100%;
+  background-color: #000 !important;
+>>>>>>> cf679b6a4ef43a14ab83b69125781bcf7d26acb4
 }

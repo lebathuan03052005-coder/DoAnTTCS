@@ -4,4 +4,22 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  /* Prevent horizontal overflow from large components while keeping internal scrolls */
+  overflow-x: hidden;
+}
+
+/* ✅ FIX: Nền đen mặc định cho toàn bộ app
+   Đảm bảo footer và mọi vùng không có container riêng
+   sẽ không bao giờ bị trong suốt hay lộ nền trắng */
+body {
+  background-color: #000;
+}
+
+/* ✅ FIX: Footer luôn đặc màu đen trên MỌI trang
+   Ghi đè mọi CSS khác (booking.css, menu.css, homePage.css...) */
+footer,
+.footer {
+  background-color: #000 !important;
+  position: relative !important;
+  z-index: 99 !important;
 }

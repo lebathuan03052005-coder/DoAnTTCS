@@ -38,11 +38,10 @@ router.post("/chat", async (req, res) => {
 
     if (!response.ok) {
       console.error("[Chat] Gemini error:", response.status, data);
-      return res
-        .status(500)
-        .json({
-          error: data.error?.message || `Gemini lỗi ${response.status}`,
-        });
+
+      return res.status(500).json({
+        error: data.error?.message || `Gemini lỗi ${response.status}`,
+      });
     }
 
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;

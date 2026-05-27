@@ -51,6 +51,7 @@ Trả lời bằng tiếng Việt, thân thiện và ngắn gọn.
       prompt += `\n## ${cat}\n`;
       for (const item of items)
         prompt += `- ${item.question_key}: ${item.answer_content}\n`;
+
     }
 
     prompt += `\n═══════════════════════════════
@@ -82,14 +83,14 @@ Trả lời bằng tiếng Việt, thân thiện và ngắn gọn.
       for (const item of items) {
         let line = `• ${item.item_name} — ${Number(item.price).toLocaleString("vi-VN")}đ`;
         if (item.is_best_seller) line += " ⭐";
-        if (item.is_spicy) line += " 🌶️";
-        if (item.is_vegetarian) line += " 🌿";
-        if (item.serving_size) line += ` | Khẩu phần: ${item.serving_size}`;
+        if (item.is_spicy)       line += " 🌶️";
+        if (item.is_vegetarian)  line += " 🌿";
+        if (item.serving_size)   line += ` | Khẩu phần: ${item.serving_size}`;
         prompt += line + "\n";
-        if (item.description) prompt += `  → ${item.description}\n`;
-        if (item.ingredients) prompt += `  Nguyên liệu: ${item.ingredients}\n`;
-        if (item.allergy_warnings)
-          prompt += `  ⚠️ Dị ứng: ${item.allergy_warnings}\n`;
+        if (item.description)       prompt += `  → ${item.description}\n`;
+        if (item.ingredients)       prompt += `  Nguyên liệu: ${item.ingredients}\n`;
+        if (item.allergy_warnings)  prompt += `  ⚠️ Dị ứng: ${item.allergy_warnings}\n`;
+
       }
     }
 
@@ -100,5 +101,6 @@ Trả lời bằng tiếng Việt, thân thiện và ngắn gọn.
   } catch (err) {
     console.error("[Context] Lỗi load dữ liệu nhà hàng:", err.message);
     return "Bạn là trợ lý tư vấn của nhà hàng. Hãy hỗ trợ khách hàng lịch sự. Hiện tại không thể tải dữ liệu, hãy đề nghị khách liên hệ trực tiếp với nhân viên hoặc liên hệ qua email: lebathuan03052005@gmail.com .";
+
   }
 }
