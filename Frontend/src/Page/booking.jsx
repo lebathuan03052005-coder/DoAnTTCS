@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import "./booking.css";
-import Admin from "./Page_admin/admin";
 import Swal from "sweetalert2";
 
 const Booking = () => {
@@ -84,7 +83,9 @@ const Booking = () => {
         <main className="main-content">
           <section className="booking-section">
             <div className="container">
-              <h2 className="section-title">Đặt Bàn</h2>
+              <h2 className="section-title" style={{ textAlign: "center" }}>
+                Đặt Bàn
+              </h2>
               <p className="section-description">
                 Chọn thời gian và số lượng phù hợp, chúng tôi sẽ chuẩn bị bàn
                 cho bạn.

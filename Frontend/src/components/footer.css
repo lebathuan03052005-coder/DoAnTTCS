@@ -1,28 +1,42 @@
-/* ===== TỔNG QUAN FOOTER ===== */
+/* ==========================================================================
+   1. TỔNG QUAN TẦNG NỀN (THẺ FOOTER NGOÀI CÙNG)
+   ========================================================================== */
 .footer {
   color: #fff;
-  padding: 60px 0 20px; /* Thêm khoảng trống phía trên cho thoáng */
+  padding: 60px 0 20px;
   font-family: sans-serif;
   border-top: 2px solid #d4af37;
-  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
+  background-color: #0e0c09 !important; /* Đảm bảo màu đen hoàng gia */
+  width: 100%;
+  box-sizing: border-box;
 
-  /* Viền vàng hoàng gia chốt chặn ở trên */
+  /* 🌟 ĐÂY LÀ CÁC DÒNG QUAN TRỌNG ĐỂ SỬA LỖI CHIỀU CAO O ================= */
+  display: block; /* Ép footer hoạt động như một khối độc lập */
+  height: auto !important; /* Tuyệt đối không cho phép cao bằng 0, tự động co giãn theo nội dung */
+  overflow: hidden; /* Kỹ thuật Clearfix giúp ôm trọn các phần tử con dùng flex/float */
+
+  /* Lớp nổi */
+  position: relative;
+  z-index: 9995 !important;
 }
 
-/* ===== BA CỘT CHÍNH (FLEXBOX) ===== */
+/* ==========================================================================
+   2. KHU VỰC CHỨA CÁC CỘT THÔNG TIN
+   ========================================================================== */
 .footer-container {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap; /* Tự rớt dòng nếu màn hình điện thoại nhỏ */
+  flex-wrap: wrap; /* Tự động rớt dòng trên màn hình điện thoại nhỏ */
   max-width: 1200px;
   margin: 0 auto; /* Căn giữa toàn bộ cụm nội dung */
   padding: 0 20px;
   gap: 30px;
+  align-items: stretch;
 }
 
 .footer-col {
   flex: 1;
-  min-width: 250px; /* Không cho cột bị bóp quá nhỏ */
+  min-width: 250px; /* Không cho các cột bị bóp quá hẹp */
 }
 
 .footer-col h4 {
@@ -37,6 +51,7 @@
 .footer-logo {
   font-family: "Playfair Display", serif;
   font-size: 1.8rem;
+  margin-top: 0;
   margin-bottom: 15px;
 }
 
@@ -54,12 +69,12 @@
   font-size: 1.5rem;
   margin-right: 15px;
   text-decoration: none;
-  filter: grayscale(100%); /* Làm xám icon */
+  filter: grayscale(100%);
   transition: 0.3s;
 }
 
 .social-links a:hover {
-  filter: grayscale(0%); /* Hiện màu thật khi trỏ chuột vào */
+  filter: grayscale(0%);
   transform: scale(1.2);
 }
 
@@ -67,6 +82,7 @@
 .links-col ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .links-col li {
@@ -81,7 +97,7 @@
 
 .links-col a:hover {
   color: #d4af37;
-  padding-left: 5px; /* Hiệu ứng thụt đầu dòng cực xịn khi hover */
+  padding-left: 5px; /* Hiệu ứng thụt đầu dòng khi rê chuột vào */
 }
 
 /* ===== CỘT 3: LIÊN HỆ ===== */
@@ -96,11 +112,13 @@
   text-decoration: none;
 }
 
-/* ===== PHẦN BẢN QUYỀN (BOTTOM) ===== */
+/* ==========================================================================
+   3. PHẦN BẢN QUYỀN CHỐT ĐÁY (Đã tách độc lập hoàn toàn khỏi Flexbox)
+   ========================================================================== */
 .footer-bottom {
+  flex: 1 0 100%; /* Ép dải bản quyền luôn chiếm trọn 100% chiều ngang hàng mới */
   text-align: center;
   margin-top: 40px;
-  padding: 0 20px;
 }
 
 .footer-line {
@@ -108,25 +126,11 @@
   height: 1px;
   background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .footer-bottom p {
   color: #777;
   font-size: 0.9rem;
-}
-.layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.content {
-  flex: 1; /* 🔥 đẩy footer xuống cuối */
-}
-/* Trong file CSS của Footer hoặc style trực tiếp */
-footer {
-  position: relative;
-  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
-  width: 100%;
-  background-color: #000; /* Đảm bảo có màu nền để không bị nhìn xuyên thấu */
+  margin: 0;
 }

@@ -5,7 +5,6 @@ import nodemailer from "nodemailer";
 
 const router = express.Router();
 
-// Sửa lại để tìm đúng chữ SMTP_USER và SMTP_PASS trong file .env
 const isMailConfigured = Boolean(
   process.env.SMTP_USER && process.env.SMTP_PASS,
 );
@@ -25,7 +24,6 @@ async function sendStatusEmail({ to, subject, html }) {
     console.warn("Chưa cấu hình Email. Bỏ qua gửi email trạng thái.");
     return;
   }
-
   return mailTransport.sendMail({
     from: `"The King Restaurant" <${process.env.SMTP_USER}>`,
     to,
@@ -34,9 +32,9 @@ async function sendStatusEmail({ to, subject, html }) {
   });
 }
 
-console.log(" FILE adminRoutes.js ĐANG CHẠY");
+console.log("🚀 FILE adminRoutes.js ĐANG CHẠY ỔN ĐỊNH");
 
-// 1. API: Đăng nhập
+// 1. API: Đăng nhập Admin
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -65,7 +63,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// 2. API: Thêm món ăn
+// 2. API: Thêm món ăn mới
 router.post("/admin/menu", async (req, res) => {
   try {
     const {
@@ -83,11 +81,10 @@ router.post("/admin/menu", async (req, res) => {
     } = req.body;
 
     const query = `
-            INSERT INTO menu (category_id, item_name, description, price, image_url, is_best_seller, ingredients, allergy_warnings, is_spicy, is_vegetarian, serving_size)
-            VALUES (@category_id, @item_name, @description, @price, @image_url, @is_best_seller, @ingredients, @allergy_warnings, @is_spicy, @is_vegetarian, @serving_size)
-        `;
+      INSERT INTO menu (category_id, item_name, description, price, image_url, is_best_seller, ingredients, allergy_warnings, is_spicy, is_vegetarian, serving_size)
+      VALUES (@category_id, @item_name, @description, @price, @image_url, @is_best_seller, @ingredients, @allergy_warnings, @is_spicy, @is_vegetarian, @serving_size)
+    `;
     const request = new sql.Request();
-
     request.input("category_id", sql.Int, category_id ? category_id : null);
     request.input("item_name", sql.NVarChar, item_name);
     request.input(
@@ -119,7 +116,7 @@ router.post("/admin/menu", async (req, res) => {
     await request.query(query);
     res.json({
       success: true,
-      message: " Đã nạp món ăn vào Database thành công!",
+      message: "Đã nạp món ăn vào Database thành công!",
     });
   } catch (err) {
     res
@@ -161,7 +158,7 @@ router.put("/admin/menu/:id/bestseller", async (req, res) => {
   }
 });
 
-// 5. API: Xóa món ăn
+// 5. API: Xóa món ăn khỏi danh sách
 router.delete("/admin/menu/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -178,7 +175,7 @@ router.delete("/admin/menu/:id", async (req, res) => {
   }
 });
 
-// 6. API: Lấy thông tin 1 món ăn để sửa
+// 6. API: Lấy thông tin chi tiết 1 món ăn để sửa
 router.get("/admin/menu/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -201,7 +198,7 @@ router.get("/admin/menu/:id", async (req, res) => {
   }
 });
 
-// 7. API: Cập nhật thông tin món ăn
+// 7. API: Cập nhật thông tin món ăn toàn diện
 router.put("/admin/menu/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -221,17 +218,10 @@ router.put("/admin/menu/:id", async (req, res) => {
 
     const query = `
       UPDATE menu 
-      SET category_id = @category_id, 
-          item_name = @item_name, 
-          description = @description, 
-          price = @price, 
-          image_url = @image_url, 
-          is_best_seller = @is_best_seller, 
-          ingredients = @ingredients, 
-          allergy_warnings = @allergy_warnings, 
-          is_spicy = @is_spicy, 
-          is_vegetarian = @is_vegetarian, 
-          serving_size = @serving_size
+      SET category_id = @category_id, item_name = @item_name, description = @description, 
+          price = @price, image_url = @image_url, is_best_seller = @is_best_seller, 
+          ingredients = @ingredients, allergy_warnings = @allergy_warnings, is_spicy = @is_spicy, 
+          is_vegetarian = @is_vegetarian, serving_size = @serving_size
       WHERE id = @id
     `;
 
@@ -273,49 +263,61 @@ router.put("/admin/menu/:id", async (req, res) => {
       .json({ success: false, message: "Lỗi Database: " + err.message });
   }
 });
-/// 9. API: Lấy danh sách sơ đồ bàn
+
+// 🌟 8. [BỔ SUNG QUAN TRỌNG]: API LẤY DANH SÁCH ĐẶT BÀN CHO FRONTEND DISPLAY 🌟
+router.get("/admin/reservations", async (req, res) => {
+  try {
+    const request = new sql.Request();
+    // INNER JOIN hoặc LEFT JOIN với sơ đồ bàn để lấy kèm tên số bàn hiển thị
+    const result = await request.query(`
+      SELECT 
+        r.id, r.customer_name, r.phone, r.email, r.booking_date, r.booking_time, r.guests, r.note, r.status,
+        rt.table_number AS assigned_table
+      FROM reservations r
+      LEFT JOIN restaurant_tables rt ON r.table_id = rt.id
+      ORDER BY r.booking_date DESC, r.booking_time ASC
+    `);
+    res.json({ success: true, data: result.recordset });
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Lỗi Database khi lấy danh sách đặt bàn: " + err.message,
+      });
+  }
+});
+
+// 9. API: Lấy danh sách sơ đồ bàn (Có bổ sung rt.id làm style details)
 router.get("/admin/restaurant_tables", async (req, res) => {
   try {
     const request = new sql.Request();
-
     const result = await request.query(`
       SELECT 
+        rt.id,
         rt.table_number,
         rt.location,
         rt.capacity,
         rt.status,
-
         ts.id AS style_id,
         ts.style_name,
         ts.description,
         ts.image_url,
-
         r.note
-
       FROM restaurant_tables rt
-
-      LEFT JOIN table_styles ts
-      ON rt.style_id = ts.id
-
-      LEFT JOIN reservations r
-      ON rt.id = r.table_id
-
+      LEFT JOIN table_styles ts ON rt.style_id = ts.id
+      LEFT JOIN reservations r ON rt.id = r.table_id
       ORDER BY rt.location ASC, rt.table_number ASC
     `);
-
-    res.json({
-      success: true,
-      data: result.recordset,
-    });
+    res.json({ success: true, data: result.recordset });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Lỗi Database: " + err.message,
-    });
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi Database: " + err.message });
   }
 });
 
-// 10. API: Cập nhật trạng thái bàn
+// 10. API: Cập nhật trạng thái trống/bận của bàn công nghiệp
 router.put(
   "/admin/restaurant_tables/:table_number/status",
   async (req, res) => {
@@ -341,7 +343,7 @@ router.put(
   },
 );
 
-// 10b. API: Cập nhật thông tin bàn (status, note, style_id, capacity, location)
+// 10b. API: Cập nhật thông tin chi tiết cấu trúc bàn
 router.put("/admin/restaurant_tables/:table_number", async (req, res) => {
   try {
     const { table_number } = req.params;
@@ -355,7 +357,6 @@ router.put("/admin/restaurant_tables/:table_number", async (req, res) => {
     request.input("capacity", sql.Int, capacity || null);
     request.input("location", sql.NVarChar, location || null);
 
-    // Build update dynamically to only set provided fields
     const updates = [];
     if (status !== undefined) updates.push("status = @status");
     if (note !== undefined) updates.push("note = @note");
@@ -371,9 +372,7 @@ router.put("/admin/restaurant_tables/:table_number", async (req, res) => {
     }
 
     const query = `UPDATE restaurant_tables SET ${updates.join(", ")} WHERE table_number = @table_number`;
-
     await request.query(query);
-
     res.json({ success: true, message: "Cập nhật thông tin bàn thành công!" });
   } catch (err) {
     res
@@ -382,30 +381,20 @@ router.put("/admin/restaurant_tables/:table_number", async (req, res) => {
   }
 });
 
-// 11: API lấy style bàn ăn
+// 11: API lấy toàn bộ style không gian bàn ăn
 router.get("/admin/table_styles", async (req, res) => {
   try {
     const request = new sql.Request();
-
-    const result = await request.query(`
-      SELECT *
-      FROM table_styles
-      ORDER BY id DESC
-    `);
-
-    res.json({
-      success: true,
-      data: result.recordset,
-    });
+    const result = await request.query(
+      `SELECT * FROM table_styles ORDER BY id DESC`,
+    );
+    res.json({ success: true, data: result.recordset });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// API: Lấy 1 style theo id
+// API: Lấy thông tin 1 style cụ thể theo ID phục vụ trang sửa
 router.get("/admin/table_styles/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -424,7 +413,7 @@ router.get("/admin/table_styles/:id", async (req, res) => {
   }
 });
 
-// API: Xóa 1 style bàn ăn
+// API: Xóa 1 dạng style bàn
 router.delete("/admin/table_styles/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -437,14 +426,13 @@ router.delete("/admin/table_styles/:id", async (req, res) => {
   }
 });
 
-// 12: API: Thêm sửa style bàn ăn
+// 12: API: Cập nhật hoặc lưu đè thông tin style bàn
 router.put("/admin/table_styles/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { style_name, description, image_url, bestseller } = req.body;
 
     const request = new sql.Request();
-
     await request
       .input("id", sql.Int, id)
       .input("style_name", sql.NVarChar, style_name)
@@ -452,27 +440,17 @@ router.put("/admin/table_styles/:id", async (req, res) => {
       .input("image_url", sql.VarChar, image_url)
       .input("bestseller", sql.Bit, bestseller ? 1 : 0).query(`
         UPDATE table_styles
-        SET
-          style_name = @style_name,
-          description = @description,
-          image_url = @image_url,
-          bestseller = @bestseller 
+        SET style_name = @style_name, description = @description, image_url = @image_url, bestseller = @bestseller 
         WHERE id = @id
       `);
 
-    res.json({
-      success: true,
-      message: "Cập nhật style thành công",
-    });
+    res.json({ success: true, message: "Cập nhật style thành công" });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// 13, API: Đặt bàn ăn
+// 13: API: Khách hàng tạo đơn đặt bàn mới từ Client Form
 router.post("/admin/reservations", async (req, res) => {
   try {
     const {
@@ -484,16 +462,7 @@ router.post("/admin/reservations", async (req, res) => {
       guests,
       note,
     } = req.body;
-
     const guestNumber = parseInt(guests, 10) || 1;
-
-    const emailColumnResult = await new sql.Request().query(`
-      SELECT COUNT(*) AS count
-      FROM INFORMATION_SCHEMA.COLUMNS
-      WHERE TABLE_NAME = 'reservations'
-        AND COLUMN_NAME = 'email'
-    `);
-    const hasEmailColumn = emailColumnResult.recordset[0].count > 0;
 
     const request = new sql.Request()
       .input("customer_name", sql.NVarChar, customer_name)
@@ -505,26 +474,23 @@ router.post("/admin/reservations", async (req, res) => {
       .input("email", sql.VarChar, email || null);
 
     let insertQuery = `
-      INSERT INTO reservations (customer_name, phone, booking_date, booking_time, guests, note, email)
-      VALUES (@customer_name, @phone, @booking_date, @booking_time, @guests, @note, @email)
+      INSERT INTO reservations (customer_name, phone, booking_date, booking_time, guests, note, email, status)
+      VALUES (@customer_name, @phone, @booking_date, @booking_time, @guests, @note, @email, 'Pending')
     `;
 
     await request.query(insertQuery);
-
-    res.status(201).json({
-      success: true,
-      message: "Đặt bàn thành công! Chúng tôi sẽ liên hệ lại để xác nhận.",
-    });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Đặt bàn thành công! Chúng tôi sẽ liên hệ lại để xác nhận.",
+      });
   } catch (err) {
-    console.error(">>> CHI TIẾT LỖI:", err.message);
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// API: Xếp bàn cho khách (Lưu table_id vào reservations)
+// 🌟 14. API GỘP NHẤT QUÁN: ĐIỀU PHỐI / XẾP VỊ TRÍ BÀN CHO KHÁCH (ĐÃ KHỬ TRÙNG LẶP) 🌟
 router.put("/admin/reservations/:id/assign-table", async (req, res) => {
   try {
     const { id } = req.params;
@@ -533,25 +499,33 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
     if (!table_number) {
       return res
         .status(400)
-        .json({ success: false, message: "Thiếu thông tin bàn." });
+        .json({ success: false, message: "Thiếu thông tin số bàn." });
     }
 
     const request = new sql.Request();
     request.input("res_id", sql.Int, id);
     request.input("table_num", sql.NVarChar, String(table_number));
 
-    // Lệnh SQL: Xử lý cả 2 việc cùng 1 lúc trong DB cho an toàn
     const result = await request.query(`
-      DECLARE @tableId INT;
-      SELECT @tableId = id FROM restaurant_tables WHERE table_number = @table_num;
+      DECLARE @newTableId INT;
+      DECLARE @oldTableId INT;
 
-      IF @tableId IS NOT NULL
+      SELECT @newTableId = id FROM restaurant_tables WHERE table_number = @table_num;
+      SELECT @oldTableId = table_id FROM reservations WHERE id = @res_id;
+
+      IF @newTableId IS NOT NULL
       BEGIN
-        -- 1. Lưu bàn vào đơn đặt
-        UPDATE reservations SET table_id = @tableId WHERE id = @res_id;
-        
-        -- 2. Đổi trạng thái bàn thành "Da dat" luôn
-        UPDATE restaurant_tables SET status = N'Da dat' WHERE id = @tableId;
+        -- Gỡ bàn cũ nếu có sang trạng thái trống
+        IF @oldTableId IS NOT NULL
+        BEGIN
+          UPDATE restaurant_tables SET status = N'Con trong' WHERE id = @oldTableId;
+        END
+
+        -- Chuyển đơn sang ID của bàn mới
+        UPDATE reservations SET table_id = @newTableId WHERE id = @res_id;
+
+        -- Khóa bàn mới thành 'Da dat'
+        UPDATE restaurant_tables SET status = N'Da dat' WHERE id = @newTableId;
 
         SELECT 1 AS success_flag;
       END
@@ -562,99 +536,44 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
     `);
 
     if (result.recordset[0]?.success_flag === 1) {
-      res.json({ success: true, message: "Xếp bàn thành công!" });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: `Không tìm thấy bàn ${table_number} trong CSDL!`,
+      res.json({
+        success: true,
+        message: "Xếp bàn vào Database và khóa sơ đồ thành công!",
       });
+    } else {
+      res
+        .status(400)
+        .json({
+          success: false,
+          message: `Không tìm thấy bàn mang số hiệu ${table_number} trong hệ thống.`,
+        });
     }
   } catch (err) {
-    console.error(">>> Lỗi ngầm khi xếp bàn:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// 14, API: Lấy danh sách đặt bàn
-router.get("/admin/reservations", async (req, res) => {
-  try {
-    const request = new sql.Request();
-    const result = await request.query(`
-      SELECT 
-          r.*, 
-          t.table_number 
-      FROM reservations r
-      LEFT JOIN restaurant_tables t ON r.table_id = t.id
-      ORDER BY r.created_at DESC
-    `);
-    res.json({
-      success: true,
-      data: result.recordset,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-});
-
-// API: Xóa đơn đặt bàn
+// 15. API: Xóa bản ghi lịch sử đặt bàn
 router.delete("/admin/reservations/:id", async (req, res) => {
   try {
-    await sql.query(`DELETE FROM reservations WHERE id = ${req.params.id}`);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-// API: Xếp bàn cho khách (Lưu table_id vào reservations)
-router.put("/admin/reservations/:id/assign-table", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { table_number } = req.body;
-
-    if (!table_number) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Thiếu thông tin bàn." });
-    }
-
     const request = new sql.Request();
-    request.input("res_id", sql.Int, id);
-    request.input("table_num", sql.Int, table_number);
-
-    // Lệnh SQL: Tìm id của bàn và Update vào bảng reservations
-    await request.query(`
-      DECLARE @tableId INT;
-      
-      SELECT @tableId = id FROM restaurant_tables WHERE table_number = @table_num;
-
-      IF @tableId IS NOT NULL
-      BEGIN
-        UPDATE reservations 
-        SET table_id = @tableId 
-        WHERE id = @res_id;
-      END
-    `);
-
-    res.json({ success: true, message: "Xếp bàn và lưu Database thành công!" });
+    request.input("id", sql.Int, req.params.id);
+    await request.query(`DELETE FROM reservations WHERE id = @id`);
+    res.json({ success: true, message: "Đã xóa bản ghi đơn thành công" });
   } catch (err) {
-    console.error("Lỗi khi xếp bàn:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// API: Duyệt hoặc từ chối thông báo đặt bàn và xử lý gửi Gmail thông báo
+// 16. API: Duyệt hoặc từ chối đơn hàng + Kích hoạt gửi Gmail tự động qua Nodemailer
 router.put("/admin/reservations/:id/status", async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body; // Giá trị: "Confirmed" hoặc "Cancelled"
+    const { status } = req.body;
 
     const request = new sql.Request();
     request.input("id", sql.Int, id);
 
-    // 1. Kiểm tra đơn đặt bàn có tồn tại không & Lấy thông tin lịch đặt
     const reservationResult = await request.query(
       `SELECT * FROM reservations WHERE id = @id`,
     );
@@ -662,24 +581,23 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
     if (reservationResult.recordset.length === 0) {
       return res
         .status(404)
-        .json({ success: false, message: "Không tìm thấy đặt bàn." });
+        .json({
+          success: false,
+          message: "Không tìm thấy dữ liệu đơn đặt bàn.",
+        });
     }
 
     const reservation = reservationResult.recordset[0];
 
-    // 2. Cập nhật trạng thái mới vào Cơ sở dữ liệu
     request.input("status", sql.NVarChar, status);
-    await request.query(`
-      UPDATE reservations
-      SET status = @status
-      WHERE id = @id
-    `);
+    await request.query(
+      `UPDATE reservations SET status = @status WHERE id = @id`,
+    );
 
-    // 3. Xử lý gửi Gmail thông báo tự động (Đã bọc try-catch để tránh sập server khi lỗi mail)
     const recipientEmail = String(
       reservation.email || req.body.email || "",
     ).trim();
-    let emailStatusMsg = "Khách hàng không đăng ký địa chỉ email.";
+    let emailStatusMsg = "Khách hàng không để lại email.";
 
     if (
       recipientEmail &&
@@ -688,14 +606,11 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
     ) {
       try {
         const isApproved = status === "Confirmed" || req.body.approved === true;
-
-        // Chuẩn hóa định dạng ngày hiển thị (dd/mm/yyyy)
         const displayDate = reservation.booking_date
           ? new Date(reservation.booking_date).toLocaleDateString("vi-VN")
-          : "Không có";
+          : "Chưa xác định";
 
-        // Chuẩn hóa định dạng giờ hiển thị (hh:mm)
-        let displayTime = "Không có";
+        let displayTime = "Chưa rõ";
         if (reservation.booking_time) {
           const timeStr =
             reservation.booking_time instanceof Date
@@ -707,58 +622,40 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
         }
 
         const subject = isApproved
-          ? "Yêu cầu đặt bàn của bạn đã được duyệt - The King Restaurant"
+          ? "Yêu cầu đặt bàn đã được duyệt - The King Restaurant"
           : "Thông báo về yêu cầu đặt bàn - The King Restaurant";
-
         const html = `
-          <p>Xin chào <strong>${reservation.customer_name || "khách hàng"}</strong>,</p>
-          <p>Yêu cầu đặt bàn của bạn vào ngày <strong>${displayDate}</strong> lúc <strong>${displayTime}</strong> đã được nhà hàng <strong>${
-            isApproved ? "DUYỆT THÀNH CÔNG" : "TỪ CHỐI TIẾP NHẬN"
-          }</strong>.</p>
-          
-          <hr style="border: none; border-top: 1px solid #eee;" />
-          <p><strong>Chi tiết thông tin lịch đặt của bạn:</strong></p>
-          <ul style="list-style-type: none; padding-left: 0;">
-            <li style="margin-bottom: 8px;">• <strong>Tên khách hàng:</strong> ${reservation.customer_name || "Khách hàng"}</li>
-            <li style="margin-bottom: 8px;">• <strong>Số điện thoại:</strong> ${reservation.phone || "Không có"}</li>
-            <li style="margin-bottom: 8px;">• <strong>Ngày đặt bàn:</strong> ${displayDate}</li>
-            <li style="margin-bottom: 8px;">• <strong>Giờ nhận bàn:</strong> ${displayTime}</li>
-            <li style="margin-bottom: 8px;">• <strong>Số lượng khách:</strong> ${reservation.guests || 1} người</li>
-            <li style="margin-bottom: 8px;">• <strong>Ghi chú đi kèm:</strong> ${reservation.note || "Không có"}</li>
+          <p>Xin chào <strong>${reservation.customer_name || "Quý khách"}</strong>,</p>
+          <p>Yêu cầu đặt bàn của bạn vào ngày <strong>${displayDate}</strong> lúc <strong>${displayTime}</strong> đã được nhà hàng <strong>${isApproved ? "DUYỆT THÀNH CÔNG" : "TỪ CHỐI TIẾP NHẬN"}</strong>.</p>
+          <hr/>
+          <p><strong>Chi tiết lịch đặt bàn:</strong></p>
+          <ul>
+            <li>Tên khách hàng: ${reservation.customer_name}</li>
+            <li>Số điện thoại: ${reservation.phone}</li>
+            <li>Thời gian nhận bàn: ${displayTime} ngày ${displayDate}</li>
+            <li>Số lượng khách: ${reservation.guests} người</li>
+            <li>Ghi chú đi kèm: ${reservation.note || "Không"}</li>
           </ul>
-          <hr style="border: none; border-top: 1px solid #eee;" />
-
-          <p>Cảm ơn bạn đã tin tưởng sử dụng dịch vụ của chúng tôi.</p>
-          <p>Mọi thắc mắc hoặc cần hỗ trợ thay đổi thông tin gấp, vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
-          <br />
-          <p>Trân trọng,</p>
-          <p><strong>Ban quản lý The King Restaurant</strong></p>
-          <p style="font-size: 0.8rem; color: #888;">(Email này được gửi tự động, vui lòng không trả lời trực tiếp. Xin cảm ơn)</p>
+          <hr/>
+          <p>Mọi thắc mắc vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
+          <p>Trân trọng,<br/><strong>Ban quản lý The King Restaurant</strong></p>
         `;
 
-        // Thực thi gọi hàm cấu hình Nodemailer
-        await sendStatusEmail({
-          to: recipientEmail,
-          subject,
-          html,
-        });
-
-        emailStatusMsg = "Đã gửi email thông báo tới khách hàng thành công!";
-      } catch (emailErr) {
-        console.error(">>> Lỗi khi gửi Email:", emailErr.message);
+        await sendStatusEmail({ to: recipientEmail, subject, html });
         emailStatusMsg =
-          "Lỗi hệ thống gửi mail (Vui lòng kiểm tra lại thông tin cấu hình Nodemailer).";
+          "Hệ thống đã tự động gửi thư điện tử thông báo lịch trình thành công!";
+      } catch (emailErr) {
+        emailStatusMsg = "Lỗi cổng SMTP gửi mail.";
       }
     }
 
-    // 4. Phản hồi kết quả về phía Frontend React
     res.json({
       success: true,
-      message: `Cập nhật trạng thái đơn đặt bàn thành công! (${emailStatusMsg})`,
+      message: `Xử lý cập nhật trạng thái đơn thành công! (${emailStatusMsg})`,
     });
   } catch (err) {
-    console.error(">>> Lỗi cập nhật trạng thái đơn:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
 export default router;

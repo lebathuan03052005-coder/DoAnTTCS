@@ -13,25 +13,24 @@ const AdminManageTables = () => {
   const [newStatus, setNewStatus] = useState("");
   const [newStyleId, setNewStyleId] = useState(null);
 
+  const fetchTables = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/admin/restaurant_tables",
+      );
+      const result = await response.json();
+
+      if (result.success) {
+        setTables(result.data);
+      } else {
+        console.error("Lỗi:", result.message);
+      }
+    } catch (error) {
+      console.error("Không kết nối được Backend:", error);
+    }
+  };
   // Gọi API
   useEffect(() => {
-    const fetchTables = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/admin/restaurant_tables",
-        );
-        const result = await response.json();
-
-        if (result.success) {
-          setTables(result.data);
-        } else {
-          console.error("Lỗi:", result.message);
-        }
-      } catch (error) {
-        console.error("Không kết nối được Backend:", error);
-      }
-    };
-
     fetchTables();
     // fetch styles for selection
     const fetchStyles = async () => {
@@ -86,7 +85,6 @@ const AdminManageTables = () => {
   // Gửi API cập nhật trạng thái lên Backend
   const handleUpdateStatus = async () => {
     try {
-      // call unified update endpoint to set status and style
       const response = await fetch(
         `http://localhost:5000/api/admin/restaurant_tables/${selectedTable.table_number}`,
         {
@@ -98,22 +96,13 @@ const AdminManageTables = () => {
           }),
         },
       );
+
       const result = await response.json();
 
       if (result.success) {
-        setTables((prev) =>
-          prev.map((t) =>
-            t.table_number === selectedTable.table_number
-              ? {
-                  ...t,
-                  status: newStatus,
-                  style_id: newStyleId,
-                  style_name: styles.find((s) => s.id === newStyleId)
-                    ?.style_name,
-                }
-              : t,
-          ),
-        );
+        // gọi lại API để lấy dữ liệu mới nhất
+        await fetchTables();
+
         handleCloseModal();
       } else {
         alert("Lỗi: " + result.message);

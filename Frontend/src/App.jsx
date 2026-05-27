@@ -50,6 +50,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 // Component chứa nội dung và logic ẩn/hiện Chatbot
+// ── Component chứa nội dung và logic ẩn/hiện Chatbot ─────────────────────────
 function MainLayout() {
   const { pathname } = useLocation();
   const isAdmin = ADMIN_PATHS.some((p) => pathname.startsWith(p));
@@ -57,9 +58,17 @@ function MainLayout() {
   return (
     <div
       className="App"
+      // 🌟 minHeight: "100vh" và display: "flex" giúp toàn bộ app luôn cao bằng hoặc hơn màn hình
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
     >
-      <div style={{ flex: 1 }}>
+      {/* Phần nội dung chính của trang */}
+      <div
+        style={{
+          flex: "1 0 auto", // 🌟 SỬA Ở ĐÂY: Giúp div này tự động phình to hết cỡ để ĐẨY Footer xuống dưới cùng
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Routes>
           {/* CÁC TRANG CỦA KHÁCH */}
           <Route path="/" element={<HomePage />} />
@@ -135,8 +144,12 @@ function MainLayout() {
         </Routes>
       </div>
 
-      <Footer />
-
+      {/* 🌟 Footer luôn được đảm bảo nằm dưới cùng của trang */}
+      <div
+        style={{ zIndex: 9995, position: "relative", background: "#0e0c09" }}
+      >
+        <Footer />
+      </div>
       {/* Nếu KHÔNG PHẢI là trang admin thì mới render Chatbot */}
       {!isAdmin && <Chatbot />}
     </div>

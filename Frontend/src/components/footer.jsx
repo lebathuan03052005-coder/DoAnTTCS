@@ -49,20 +49,21 @@ const Footer = () => {
             <a href="tel:0862680850">0862 680 850</a>
           </p>
           <p>
-            <strong>📧 Email:</strong> contact@theking.com
+            <strong>📧 Email:</strong> lebathuan0305@gmail.com
           </p>
           <p>
             <strong>⏰ Mở cửa:</strong> 09:00 AM - 10:30 PM
           </p>
         </div>
-      </div>
 
-      {/* Dải bản quyền dưới cùng */}
-      <div className="footer-bottom">
-        <hr className="footer-line" />
-        <p>
-          © {new Date().getFullYear()} The King Restaurant. All rights reserved.
-        </p>
+        {/* Dải bản quyền dưới cùng */}
+        <div className="footer-bottom">
+          <hr className="footer-line" />
+          <p>
+            © {new Date().getFullYear()} The King Restaurant. All rights
+            reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );

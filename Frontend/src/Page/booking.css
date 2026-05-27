@@ -7,6 +7,8 @@
   flex-direction: column;
   align-items: center;
   padding: 32px 16px 48px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .main-content {
@@ -14,8 +16,9 @@
   width: 100%;
   max-width: 1080px;
   background-color: #ffffff;
+  margin: 0 auto;
+  border-radius: 32px; /* Đồng bộ bo góc nếu cần */
 }
-
 .booking-section {
   background: #ffffff;
   border: 1px solid rgba(148, 163, 184, 0.18);
@@ -31,10 +34,13 @@
 }
 
 .section-title {
+  display: block !important;
+  width: 100% !important;
   font-size: 32px;
   color: #0f172a;
-  text-align: center;
+  text-align: center !important;
   margin-top: 20px;
+  margin-bottom: 10px;
   font-weight: 800;
 }
 
@@ -48,7 +54,6 @@
 }
 
 .booking-container {
-  display: flex;
   justify-content: center;
 }
 

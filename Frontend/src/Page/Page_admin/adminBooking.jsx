@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar";
 import Admin from "./admin";
+
+// ── IMPORT CÁC FILE CSS RIÊNG CỦA BẠN ─────────────────────────────────────────
 import "./adminCommon.css";
 import "./adminBooking.css";
 
@@ -41,6 +43,7 @@ export default function AdminBooking() {
       const data = await response.json();
       let resData = Array.isArray(data) ? data : data.data || [];
 
+      // Sắp xếp ngày mới lên đầu, cùng ngày thì giờ sớm lên đầu
       resData.sort((a, b) => {
         const dateA = new Date(a.booking_date || 0).getTime();
         const dateB = new Date(b.booking_date || 0).getTime();
@@ -52,7 +55,7 @@ export default function AdminBooking() {
       });
       setReservations(resData);
     } catch (err) {
-      console.error(err);
+      console.error("[AdminBooking] Lỗi lấy đơn đặt bàn:", err);
       setReservations([]);
     }
   };
@@ -63,7 +66,7 @@ export default function AdminBooking() {
       const data = await response.json();
       setTables(data.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("[AdminBooking] Lỗi lấy danh sách bàn:", err);
     }
   };
 
@@ -73,7 +76,7 @@ export default function AdminBooking() {
       const data = await response.json();
       setStyles(data.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("[AdminBooking] Lỗi lấy danh sách style bàn:", err);
     }
   };
 
@@ -81,9 +84,9 @@ export default function AdminBooking() {
     (table) => table.status === "Con trong",
   );
 
-  // ==========================================
-  // LOGIC ĐƠN ĐẶT BÀN (XẾP BÀN, DUYỆT, XÓA)
-  // ==========================================
+  // ==========================================================================
+  // LOGIC XỬ LÝ HÀNH ĐỘNG
+  // ==========================================================================
   const openAssignModal = (reservation) => {
     setSelectedReservation(reservation);
     setAssignTableNumber("");
@@ -97,7 +100,6 @@ export default function AdminBooking() {
     }
 
     try {
-      // Chỉ cần gọi ĐÚNG 1 API duy nhất này!
       const response = await fetch(
         `${API_BASE}/admin/reservations/${selectedReservation.id}/assign-table`,
         {
@@ -112,15 +114,14 @@ export default function AdminBooking() {
       if (data.success) {
         alert("🎉 Xếp bàn thành công!");
         setSelectedReservation(null);
-        loadData(); // Cập nhật lại toàn bộ bảng và danh sách bàn
+        loadData(); // Tải lại dữ liệu để cập nhật số bàn
       } else {
-        alert(" Lỗi: " + data.message);
+        alert("Thất bại: " + data.message);
         setFeedback(data.message);
       }
     } catch (err) {
       console.error(err);
-      alert(" Lỗi kết nối API! Hãy kiểm tra Server Backend.");
-      setFeedback("Lỗi kết nối đến máy chủ.");
+      alert("Lỗi kết nối API xếp bàn.");
     }
   };
 
@@ -131,17 +132,15 @@ export default function AdminBooking() {
         reservation.assigned_table ||
         reservation.table_id;
       if (!hasTable) {
-        alert(
-          " CHÚ Ý: Vui lòng [Xếp bàn] cho khách hàng này trước khi bấm Duyệt đơn!",
-        );
+        alert("⚠️ Vui lòng bấm [Xếp] bàn cho khách trước khi Duyệt đơn!");
         return;
       }
     }
 
     const newStatus = isApproved ? "Confirmed" : "Cancelled";
     const confirmMessage = isApproved
-      ? `DUYỆT đơn của khách ${reservation.customer_name}?`
-      : `TỪ CHỐI đơn của khách ${reservation.customer_name}?`;
+      ? `Bạn muốn DUYỆT đơn của khách: ${reservation.customer_name}?`
+      : `Bạn muốn TỪ CHỐI đơn của khách: ${reservation.customer_name}?`;
 
     if (!window.confirm(confirmMessage)) return;
     setProcessingIds((p) => [...p, reservation.id]);
@@ -164,13 +163,13 @@ export default function AdminBooking() {
       );
       const data = await response.json();
       if (data.success) {
-        alert(`Đã ${isApproved ? "Duyệt" : "Từ chối"} thành công!`);
+        alert(`Đã ${isApproved ? "Duyệt" : "Từ chối"} đơn thành công!`);
         await fetchReservations();
       } else {
-        alert(data.message || "Thất bại.");
+        alert(data.message || "Xử lý trạng thái thất bại.");
       }
     } catch (err) {
-      alert("Lỗi kết nối.");
+      alert("Lỗi kết nối máy chủ khi duyệt.");
     } finally {
       setProcessingIds((p) => p.filter((id) => id !== reservation.id));
     }
@@ -179,7 +178,7 @@ export default function AdminBooking() {
   const handleDeleteReservation = async (id) => {
     if (
       !window.confirm(
-        "🚨 BẠN CÓ CHẮC CHẮN MUỐN XÓA ĐƠN NÀY KHÔNG? Hành động này không thể hoàn tác!",
+        "🚨 HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc muốn xóa đơn này?",
       )
     )
       return;
@@ -190,12 +189,54 @@ export default function AdminBooking() {
       const data = await response.json();
       if (data.success) {
         setReservations((prev) => prev.filter((r) => r.id !== id));
-        alert("Đã xóa đơn đặt bàn thành công.");
+        alert("Đã dọn dẹp dữ liệu đơn thành công.");
       } else {
-        alert(data.message || "Không thể xóa đơn.");
+        alert(data.message || "Không thể xóa.");
       }
     } catch (err) {
-      alert("Lỗi khi xóa đơn.");
+      alert("Lỗi kết nối khi xóa.");
+    }
+  };
+
+  const handleUpdateTableStyle = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.id}/style`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ table_style: editTableStyle }),
+        },
+      );
+      const data = await response.json();
+      if (data.success) {
+        alert("Cập nhật style không gian bàn thành công!");
+        setSelectedTableDetails(null);
+        loadData();
+      }
+    } catch (err) {
+      alert("Lỗi cập nhật cấu trúc style.");
+    }
+  };
+
+  const handleDeleteTable = async () => {
+    if (!window.confirm("Xóa bỏ bàn này hoàn toàn khỏi sơ đồ nhà hàng?"))
+      return;
+    try {
+      const response = await fetch(
+        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+      const data = await response.json();
+      if (data.success) {
+        alert("Đã gỡ bàn thành công.");
+        setSelectedTableDetails(null);
+        loadData();
+      }
+    } catch (err) {
+      alert("Lỗi hệ thống khi gỡ bàn.");
     }
   };
 
@@ -203,57 +244,7 @@ export default function AdminBooking() {
     setViewDetailsModal(reservation);
   };
 
-  const openTableDetailsModal = (table) => {
-    setSelectedTableDetails(table);
-    setEditTableStyle(table.table_style || table.style_name || "");
-  };
-
-  const handleUpdateTableStyle = async () => {
-    if (!selectedTableDetails || !editTableStyle) return;
-    try {
-      const response = await fetch(
-        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.table_number}/style`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ style_name: editTableStyle }),
-        },
-      );
-      const data = await response.json();
-      if (data.success) {
-        alert("Đã cập nhật Style cho bàn thành công!");
-        setSelectedTableDetails(null);
-        fetchTables();
-      } else {
-        alert(data.message || "Cập nhật Style thất bại.");
-      }
-    } catch (err) {
-      alert("Lỗi kết nối khi cập nhật Style.");
-    }
-  };
-
-  const handleDeleteTable = async () => {
-    if (!window.confirm(`XÓA Bàn số ${selectedTableDetails.table_number}?`))
-      return;
-    try {
-      const response = await fetch(
-        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.table_number}`,
-        { method: "DELETE" },
-      );
-      const data = await response.json();
-      if (data.success) {
-        alert("Xóa bàn thành công.");
-        setSelectedTableDetails(null);
-        fetchTables();
-      } else {
-        alert(data.message || "Xóa bàn thất bại.");
-      }
-    } catch (err) {
-      alert("Lỗi kết nối khi xóa bàn.");
-    }
-  };
-
-  // --- HELPERS ---
+  // ── HELPERS FORMAT VĂN BẢN ──────────────────────────────────────────────────
   const formatDisplayDate = (value) => {
     if (!value) return "-";
     const dateValue = new Date(value);
@@ -292,10 +283,14 @@ export default function AdminBooking() {
       <div className="admin-layout">
         <Admin />
         <div className="admin-content admin-booking-page">
+          {/* Header Bảng Điều Khiển */}
           <div className="admin-panel-header">
             <div>
               <h2>Quản lý đặt bàn</h2>
-              <p>Duyệt đơn, xếp bàn, cập nhật style bàn và dọn dẹp dữ liệu.</p>
+              <p>
+                Duyệt đơn, xếp bàn trực quan, đồng bộ hóa dữ liệu khách hàng hệ
+                thống.
+              </p>
             </div>
             <div className="action-row">
               <button className="btn-secondary" onClick={loadData}>
@@ -304,16 +299,31 @@ export default function AdminBooking() {
             </div>
           </div>
 
+          {/* Grid Nội Dung Khối Danh Sách */}
           <div className="booking-grid">
             <section className="booking-list card-block">
-              <div className="section-title">
-                <h3>Danh sách đặt bàn</h3>
-                <span>{reservations.length} khách đã đặt</span>
+              <div
+                className="section-title"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <h3>Danh sách khách hàng đặt bàn</h3>
+                <span>
+                  Có <strong>{reservations.length}</strong> lượt bản ghi
+                </span>
               </div>
+
               {loading ? (
-                <div className="empty-state">Đang tải dữ liệu...</div>
+                <div className="empty-state">
+                  Đang đồng bộ dữ liệu từ server cơ sở...
+                </div>
               ) : reservations.length === 0 ? (
-                <div className="empty-state">Không có đặt bàn nào.</div>
+                <div className="empty-state">
+                  Hiện tại không có dữ liệu đơn đặt bàn nào được ghi nhận.
+                </div>
               ) : (
                 <div className="table-wrapper">
                   <table
@@ -322,15 +332,15 @@ export default function AdminBooking() {
                   >
                     <thead>
                       <tr>
-                        <th style={{ width: "10%" }}>Khách hàng</th>
-                        <th style={{ width: "10%" }}>Điện thoại</th>
-                        <th style={{ width: "15%" }}>Ghi chú</th>
-                        <th style={{ width: "6%" }}>Giờ</th>
+                        <th style={{ width: "12%" }}>Khách hàng</th>
+                        <th style={{ width: "11%" }}>Điện thoại</th>
+                        <th style={{ width: "18%" }}>Ghi chú đặc biệt</th>
+                        <th style={{ width: "7%" }}>Giờ</th>
                         <th style={{ width: "6%" }}>Khách</th>
-                        <th style={{ width: "7%" }}>Trạng thái</th>
-                        <th style={{ width: "6%" }}>Bàn</th>
-                        <th style={{ width: "40%", textAlign: "center" }}>
-                          Hành động
+                        <th style={{ width: "10%" }}>Trạng thái</th>
+                        <th style={{ width: "8%" }}>Mã bàn</th>
+                        <th style={{ width: "28%", textAlign: "center" }}>
+                          Hành động xử lý
                         </th>
                       </tr>
                     </thead>
@@ -347,24 +357,30 @@ export default function AdminBooking() {
                             : null;
                         const isNewDay = currentDateStr !== prevDateStr;
 
+                        const statusText =
+                          normalizeReservationStatus(reservation);
+
                         return (
                           <React.Fragment key={reservation.id}>
+                            {/* Thanh phân cách theo từng Ngày riêng biệt */}
                             {isNewDay && (
                               <tr className="date-separator-row">
                                 <td
                                   colSpan="8"
                                   className="date-separator-cell"
                                   style={{
-                                    padding: "10px",
+                                    padding: "12px 16px",
                                     fontWeight: "bold",
-                                    backgroundColor: "#f0f4f8",
+                                    backgroundColor: "#edf4fc",
                                     borderTop: "2px solid #cbd5e1",
                                   }}
                                 >
-                                  Ngày: {currentDateStr}
+                                  🗓️ Lịch đặt bàn ngày: {currentDateStr}
                                 </td>
                               </tr>
                             )}
+
+                            {/* Dòng dữ liệu chính */}
                             <tr>
                               <td
                                 style={{
@@ -378,7 +394,6 @@ export default function AdminBooking() {
                               </td>
                               <td>{reservation.phone || "-"}</td>
                               <td
-                                className="note-cell"
                                 style={{
                                   whiteSpace: "nowrap",
                                   overflow: "hidden",
@@ -386,31 +401,29 @@ export default function AdminBooking() {
                                 }}
                                 title={reservation.note}
                               >
-                                {reservation.note || "Không"}
+                                {reservation.note || "Không có yêu cầu"}
                               </td>
                               <td>
                                 <strong>
                                   {formatDisplayTime(reservation.booking_time)}
                                 </strong>
                               </td>
-                              <td>{reservation.guests || 1}</td>
+                              <td>{reservation.guests || 1} người</td>
                               <td>
                                 <span
-                                  className={`status-badge ${getStatusClass(normalizeReservationStatus(reservation))}`}
+                                  className={`status-badge ${getStatusClass(statusText)}`}
                                 >
-                                  {normalizeReservationStatus(reservation)}
+                                  {statusText}
                                 </span>
                               </td>
                               <td>
-                                {reservation.assigned_table ||
-                                  reservation.table_number ||
-                                  "Chưa xếp"}
+                                <strong>
+                                  {reservation.assigned_table ||
+                                    reservation.table_number ||
+                                    "Trống"}
+                                </strong>
                               </td>
-
-                              <td
-                                className="table-actions"
-                                style={{ justifyContent: "center" }}
-                              >
+                              <td className="table-actions">
                                 <button
                                   className="btn-outline btn-details"
                                   onClick={() => openDetails(reservation)}
@@ -420,10 +433,7 @@ export default function AdminBooking() {
                                 <button
                                   className="btn-secondary"
                                   onClick={() => openAssignModal(reservation)}
-                                  disabled={
-                                    normalizeReservationStatus(reservation) ===
-                                    "Từ chối"
-                                  }
+                                  disabled={statusText === "Từ chối"}
                                 >
                                   Xếp
                                 </button>
@@ -432,10 +442,7 @@ export default function AdminBooking() {
                                   onClick={() =>
                                     handleReviewReservation(reservation, true)
                                   }
-                                  disabled={
-                                    normalizeReservationStatus(reservation) !==
-                                    "Chờ duyệt"
-                                  }
+                                  disabled={statusText !== "Chờ duyệt"}
                                 >
                                   Duyệt
                                 </button>
@@ -444,7 +451,10 @@ export default function AdminBooking() {
                                   onClick={() =>
                                     handleDeleteReservation(reservation.id)
                                   }
-                                  style={{ backgroundColor: "#dc2626" }}
+                                  style={{
+                                    backgroundColor: "#dc2626",
+                                    color: "#fff",
+                                  }}
                                 >
                                   Xóa
                                 </button>
@@ -462,12 +472,12 @@ export default function AdminBooking() {
         </div>
       </div>
 
-      {/* 1. MODAL XẾP BÀN CHO KHÁCH */}
+      {/* ── MODAL 1: XẾP BÀN TRỐNG CHO KHÁCH KHÁCH ──────────────────────────────── */}
       {selectedReservation && (
         <div className="admin-modal-backdrop">
           <div className="admin-modal">
             <div className="modal-header">
-              <h3>Xếp khách: {selectedReservation.customer_name}</h3>
+              <h3>Xếp mã bàn cho: {selectedReservation.customer_name}</h3>
               <button
                 className="close-button"
                 onClick={() => setSelectedReservation(null)}
@@ -476,36 +486,56 @@ export default function AdminBooking() {
               </button>
             </div>
             <div className="modal-body">
-              <label>Chọn bàn trống</label>
+              <label
+                style={{
+                  fontWeight: 600,
+                  marginBottom: "8px",
+                  display: "block",
+                }}
+              >
+                Danh sách các bàn đang trống hiện tại:
+              </label>
               <select
                 value={assignTableNumber}
                 onChange={(e) => setAssignTableNumber(e.target.value)}
+                style={{ width: "100%", padding: "10px", borderRadius: "8px" }}
               >
-                <option value="">-- Chọn bàn --</option>
+                <option value="">-- Click chọn vị trí bàn --</option>
                 {availableTables.map((table) => (
                   <option key={table.table_number} value={table.table_number}>
-                    Bàn {table.table_number}
+                    Bàn số {table.table_number}
                   </option>
                 ))}
               </select>
-              {feedback && <p className="modal-feedback">{feedback}</p>}
+              {feedback && (
+                <p
+                  className="modal-feedback"
+                  style={{
+                    color: "#ef4444",
+                    marginTop: "8px",
+                    fontSize: "13px",
+                  }}
+                >
+                  {feedback}
+                </p>
+              )}
             </div>
             <div className="modal-actions">
               <button
                 className="btn-outline"
                 onClick={() => setSelectedReservation(null)}
               >
-                Hủy
+                Hủy bỏ
               </button>
               <button className="btn-primary" onClick={handleAssignTable}>
-                Xác nhận xếp bàn
+                Lưu cấu hình xếp
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 2. MODAL CHI TIẾT ĐƠN (Đã bỏ phần nhập ghi chú style) */}
+      {/* ── MODAL 2: XEM TOÀN BỘ CHI TIẾT ĐƠN ĐẶT ────────────────────────────────── */}
       {viewDetailsModal && (
         <div className="admin-modal-backdrop">
           <div
@@ -513,7 +543,7 @@ export default function AdminBooking() {
             style={{ maxWidth: "550px" }}
           >
             <div className="modal-header">
-              <h3>Chi tiết đơn đặt bàn</h3>
+              <h3>Hồ sơ chi tiết đơn đặt bàn</h3>
               <button
                 className="close-button"
                 onClick={() => setViewDetailsModal(null)}
@@ -525,35 +555,42 @@ export default function AdminBooking() {
               <div
                 style={{
                   backgroundColor: "#f1f5f9",
-                  padding: "16px 20px",
+                  padding: "20px",
                   borderRadius: "12px",
-                  marginBottom: "10px",
-                  color: "#333",
+                  color: "#1e293b",
+                  lineHeight: "1.8",
                 }}
               >
-                <p style={{ margin: "0 0 10px 0" }}>
-                  <strong>Khách hàng:</strong> {viewDetailsModal.customer_name}
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>👤 Tên khách hàng:</strong>{" "}
+                  {viewDetailsModal.customer_name}
                 </p>
-                <p style={{ margin: "0 0 10px 0" }}>
-                  <strong>Số điện thoại:</strong> {viewDetailsModal.phone}
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>📞 Số điện thoại:</strong> {viewDetailsModal.phone}
                 </p>
-                <p style={{ margin: "0 0 10px 0" }}>
-                  <strong>Ngày & Giờ:</strong>{" "}
-                  {formatDisplayDate(viewDetailsModal.booking_date)} lúc{" "}
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>📧 Địa chỉ Email:</strong>{" "}
+                  {viewDetailsModal.email || "Không cung cấp"}
+                </p>
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>📅 Lịch hẹn:</strong> Ngày{" "}
+                  {formatDisplayDate(viewDetailsModal.booking_date)} vào lúc{" "}
                   {formatDisplayTime(viewDetailsModal.booking_time)}
                 </p>
-                <p style={{ margin: "0 0 10px 0" }}>
-                  <strong>Số người:</strong> {viewDetailsModal.guests} người
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>👥 Số lượng khách đến:</strong>{" "}
+                  {viewDetailsModal.guests} người lớn
                 </p>
-                <p style={{ margin: "0 0 10px 0" }}>
-                  <strong>Ghi chú:</strong>{" "}
-                  {viewDetailsModal.note || "Không có"}
+                <p style={{ margin: "0 0 8px 0" }}>
+                  <strong>📝 Nội dung ghi chú:</strong>{" "}
+                  {viewDetailsModal.note ||
+                    "Không có yêu cầu đặc biệt nào từ khách"}
                 </p>
                 <p style={{ margin: 0 }}>
-                  <strong>Bàn đã xếp:</strong>{" "}
+                  <strong>🪑 Trạng thái vị trí bàn:</strong> Bàn số{" "}
                   {viewDetailsModal.assigned_table ||
                     viewDetailsModal.table_number ||
-                    "Chưa xếp"}
+                    "Chưa được điều phối"}
                 </p>
               </div>
             </div>
@@ -564,82 +601,6 @@ export default function AdminBooking() {
               >
                 Đóng cửa sổ
               </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 3. MODAL CHI TIẾT & QUẢN LÝ TỪNG BÀN */}
-      {selectedTableDetails && (
-        <div className="admin-modal-backdrop">
-          <div className="admin-modal">
-            <div className="modal-header">
-              <h3>Chi tiết Bàn {selectedTableDetails.table_number}</h3>
-              <button
-                className="close-button"
-                onClick={() => setSelectedTableDetails(null)}
-              >
-                ×
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>
-                <strong>Trạng thái:</strong>{" "}
-                {selectedTableDetails.status === "Con trong"
-                  ? "Đang trống"
-                  : "Có khách"}
-              </p>
-              <p>
-                <strong>Style đang dùng:</strong>{" "}
-                {selectedTableDetails.table_style ||
-                  selectedTableDetails.style_name ||
-                  "Chưa có"}
-              </p>
-              <label style={{ marginTop: "15px", display: "block" }}>
-                Thay đổi Style cho bàn này:
-              </label>
-              <select
-                value={editTableStyle}
-                onChange={(e) => setEditTableStyle(e.target.value)}
-                style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-              >
-                <option value="">-- Chọn Style --</option>
-                {styles.map((style) => (
-                  <option
-                    key={style.id || style.style_name}
-                    value={style.style_name}
-                  >
-                    {style.style_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div
-              className="modal-actions"
-              style={{ justifyContent: "space-between" }}
-            >
-              <button
-                className="btn-reject"
-                style={{ backgroundColor: "#dc2626" }}
-                onClick={handleDeleteTable}
-              >
-                Xóa bàn
-              </button>
-              <div>
-                <button
-                  className="btn-outline"
-                  style={{ marginRight: "10px" }}
-                  onClick={() => setSelectedTableDetails(null)}
-                >
-                  Đóng
-                </button>
-                <button
-                  className="btn-primary"
-                  onClick={handleUpdateTableStyle}
-                >
-                  Lưu Style
-                </button>
-              </div>
             </div>
           </div>
         </div>
