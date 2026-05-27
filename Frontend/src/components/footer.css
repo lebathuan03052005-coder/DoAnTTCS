@@ -4,9 +4,13 @@
   padding: 60px 0 20px; /* Thêm khoảng trống phía trên cho thoáng */
   font-family: sans-serif;
   border-top: 2px solid #d4af37;
-  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
+  z-index: 99;
 
-  /* Viền vàng hoàng gia chốt chặn ở trên */
+  /* ✅ FIX: Đảm bảo footer luôn có nền đen đặc trên MỌI trang,
+     không bị ảnh nền fixed của homepage xuyên thấu qua */
+  background-color: #000;
+  position: relative;
+  width: 100%;
 }
 
 /* ===== BA CỘT CHÍNH (FLEXBOX) ===== */
@@ -123,10 +127,12 @@
 .content {
   flex: 1; /* 🔥 đẩy footer xuống cuối */
 }
-/* Trong file CSS của Footer hoặc style trực tiếp */
-footer {
+/* ✅ Áp dụng cho cả thẻ <footer> HTML lẫn class .footer
+   để không trang nào bị trong suốt dù dùng cách nào */
+footer,
+.footer {
   position: relative;
-  z-index: 99; /* Đảm bảo số này lớn hơn z-index của sidebar nếu cần */
+  z-index: 99;
   width: 100%;
-  background-color: #000; /* Đảm bảo có màu nền để không bị nhìn xuyên thấu */
+  background-color: #000 !important;
 }

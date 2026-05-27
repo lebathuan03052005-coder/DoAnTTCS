@@ -30,17 +30,21 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center; /* Căn giữa theo chiều dọc cho toàn bộ thành phần */
-  background-color: #0e0e0e;
-  box-shadow: #6a6868 0px 4px 12px -1px;
+  /* Make navbar semi-transparent so page background can show through */
+  background-color: rgba(14,14,14,0.6);
+  box-shadow: rgba(106,104,104,0.18) 0px 4px 12px -1px;
   border-radius: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  /* Use left/right inset instead of margins to avoid horizontal overflow */
+  left: 20px;
+  right: 20px;
 }
 .navbar {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  /* keep 20px spacing from both edges without increasing total width */
+  left: 20px;
+  right: 20px;
+  width: calc(100% - 40px);
   height: 90px;
   z-index: 1000;
 }
