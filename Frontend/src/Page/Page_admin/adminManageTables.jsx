@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar";
-import "./adminCommon.css";
 import "./adminManageTables.css";
 import Admin from "./admin";
 const AdminManageTables = () => {
@@ -118,7 +117,7 @@ const AdminManageTables = () => {
 
       <div className="main-content">
         <Navbar />
-        <main style={{ flex: 1, backgroundColor: "#f4f4f4", padding: "20px" }}>
+        <main>
           <div className="admin-tables-container">
             <h2 className="admin-tables-title">Sơ Đồ Bàn Nhà Hàng</h2>
 

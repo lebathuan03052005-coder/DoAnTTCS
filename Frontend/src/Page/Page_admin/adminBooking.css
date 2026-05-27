@@ -26,8 +26,9 @@
    BOOKING PAGE SPECIFIC STYLES
 ========================================== */
 .admin-booking-page {
-  padding: 105px 24px 32px 24px; /* Giảm nhẹ padding trên mobile */
+  padding: 10px 24px 32px 24px; /* Giảm nhẹ padding trên mobile */
   min-height: 100vh;
+  margin-top: 90px;
   background-color: var(--admin-bg);
   font-family:
     "Inter",

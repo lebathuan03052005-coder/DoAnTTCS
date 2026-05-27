@@ -1,5 +1,4 @@
 .admin-tables-container {
-  background-color: #ffffff;
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -11,6 +10,7 @@
   font-size: 1.8rem;
   border-bottom: 2px solid #eee;
   padding-bottom: 10px;
+  border-radius: 8px;
 }
 
 /* ======= QUICK FILTER ======= */
@@ -145,14 +145,15 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  flex: 999999;
 }
 
 .modal-content {
   background: white;
   padding: 30px;
   border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
+  width: 500px;
+  max-width: 100%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -209,17 +210,12 @@
 }
 .admin-layout {
   display: flex;
-}
-
-/* Sidebar */
-.BangDK {
-  width: 250px;
-  height: 100vh;
-  background-color: var(--sidebar-color);
+  min-height: 100vh;
 }
 
 /* Nội dung tự động né sidebar */
 .main-content {
   flex: 1;
   background: var(--bg-admin);
+  margin-top: 90px; /* leave space for top admin header */
 }

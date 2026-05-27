@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // 🌟 ĐÃ SỬA: Bổ sung thêm useEffect vào đây kẻo lỗi sập trang
 import Navbar from "../../components/navbar";
+import Admin from "./admin";
 import "./adminCommon.css";
 import "./adminAddMenu.css";
-import Admin from "./admin";
+
 export default function AdminAddMenu() {
+  const [categoriesList, setCategoriesList] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/admin/categories",
+        );
+        const data = await response.json();
+
+        // Kiểm tra cấu trúc data trả về của bạn là mảng trực tiếp hay nằm trong .data
+        setCategoriesList(Array.isArray(data) ? data : data.data || []);
+      } catch (error) {
+        console.error("Lỗi khi tải danh sách danh mục nhà hàng:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const [formData, setFormData] = useState({
-    category_id: "",
+    category_name: "",
     item_name: "",
     description: "",
     price: "",
@@ -33,6 +54,7 @@ export default function AdminAddMenu() {
       const response = await fetch("http://localhost:5000/api/admin/menu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // Toàn bộ dữ liệu trong formData (bao gồm cả category_name dạng chữ) sẽ được gửi đi
         body: JSON.stringify(formData),
       });
 
@@ -40,8 +62,9 @@ export default function AdminAddMenu() {
 
       if (result.success) {
         alert(result.message);
+        // RESET LẠI FORM SẠCH SẼ SAU KHI THÊM THÀNH CÔNG
         setFormData({
-          category_id: "",
+          category_name: "",
           item_name: "",
           description: "",
           price: "",
@@ -69,10 +92,10 @@ export default function AdminAddMenu() {
           <Navbar />
 
           <div className="admin-menu-container">
-            <h2 className="admin-menu-title">QUẢN LÝ THỰC ĐƠN CỦA NHÀ HÀNG </h2>
+            <h2 className="admin-menu-title">QUẢN LÝ THỰC ĐƠN CỦA NHÀ HÀNG</h2>
 
             <form onSubmit={handleSubmit} className="admin-menu-form">
-              <div className="form-row ">
+              <div className="form-row">
                 <div className="form-group">
                   <label>
                     <b>Tên món ăn (*):</b>
@@ -101,16 +124,24 @@ export default function AdminAddMenu() {
                 </div>
                 <div className="form-group">
                   <label>
-                    <b>ID Danh mục:</b>
+                    <b>Danh mục món ăn (*):</b>
                   </label>
-                  <input
-                    type="number"
-                    name="category_id"
-                    value={formData.category_id}
+                  <select
+                    name="category_name"
+                    value={formData.category_name}
                     onChange={handleChange}
-                    placeholder="VD: 1, 2, 3..."
                     className="form-input"
-                  />
+                    required
+                    style={{ cursor: "pointer" }}
+                  >
+                    <option value="">-- Chọn danh mục món ăn --</option>
+                    {/* Vòng lặp tự động rải các danh mục lấy từ cơ sở dữ liệu */}
+                    {categoriesList.map((cat) => (
+                      <option key={cat.id || cat.name} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -150,7 +181,7 @@ export default function AdminAddMenu() {
               <div className="form-row">
                 <div className="form-group">
                   <label>
-                    <b style={{ color: "#333" }}>thực phẩm gây dị ứng:</b>
+                    <b style={{ color: "#333" }}>Thực phẩm gây dị ứng:</b>
                   </label>
                   <input
                     type="text"

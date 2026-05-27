@@ -11,7 +11,7 @@
 .admin-edit-container {
   padding: 20px;
   margin-top: 90px;
-  margin-left: 250px; /* leave space for left admin menu */
+  margin-left: 100px; /* leave space for left admin menu */
   min-height: calc(100vh - 90px);
   background-color: #f7f7f8;
   width: 100%;
@@ -93,7 +93,7 @@
 /* Responsive */
 @media (max-width: 900px) {
   .admin-edit-container {
-    margin-left: 250px;
+    margin-left: 200px;
     padding: 16px;
   }
   .admin-form {

@@ -32,7 +32,7 @@ async function sendStatusEmail({ to, subject, html }) {
   });
 }
 
-console.log("🚀 FILE adminRoutes.js ĐANG CHẠY ỔN ĐỊNH");
+console.log(" FILE adminRoutes.js ĐANG CHẠY ỔN ĐỊNH");
 
 // 1. API: Đăng nhập Admin
 router.post("/login", async (req, res) => {
@@ -63,11 +63,12 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// 2. API: Thêm món ăn mới
-router.post("/admin/menu", async (req, res) => {
+// 2. API: Cập nhật thông tin món ăn toàn diện (Nhận vào category_name)
+router.put("/admin/menu/:id", async (req, res) => {
   try {
+    const { id } = req.params;
     const {
-      category_id,
+      category_name,
       item_name,
       description,
       price,
@@ -79,13 +80,32 @@ router.post("/admin/menu", async (req, res) => {
       is_vegetarian,
       serving_size,
     } = req.body;
-
     const query = `
-      INSERT INTO menu (category_id, item_name, description, price, image_url, is_best_seller, ingredients, allergy_warnings, is_spicy, is_vegetarian, serving_size)
-      VALUES (@category_id, @item_name, @description, @price, @image_url, @is_best_seller, @ingredients, @allergy_warnings, @is_spicy, @is_vegetarian, @serving_size)
+      UPDATE menu 
+      SET category_id = (SELECT id FROM categories WHERE name = @category_name), 
+          item_name = @item_name, 
+          description = @description, 
+          price = @price, 
+          image_url = @image_url, 
+          is_best_seller = @is_best_seller, 
+          ingredients = @ingredients, 
+          allergy_warnings = @allergy_warnings, 
+          is_spicy = @is_spicy, 
+          is_vegetarian = @is_vegetarian, 
+          serving_size = @serving_size
+      WHERE id = @id
     `;
+
     const request = new sql.Request();
-    request.input("category_id", sql.Int, category_id ? category_id : null);
+    request.input("id", sql.Int, id);
+
+    //  Đổi trường nạp dữ liệu đầu vào thành NVarChar cho chuỗi chữ tiếng Việt
+    request.input(
+      "category_name",
+      sql.NVarChar,
+      category_name ? category_name : null,
+    );
+
     request.input("item_name", sql.NVarChar, item_name);
     request.input(
       "description",
@@ -116,7 +136,7 @@ router.post("/admin/menu", async (req, res) => {
     await request.query(query);
     res.json({
       success: true,
-      message: "Đã nạp món ăn vào Database thành công!",
+      message: "Cập nhật thông tin món ăn theo danh mục thành công!",
     });
   } catch (err) {
     res
@@ -124,12 +144,118 @@ router.post("/admin/menu", async (req, res) => {
       .json({ success: false, message: "Lỗi Database: " + err.message });
   }
 });
+// 2b. API: Thêm món ăn mới toàn diện (Đồng bộ quy đổi danh mục qua category_name)
+router.post("/admin/menu", async (req, res) => {
+  try {
+    const {
+      category_name,
+      item_name,
+      description,
+      price,
+      image_url,
+      is_best_seller,
+      ingredients,
+      allergy_warnings,
+      is_spicy,
+      is_vegetarian,
+      serving_size,
+    } = req.body;
 
-// 3. API: Lấy danh sách toàn bộ món ăn
+    // 🌟 SỬA ĐOẠN INSERT: Dùng Subquery lồng trực tiếp vào câu lệnh VALUES để quy đổi tự động
+    const query = `
+      INSERT INTO menu (
+        category_id, 
+        item_name, 
+        description, 
+        price, 
+        image_url, 
+        is_best_seller, 
+        ingredients, 
+        allergy_warnings, 
+        is_spicy, 
+        is_vegetarian, 
+        serving_size
+      )
+      VALUES (
+        (SELECT id FROM categories WHERE name = @category_name), 
+        @item_name, 
+        @description, 
+        @price, 
+        @image_url, 
+        @is_best_seller, 
+        @ingredients, 
+        @allergy_warnings, 
+        @is_spicy, 
+        @is_vegetarian, 
+        @serving_size
+      )
+    `;
+
+    const request = new sql.Request();
+
+    // Ép kiểu NVarChar để SQL Server đọc hiểu chính xác tiếng Việt có dấu của tên danh mục
+    request.input(
+      "category_name",
+      sql.NVarChar,
+      category_name ? category_name : null,
+    );
+
+    request.input("item_name", sql.NVarChar, item_name);
+    request.input(
+      "description",
+      sql.NVarChar,
+      description ? description : null,
+    );
+    request.input("price", sql.Decimal, price);
+    request.input("image_url", sql.VarChar, image_url ? image_url : null);
+    request.input("is_best_seller", sql.Bit, is_best_seller ? 1 : 0);
+    request.input(
+      "ingredients",
+      sql.NVarChar,
+      ingredients ? ingredients : null,
+    );
+    request.input(
+      "allergy_warnings",
+      sql.NVarChar,
+      allergy_warnings ? allergy_warnings : null,
+    );
+    request.input("is_spicy", sql.Bit, is_spicy ? 1 : 0);
+    request.input("is_vegetarian", sql.Bit, is_vegetarian ? 1 : 0);
+    request.input(
+      "serving_size",
+      sql.NVarChar,
+      serving_size ? serving_size : null,
+    );
+
+    await request.query(query);
+
+    res.json({
+      success: true,
+      message: "Đã nạp món ăn mới vào hệ thống dữ liệu nhà hàng thành công!",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi Database khi thêm món: " + err.message,
+    });
+  }
+});
+
+// 3. API: Lấy danh sách toàn bộ món ăn (Đã sửa đổi bổ sung LEFT JOIN lấy tên danh mục)
 router.get("/admin/menu", async (req, res) => {
   try {
     const request = new sql.Request();
-    const result = await request.query("SELECT * FROM menu ORDER BY id DESC");
+
+    //  Thêm LEFT JOIN để lấy ra cột c.name AS category_name
+    const result = await request.query(`
+      SELECT 
+        m.*,
+        c.name AS category_name
+      FROM menu m
+      LEFT JOIN categories c ON m.category_id = c.id
+      ORDER BY m.id DESC
+    `);
+
     res.json({ success: true, data: result.recordset });
   } catch (err) {
     res
@@ -175,11 +301,21 @@ router.delete("/admin/menu/:id", async (req, res) => {
   }
 });
 
-// 6. API: Lấy thông tin chi tiết 1 món ăn để sửa
+// 6. API: Lấy thông tin chi tiết 1 món ăn để sửa (Đã nâng cấp LEFT JOIN để đồng bộ form sửa)
 router.get("/admin/menu/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const query = `SELECT * FROM menu WHERE id = @id`;
+
+    //  Thêm liên kết LEFT JOIN sang bảng danh mục
+    const query = `
+      SELECT 
+        m.*, 
+        c.name AS category_name 
+      FROM menu m
+      LEFT JOIN categories c ON m.category_id = c.id 
+      WHERE m.id = @id
+    `;
+
     const request = new sql.Request();
     request.input("id", sql.Int, id);
 
@@ -189,7 +325,10 @@ router.get("/admin/menu/:id", async (req, res) => {
     } else {
       res
         .status(404)
-        .json({ success: false, message: "Không tìm thấy món ăn!" });
+        .json({
+          success: false,
+          message: "Không tìm thấy dữ liệu món ăn này!",
+        });
     }
   } catch (err) {
     res
@@ -197,74 +336,28 @@ router.get("/admin/menu/:id", async (req, res) => {
       .json({ success: false, message: "Lỗi Database: " + err.message });
   }
 });
-
-// 7. API: Cập nhật thông tin món ăn toàn diện
-router.put("/admin/menu/:id", async (req, res) => {
+// 7. API Lấy danh sách toàn bộ danh mục món ăn cho Ô chọn Frontend
+router.get("/admin/categories", async (req, res) => {
   try {
-    const { id } = req.params;
-    const {
-      category_id,
-      item_name,
-      description,
-      price,
-      image_url,
-      is_best_seller,
-      ingredients,
-      allergy_warnings,
-      is_spicy,
-      is_vegetarian,
-      serving_size,
-    } = req.body;
-
-    const query = `
-      UPDATE menu 
-      SET category_id = @category_id, item_name = @item_name, description = @description, 
-          price = @price, image_url = @image_url, is_best_seller = @is_best_seller, 
-          ingredients = @ingredients, allergy_warnings = @allergy_warnings, is_spicy = @is_spicy, 
-          is_vegetarian = @is_vegetarian, serving_size = @serving_size
-      WHERE id = @id
-    `;
-
     const request = new sql.Request();
-    request.input("id", sql.Int, id);
-    request.input("category_id", sql.Int, category_id ? category_id : null);
-    request.input("item_name", sql.NVarChar, item_name);
-    request.input(
-      "description",
-      sql.NVarChar,
-      description ? description : null,
-    );
-    request.input("price", sql.Decimal, price);
-    request.input("image_url", sql.VarChar, image_url ? image_url : null);
-    request.input("is_best_seller", sql.Bit, is_best_seller ? 1 : 0);
-    request.input(
-      "ingredients",
-      sql.NVarChar,
-      ingredients ? ingredients : null,
-    );
-    request.input(
-      "allergy_warnings",
-      sql.NVarChar,
-      allergy_warnings ? allergy_warnings : null,
-    );
-    request.input("is_spicy", sql.Bit, is_spicy ? 1 : 0);
-    request.input("is_vegetarian", sql.Bit, is_vegetarian ? 1 : 0);
-    request.input(
-      "serving_size",
-      sql.NVarChar,
-      serving_size ? serving_size : null,
+    // Lấy ra ID và Tên danh mục từ bảng categories để hiển thị lên thẻ select
+    const result = await request.query(
+      "SELECT id, name FROM categories ORDER BY name ASC",
     );
 
-    await request.query(query);
-    res.json({ success: true, message: "Cập nhật món ăn thành công!" });
+    res.json({
+      success: true,
+      data: result.recordset,
+    });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Lỗi Database: " + err.message });
+    res.status(500).json({
+      success: false,
+      message: "Lỗi Database khi tải danh mục: " + err.message,
+    });
   }
 });
 
-// 🌟 8. [BỔ SUNG QUAN TRỌNG]: API LẤY DANH SÁCH ĐẶT BÀN CHO FRONTEND DISPLAY 🌟
+//  8.  API LẤY DANH SÁCH ĐẶT BÀN CHO FRONTEND DISPLAY
 router.get("/admin/reservations", async (req, res) => {
   try {
     const request = new sql.Request();
@@ -279,12 +372,10 @@ router.get("/admin/reservations", async (req, res) => {
     `);
     res.json({ success: true, data: result.recordset });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Lỗi Database khi lấy danh sách đặt bàn: " + err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Lỗi Database khi lấy danh sách đặt bàn: " + err.message,
+    });
   }
 });
 
@@ -479,12 +570,10 @@ router.post("/admin/reservations", async (req, res) => {
     `;
 
     await request.query(insertQuery);
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Đặt bàn thành công! Chúng tôi sẽ liên hệ lại để xác nhận.",
-      });
+    res.status(201).json({
+      success: true,
+      message: "Đặt bàn thành công! Chúng tôi sẽ liên hệ lại để xác nhận.",
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -541,12 +630,10 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
         message: "Xếp bàn vào Database và khóa sơ đồ thành công!",
       });
     } else {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: `Không tìm thấy bàn mang số hiệu ${table_number} trong hệ thống.`,
-        });
+      res.status(400).json({
+        success: false,
+        message: `Không tìm thấy bàn mang số hiệu ${table_number} trong hệ thống.`,
+      });
     }
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -579,12 +666,10 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
     );
 
     if (reservationResult.recordset.length === 0) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Không tìm thấy dữ liệu đơn đặt bàn.",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy dữ liệu đơn đặt bàn.",
+      });
     }
 
     const reservation = reservationResult.recordset[0];

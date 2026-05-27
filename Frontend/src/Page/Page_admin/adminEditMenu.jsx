@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
+import Admin from "./admin";
 import "./adminCommon.css";
 import "./adminAddMenu.css";
-import Admin from "./admin";
 
 export default function AdminEditMenu() {
   const { id } = useParams(); // Lấy ID của món ăn từ thanh địa chỉ URL
@@ -13,7 +13,7 @@ export default function AdminEditMenu() {
   const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
-    category_id: "",
+    category_name: "",
     item_name: "",
     description: "",
     price: "",
@@ -36,10 +36,10 @@ export default function AdminEditMenu() {
         const result = await response.json();
 
         if (result.success) {
-          // Đổ dữ liệu cũ vào các ô nhập
           const data = result.data;
+          // Đổ dữ liệu cũ vào các ô nhập
           setFormData({
-            category_id: data.category_id || "",
+            category_name: data.category_name || "", // Backend truyền về category_name từ câu lệnh lồng JOIN
             item_name: data.item_name || "",
             description: data.description || "",
             price: data.price || "",
@@ -67,21 +67,22 @@ export default function AdminEditMenu() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/categories");
+        // 🌟 ĐÃ SỬA: Trỏ chuẩn xác về cổng API quản trị chung hệ thống
+        const response = await fetch(
+          "http://localhost:5000/api/admin/categories",
+        );
 
         if (!response.ok) {
-          console.error("❌ API lỗi:", response.status);
+          console.error("API lỗi:", response.status);
           return;
         }
 
         const result = await response.json();
-        console.log(" Categories:", result);
-
         if (result.success) {
-          setCategories(result.data);
+          setCategories(result.data || []);
         }
       } catch (error) {
-        console.error(" Lỗi khi tải danh mục:", error);
+        console.error("Lỗi khi tải danh mục:", error);
       }
     };
     fetchCategories();
@@ -103,17 +104,17 @@ export default function AdminEditMenu() {
       const response = await fetch(
         `http://localhost:5000/api/admin/menu/${id}`,
         {
-          method: "PUT", // Chú ý: Dùng PUT cho hành động Sửa
+          method: "PUT", // Sử dụng phương thức PUT để cập nhật bản ghi
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(formData), // Gửi toàn bộ dữ liệu đi (bao gồm cả category_name mới chọn)
         },
       );
 
       const result = await response.json();
 
       if (result.success) {
-        alert("Cập nhật thành công!");
-        navigate("/adminMenuList"); // Sửa xong thì quay về danh sách
+        alert("Cập nhật món ăn thành công!");
+        navigate("/adminMenuList"); // Sửa xong thì quay về danh sách quản lý chung
       } else {
         alert("Lỗi: " + result.message);
       }
@@ -125,174 +126,177 @@ export default function AdminEditMenu() {
   return (
     <main className="admin-menu-page">
       <Navbar />
-      <Admin />
-      <div className="admin-menu-container">
-        <h2
-          className="admin-menu-title"
-          style={{ color: "#d39e00", textAlign: "center", marginLeft: "160px" }}
-        >
-          CẬP NHẬT MÓN ĂN (ID: {id})
-        </h2>
+      <div className="admin-layout">
+        <Admin />
+        <div className="main-content">
+          <div className="admin-menu-container">
+            <h2
+              className="admin-menu-title"
+              style={{ color: "#d39e00", textAlign: "center" }}
+            >
+              CẬP NHẬT MÓN ĂN (ID: {id})
+            </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="admin-menu-form"
-          style={{
-            marginTop: "20px",
-            marginLeft: "90px",
-            width: "100%",
-            maxWidth: "1000px",
-          }}
-        >
-          <div className="form-row">
-            <div className="form-group">
+            <form
+              onSubmit={handleSubmit}
+              className="admin-menu-form"
+              style={{ marginTop: "20px" }}
+            >
+              <div className="form-row">
+                <div className="form-group">
+                  <label>
+                    <b>Tên món ăn (*):</b>
+                  </label>
+                  <input
+                    type="text"
+                    name="item_name"
+                    value={formData.item_name}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>
+                    <b>Giá tiền (*):</b>
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>
+                    <b>Danh mục món ăn (*):</b>
+                  </label>
+                  <select
+                    name="category_name"
+                    value={formData.category_name}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                    style={{ cursor: "pointer" }}
+                  >
+                    <option value="">-- Chọn danh mục --</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id || cat.name} value={cat.name}>
+                        {cat.name} {/* Hiển thị chính xác tên chữ tiếng Việt */}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <label>
-                <b>Tên món ăn (*):</b>
+                <b style={{ color: "#333" }}>Mô tả chung:</b>
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="form-input form-textarea"
+              />
+
+              <label>
+                <b style={{ color: "#333" }}>Link Hình Ảnh (URL):</b>
               </label>
               <input
                 type="text"
-                name="item_name"
-                value={formData.item_name}
+                name="image_url"
+                value={formData.image_url}
                 onChange={handleChange}
-                required
+                placeholder="/anh/ten-anh.jpg"
                 className="form-input"
               />
-            </div>
-            <div className="form-group">
+
               <label>
-                <b>Giá tiền (*):</b>
+                <b style={{ color: "#333" }}>Nguyên liệu chi tiết:</b>
               </label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
+              <textarea
+                name="ingredients"
+                value={formData.ingredients}
                 onChange={handleChange}
-                required
-                className="form-input"
+                placeholder="Thịt bò, bơ, tỏi..."
+                className="form-input form-textarea"
               />
-            </div>
-            <div className="form-group">
-              <label>
-                <b>Danh mục:</b>
-              </label>
-              <select
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleChange}
-                className="form-input"
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>
+                    <b style={{ color: "#333" }}>Thực phẩm gây dị ứng:</b>
+                  </label>
+                  <input
+                    type="text"
+                    name="allergy_warnings"
+                    value={formData.allergy_warnings}
+                    onChange={handleChange}
+                    placeholder="Sữa, Đậu phộng..."
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>
+                    <b style={{ color: "#333" }}>Khẩu phần ăn:</b>
+                  </label>
+                  <input
+                    type="text"
+                    name="serving_size"
+                    value={formData.serving_size}
+                    onChange={handleChange}
+                    placeholder="VD: 1-2 người"
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="checkbox-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="is_best_seller"
+                    checked={formData.is_best_seller}
+                    onChange={handleChange}
+                  />{" "}
+                  ⭐ Best Seller
+                </label>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="is_spicy"
+                    checked={formData.is_spicy}
+                    onChange={handleChange}
+                  />{" "}
+                  🌶️ Món cay
+                </label>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="is_vegetarian"
+                    checked={formData.is_vegetarian}
+                    onChange={handleChange}
+                  />{" "}
+                  🥬 Món chay
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                className="submit-btn"
+                style={{
+                  backgroundColor: "#ffc107",
+                  color: "#333",
+                  fontWeight: "bold",
+                }}
               >
-                <option value="">-- Chọn danh mục --</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {/* Thay 'category_name' bằng tên cột lưu tên danh mục trong CSDL của bạn */}
-                    {cat.category_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+                LƯU THAY ĐỔI
+              </button>
+            </form>
           </div>
-
-          <label>
-            <b style={{ color: "#333" }}>Mô tả chung:</b>
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="form-input form-textarea"
-          />
-
-          <label>
-            <b style={{ color: "#333" }}>Link Hình Ảnh (URL):</b>
-          </label>
-          <input
-            type="text"
-            name="image_url"
-            value={formData.image_url}
-            onChange={handleChange}
-            placeholder="/anh/ten-anh.jpg"
-            className="form-input"
-          />
-
-          <label>
-            <b style={{ color: "#333" }}>Nguyên liệu chi tiết:</b>
-          </label>
-          <textarea
-            name="ingredients"
-            value={formData.ingredients}
-            onChange={handleChange}
-            placeholder="Thịt bò, bơ, tỏi..."
-            className="form-input form-textarea"
-          />
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>
-                <b style={{ color: "#333" }}>Thực phẩm gây dị ứng:</b>
-              </label>
-              <input
-                type="text"
-                name="allergy_warnings"
-                value={formData.allergy_warnings}
-                onChange={handleChange}
-                placeholder="Sữa, Đậu phộng..."
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label>
-                <b style={{ color: "#333" }}>Khẩu phần ăn:</b>
-              </label>
-              <input
-                type="text"
-                name="serving_size"
-                value={formData.serving_size}
-                onChange={handleChange}
-                placeholder="VD: 1-2 người"
-                className="form-input"
-              />
-            </div>
-          </div>
-
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="is_best_seller"
-                checked={formData.is_best_seller}
-                onChange={handleChange}
-              />{" "}
-              Best Seller
-            </label>
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="is_spicy"
-                checked={formData.is_spicy}
-                onChange={handleChange}
-              />{" "}
-              Món cay
-            </label>
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="is_vegetarian"
-                checked={formData.is_vegetarian}
-                onChange={handleChange}
-              />{" "}
-              Món chay
-            </label>
-          </div>
-
-          {/* Thay đổi màu nút thành màu vàng cho phù hợp với hành động Cập nhật */}
-          <button
-            type="submit"
-            className="submit-btn"
-            style={{ backgroundColor: "#ffc107", color: "#333" }}
-          >
-            LƯU THAY ĐỔI
-          </button>
-        </form>
+        </div>
       </div>
     </main>
   );

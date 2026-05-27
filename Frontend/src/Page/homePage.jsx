@@ -313,16 +313,11 @@ const HomePage = () => {
           <div className="about-container-full">
             <div className="overlay-gradient"></div>
             <div className="container">
-              <div
-                className="about-content box-right"
-                style={{
-                  marginBottom: "90px",
-                  textAlign: "right",
-                  marginRight: "300px",
-                }}
-              >
+              <div className="about-content box-right">
                 <span className="sub-title">— NHÀ HÀNG KING</span>
-                <h2 className="section-title">CÂU CHUYỆN CỦA CHÚNG TÔI</h2>
+                <h2 className="section-title" style={{ color: "#ffffff" }}>
+                  CÂU CHUYỆN CỦA CHÚNG TÔI
+                </h2>
                 <p className="section-text">
                   Tại King Restaurant, tinh hoa ẩm thực Pháp hòa quyện cùng
                   hương vị Việt quen thuộc, tạo nên một hành trình trải nghiệm
@@ -339,16 +334,11 @@ const HomePage = () => {
 
           <div className="overlay-gradient left"></div>
           <div className="container">
-            <div
-              className="about-content box-left"
-              style={{
-                marginTop: "90px",
-                textAlign: "right",
-                marginLeft: "200px",
-              }}
-            >
+            <div className="about-content box-left">
               <span className="sub-title">— TRẢI NGHIỆM</span>
-              <h2 className="section-title">TRẢI NGHIỆM HOÀNG GIA</h2>
+              <h2 className="section-title" style={{ color: "#ffffff" }}>
+                TRẢI NGHIỆM HOÀNG GIA
+              </h2>
               <p className="section-text">
                 Không chỉ là điểm đến của những tinh hoa ẩm thực, The King
                 Restaurant còn kiến tạo một không gian sang trọng và ấm cúng,

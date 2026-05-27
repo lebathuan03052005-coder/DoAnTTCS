@@ -19,11 +19,12 @@ const BangDK = () => {
           <a href="/adminManageTables">Quản lý bàn</a>
         </li>
         <li>
-          <a href="/adminTableStyle">Quản lý Style bàn</a>
-        </li>
-        <li>
           <a href="/adminAddMenu">Thêm món ăn</a>
         </li>
+        <li>
+          <a href="/adminTableStyle">Quản lý Style bàn</a>
+        </li>
+
         <li>
           <a href="/adminMenuList">Danh sách món ăn</a>
         </li>

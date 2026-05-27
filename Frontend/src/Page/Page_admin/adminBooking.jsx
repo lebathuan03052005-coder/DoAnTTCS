@@ -3,7 +3,6 @@ import Navbar from "../../components/navbar";
 import Admin from "./admin";
 
 // ── IMPORT CÁC FILE CSS RIÊNG CỦA BẠN ─────────────────────────────────────────
-import "./adminCommon.css";
 import "./adminBooking.css";
 
 const API_BASE = "http://localhost:5000/api";

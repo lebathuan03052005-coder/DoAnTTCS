@@ -1,7 +1,6 @@
 /* Container chính của form */
 .admin-menu-page {
   min-height: 100vh;
-  background-color: #ccc;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -23,7 +22,6 @@
 .admin-menu-title {
   text-align: center;
   color: #a90f0f;
-  margin-top: 100px;
   margin-bottom: 40px;
 }
 
