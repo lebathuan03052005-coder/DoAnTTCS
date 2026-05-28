@@ -306,6 +306,15 @@ const HomePage = () => {
                   ❯
                 </button>
               </div>
+              <p
+                style={{
+                  marginTop: "20px",
+                  fontStyle: "italic",
+                  color: "#ffecec",
+                }}
+              >
+                Xem thêm thông tin chi tiết ở Phần Menu trên thanh điều hướng!!
+              </p>
             </div>
           </div>
         </section>

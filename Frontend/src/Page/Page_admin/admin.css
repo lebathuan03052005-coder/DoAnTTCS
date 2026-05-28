@@ -9,34 +9,29 @@
 
 .BangDK {
   position: fixed;
-
   top: 90px;
   left: 0;
-
   width: var(--sidebar-width);
   height: calc(100vh - 90px);
-
   background-color: var(--sidebar-color);
   padding: 10px;
-
   overflow-y: auto;
   border-radius: 10px;
 }
 
-/* Style cho từng thẻ a */
+/* Style cho từng thẻ a (Thay đổi display từ block sang flex để chứa badge) */
 .BangDK_list li a {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px 16px;
-
   color: var(--text-white);
   text-decoration: none;
-
   border-radius: 8px;
-
   background-color: transparent;
-
   transition: all 0.25s ease;
 }
+
 .BangDK_list li {
   list-style: none;
 }
@@ -53,6 +48,33 @@
   background-color: var(--hover-color);
   color: var(--accent-color);
   font-weight: bold;
-
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔴 CSS CHO BADGE THÔNG BÁO SỐ LƯỢNG ĐƠN CHỜ DUYỆT */
+.badge-pending {
+  background-color: #dc2626; /* Màu đỏ nổi bật */
+  color: #ffffff; /* Chữ trắng */
+  font-size: 0.75rem; /* Cỡ chữ nhỏ gọn */
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px; /* Bo viền dạng viên thuốc */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: pulse-notify 1.5s infinite ease-in-out; /* Hiệu ứng nhấp nháy */
+}
+
+/* Hiệu ứng nhấp nháy phóng to / thu nhỏ nhẹ nhàng */
+@keyframes pulse-notify {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
 }

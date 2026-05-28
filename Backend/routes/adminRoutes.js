@@ -161,7 +161,7 @@ router.post("/admin/menu", async (req, res) => {
       serving_size,
     } = req.body;
 
-    // 🌟 SỬA ĐOẠN INSERT: Dùng Subquery lồng trực tiếp vào câu lệnh VALUES để quy đổi tự động
+    // ĐOẠN INSERT: Dùng Subquery lồng trực tiếp vào câu lệnh VALUES để quy đổi tự động
     const query = `
       INSERT INTO menu (
         category_id, 
@@ -323,12 +323,10 @@ router.get("/admin/menu/:id", async (req, res) => {
     if (result.recordset.length > 0) {
       res.json({ success: true, data: result.recordset[0] });
     } else {
-      res
-        .status(404)
-        .json({
-          success: false,
-          message: "Không tìm thấy dữ liệu món ăn này!",
-        });
+      res.status(404).json({
+        success: false,
+        message: "Không tìm thấy dữ liệu món ăn này!",
+      });
     }
   } catch (err) {
     res
@@ -579,7 +577,7 @@ router.post("/admin/reservations", async (req, res) => {
   }
 });
 
-// 🌟 14. API GỘP NHẤT QUÁN: ĐIỀU PHỐI / XẾP VỊ TRÍ BÀN CHO KHÁCH (ĐÃ KHỬ TRÙNG LẶP) 🌟
+//  14. API GỘP NHẤT QUÁN: ĐIỀU PHỐI / XẾP VỊ TRÍ BÀN CHO KHÁCH
 router.put("/admin/reservations/:id/assign-table", async (req, res) => {
   try {
     const { id } = req.params;
@@ -661,9 +659,15 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
     const request = new sql.Request();
     request.input("id", sql.Int, id);
 
-    const reservationResult = await request.query(
-      `SELECT * FROM reservations WHERE id = @id`,
-    );
+    //  LEFT JOIN với bảng sơ đồ bàn để lấy số hiệu bàn thực tế (assigned_table)
+    const reservationResult = await request.query(`
+      SELECT 
+        r.*,
+        rt.table_number AS assigned_table
+      FROM reservations r
+      LEFT JOIN restaurant_tables rt ON r.table_id = rt.id
+      WHERE r.id = @id
+    `);
 
     if (reservationResult.recordset.length === 0) {
       return res.status(404).json({
@@ -706,13 +710,25 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
             : timeStr.substring(0, 5);
         }
 
+        //  Chuẩn bị nội dung hiển thị mã bàn trong Email
+        let tableInfoHtml = "";
+        if (isApproved) {
+          // Lấy mã bàn từ DB, nếu chưa xếp thì báo là đang điều phối khi tới nơi
+          const tableNumber =
+            reservation.assigned_table ||
+            "Sẽ được điều phối trực tiếp khi Quý khách đến nhà hàng";
+          tableInfoHtml = `<p><strong> Vị trí bàn ăn của bạn:</strong> <span style="color: #e67e22; font-weight: bold; font-size: 1.1rem;">${tableNumber}</span></p>`;
+        }
+
         const subject = isApproved
           ? "Yêu cầu đặt bàn đã được duyệt - The King Restaurant"
           : "Thông báo về yêu cầu đặt bàn - The King Restaurant";
+
         const html = `
           <p>Xin chào <strong>${reservation.customer_name || "Quý khách"}</strong>,</p>
           <p>Yêu cầu đặt bàn của bạn vào ngày <strong>${displayDate}</strong> lúc <strong>${displayTime}</strong> đã được nhà hàng <strong>${isApproved ? "DUYỆT THÀNH CÔNG" : "TỪ CHỐI TIẾP NHẬN"}</strong>.</p>
-          <hr/>
+          
+          ${tableInfoHtml}  <hr/>
           <p><strong>Chi tiết lịch đặt bàn:</strong></p>
           <ul>
             <li>Tên khách hàng: ${reservation.customer_name}</li>
@@ -724,6 +740,7 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
           <hr/>
           <p>Mọi thắc mắc vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
           <p>Trân trọng,<br/><strong>Ban quản lý The King Restaurant</strong></p>
+          <p><strong>Nếu có thay đổi lịch trình, vui lòng thông báo cho chúng tôi sớm nhất thông qua email này hoặc số hotline để được hỗ trợ tốt nhất. Cảm ơn bạn đã lựa chọn The King Restaurant!</strong></p>
         `;
 
         await sendStatusEmail({ to: recipientEmail, subject, html });
@@ -742,5 +759,4 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
-
 export default router;

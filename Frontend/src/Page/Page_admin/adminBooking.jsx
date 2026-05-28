@@ -111,7 +111,7 @@ export default function AdminBooking() {
       const data = await response.json();
 
       if (data.success) {
-        alert("🎉 Xếp bàn thành công!");
+        alert(" Xếp bàn thành công!");
         setSelectedReservation(null);
         loadData(); // Tải lại dữ liệu để cập nhật số bàn
       } else {
@@ -131,7 +131,7 @@ export default function AdminBooking() {
         reservation.assigned_table ||
         reservation.table_id;
       if (!hasTable) {
-        alert("⚠️ Vui lòng bấm [Xếp] bàn cho khách trước khi Duyệt đơn!");
+        alert(" Vui lòng bấm [Xếp] bàn cho khách trước khi Duyệt đơn!");
         return;
       }
     }
@@ -177,7 +177,7 @@ export default function AdminBooking() {
   const handleDeleteReservation = async (id) => {
     if (
       !window.confirm(
-        "🚨 HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc muốn xóa đơn này?",
+        " HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc muốn xóa đơn này?",
       )
     )
       return;
@@ -194,48 +194,6 @@ export default function AdminBooking() {
       }
     } catch (err) {
       alert("Lỗi kết nối khi xóa.");
-    }
-  };
-
-  const handleUpdateTableStyle = async () => {
-    try {
-      const response = await fetch(
-        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.id}/style`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ table_style: editTableStyle }),
-        },
-      );
-      const data = await response.json();
-      if (data.success) {
-        alert("Cập nhật style không gian bàn thành công!");
-        setSelectedTableDetails(null);
-        loadData();
-      }
-    } catch (err) {
-      alert("Lỗi cập nhật cấu trúc style.");
-    }
-  };
-
-  const handleDeleteTable = async () => {
-    if (!window.confirm("Xóa bỏ bàn này hoàn toàn khỏi sơ đồ nhà hàng?"))
-      return;
-    try {
-      const response = await fetch(
-        `${API_BASE}/admin/restaurant_tables/${selectedTableDetails.id}`,
-        {
-          method: "DELETE",
-        },
-      );
-      const data = await response.json();
-      if (data.success) {
-        alert("Đã gỡ bàn thành công.");
-        setSelectedTableDetails(null);
-        loadData();
-      }
-    } catch (err) {
-      alert("Lỗi hệ thống khi gỡ bàn.");
     }
   };
 
