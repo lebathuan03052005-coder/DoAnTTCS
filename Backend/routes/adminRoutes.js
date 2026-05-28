@@ -638,31 +638,52 @@ router.put("/admin/reservations/:id/assign-table", async (req, res) => {
   }
 });
 
-// 15. API: Xóa bản ghi lịch sử đặt bàn
+// 15. API: Xóa bản ghi lịch sử đặt bàn + Tự động giải phóng bàn về trạng thái "Con trong"
 router.delete("/admin/reservations/:id", async (req, res) => {
   try {
+    const { id } = req.params;
     const request = new sql.Request();
-    request.input("id", sql.Int, req.params.id);
-    await request.query(`DELETE FROM reservations WHERE id = @id`);
-    res.json({ success: true, message: "Đã xóa bản ghi đơn thành công" });
+    request.input("id", sql.Int, id);
+
+    // Thực hiện truy vấn gộp: Giải phóng trạng thái bàn ăn trước, sau đó xóa đơn đặt bàn
+    await request.query(`
+      DECLARE @assignedTableId INT;
+
+      -- 1. Lấy ra table_id đang được liên kết với đơn đặt bàn này
+      SELECT @assignedTableId = table_id FROM reservations WHERE id = @id;
+
+      -- 2. Nếu đơn này đã được xếp bàn, cập nhật lại trạng thái bàn đó thành 'Con trong'
+      IF @assignedTableId IS NOT NULL
+      BEGIN
+        UPDATE restaurant_tables SET status = N'Con trong' WHERE id = @assignedTableId;
+      END
+
+      -- 3. Tiến hành xóa đơn đặt bàn khỏi hệ thống
+      DELETE FROM reservations WHERE id = @id;
+    `);
+
+    res.json({
+      success: true,
+      message:
+        "Đã xóa bản ghi đơn đặt bàn và giải phóng vị trí bàn ăn thành công.",
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// 16. API: Duyệt hoặc từ chối đơn hàng + Kích hoạt gửi Gmail tự động qua Nodemailer
+// 16. API: Duyệt hoặc từ chối đơn hàng + Đón nhận lý do từ chối gửi Gmail
 router.put("/admin/reservations/:id/status", async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, rejection_reason } = req.body; //  LẤY LÝ DO TỪ CHỐI TỪ BODY GỬI LÊN
 
     const request = new sql.Request();
     request.input("id", sql.Int, id);
 
-    //  LEFT JOIN với bảng sơ đồ bàn để lấy số hiệu bàn thực tế (assigned_table)
     const reservationResult = await request.query(`
       SELECT 
-        r.*,
+        r.customer_name, r.phone, r.email, r.booking_date, r.booking_time, r.guests, r.note,
         rt.table_number AS assigned_table
       FROM reservations r
       LEFT JOIN restaurant_tables rt ON r.table_id = rt.id
@@ -710,14 +731,29 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
             : timeStr.substring(0, 5);
         }
 
-        //  Chuẩn bị nội dung hiển thị mã bàn trong Email
-        let tableInfoHtml = "";
+        //  XỬ LÝ KHỐI HIỂN THỊ MÃ BÀN HOẶC LÝ DO TỪ CHỐI ĐỘNG
+        let dynamicContentHtml = "";
+
         if (isApproved) {
-          // Lấy mã bàn từ DB, nếu chưa xếp thì báo là đang điều phối khi tới nơi
-          const tableNumber =
-            reservation.assigned_table ||
-            "Sẽ được điều phối trực tiếp khi Quý khách đến nhà hàng";
-          tableInfoHtml = `<p><strong> Vị trí bàn ăn của bạn:</strong> <span style="color: #e67e22; font-weight: bold; font-size: 1.1rem;">${tableNumber}</span></p>`;
+          // Khối giao diện hiển thị Mã bàn khi ĐƯỢC DUYỆT
+          const tableNumber = reservation.assigned_table
+            ? `Bàn số ${reservation.assigned_table}`
+            : "Sẽ được điều phối trực tiếp khi bạn đến nhà hàng";
+          dynamicContentHtml = `
+            <div style="background-color: #fff9db; padding: 14px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f59f00;">
+              <p style="margin: 0; color: #d9480f;"><strong>Vị trí bàn ăn được chuẩn bị:</strong> <span style="font-weight: bold; font-size: 1.1rem;">${tableNumber}</span></p>
+            </div>
+          `;
+        } else {
+          // Khối giao diện hiển thị Lý do từ chối khi BỊ TỪ CHỐI
+          const reasonText =
+            rejection_reason ||
+            "Nhà hàng hiện tại đã hết vị trí trống vào khung giờ bạn chọn.";
+          dynamicContentHtml = `
+            <div style="background-color: #fef2f2; padding: 14px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ef4444;">
+              <p style="margin: 0; color: #991b1b;"><strong>Lý do từ chối:</strong> <span style="font-style: italic;">${reasonText}</span></p>
+            </div>
+          `;
         }
 
         const subject = isApproved
@@ -728,9 +764,10 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
           <p>Xin chào <strong>${reservation.customer_name || "Quý khách"}</strong>,</p>
           <p>Yêu cầu đặt bàn của bạn vào ngày <strong>${displayDate}</strong> lúc <strong>${displayTime}</strong> đã được nhà hàng <strong>${isApproved ? "DUYỆT THÀNH CÔNG" : "TỪ CHỐI TIẾP NHẬN"}</strong>.</p>
           
-          ${tableInfoHtml}  <hr/>
-          <p><strong>Chi tiết lịch đặt bàn:</strong></p>
-          <ul>
+          ${dynamicContentHtml} 
+          <P>Khi tới nhà hàng, vui lòng thông báo với nhân viên để được hướng dẫn tới bàn ăn. <hr/>
+          <p><strong>Chi tiết lịch đặt bàn ban đầu của bạn:</strong></p>
+          <ul>  
             <li>Tên khách hàng: ${reservation.customer_name}</li>
             <li>Số điện thoại: ${reservation.phone}</li>
             <li>Thời gian nhận bàn: ${displayTime} ngày ${displayDate}</li>
@@ -740,12 +777,13 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
           <hr/>
           <p>Mọi thắc mắc vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
           <p>Trân trọng,<br/><strong>Ban quản lý The King Restaurant</strong></p>
-          <p><strong>Nếu có thay đổi lịch trình, vui lòng thông báo cho chúng tôi sớm nhất thông qua email này hoặc số hotline để được hỗ trợ tốt nhất. Cảm ơn bạn đã lựa chọn The King Restaurant!</strong></p>
+          <p><strong>Nếu có thắc mắc hoặc cần hỗ trợ đặt lịch sang ngày khác, vui lòng 
+          thông báo cho chúng tôi thông qua email này hoặc số hotline để được phục vụ tốt nhất. Trân thành ơn!</strong></p>
         `;
 
         await sendStatusEmail({ to: recipientEmail, subject, html });
         emailStatusMsg =
-          "Hệ thống đã tự động gửi thư điện tử thông báo lịch trình thành công!";
+          "Hệ thống đã tự động gửi thư điện tử thông báo thành công!";
       } catch (emailErr) {
         emailStatusMsg = "Lỗi cổng SMTP gửi mail.";
       }

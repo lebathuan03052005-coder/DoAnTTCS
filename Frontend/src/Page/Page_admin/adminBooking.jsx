@@ -83,9 +83,8 @@ export default function AdminBooking() {
     (table) => table.status === "Con trong",
   );
 
-  // ==========================================================================
   // LOGIC XỬ LÝ HÀNH ĐỘNG
-  // ==========================================================================
+
   const openAssignModal = (reservation) => {
     setSelectedReservation(reservation);
     setAssignTableNumber("");
@@ -136,12 +135,35 @@ export default function AdminBooking() {
       }
     }
 
-    const newStatus = isApproved ? "Confirmed" : "Cancelled";
-    const confirmMessage = isApproved
-      ? `Bạn muốn DUYỆT đơn của khách: ${reservation.customer_name}?`
-      : `Bạn muốn TỪ CHỐI đơn của khách: ${reservation.customer_name}?`;
+    //  LẤY LÝ DO TỪ CHỐI NẾU BẤM NÚT TỪ CHỐI
+    let reason = null;
+    if (!isApproved) {
+      reason = window.prompt(
+        `Vui lòng nhập lý do TỪ CHỐI đơn của khách: ${reservation.customer_name}:`,
+      );
 
-    if (!window.confirm(confirmMessage)) return;
+      // Nếu admin bấm "Hủy bỏ" (Cancel) ở hộp thoại prompt thì dừng xử lý
+      if (reason === null) return;
+
+      // Nếu admin không nhập gì mà bấm OK, gán lý do mặc định
+      if (reason.trim() === "") {
+        reason =
+          "Nhà hàng hiện tại đã hết vị trí trống vào khung giờ bạn chọn.";
+      }
+    }
+
+    const newStatus = isApproved ? "Confirmed" : "Cancelled";
+
+    // Nếu là Duyệt thì mới cần hỏi Confirm lại, Từ chối đã hỏi ở bước Prompt trên rồi
+    if (
+      isApproved &&
+      !window.confirm(
+        `Bạn muốn DUYỆT đơn của khách: ${reservation.customer_name}?`,
+      )
+    ) {
+      return;
+    }
+
     setProcessingIds((p) => [...p, reservation.id]);
 
     try {
@@ -157,6 +179,7 @@ export default function AdminBooking() {
             booking_date: reservation.booking_date,
             booking_time: reservation.booking_time,
             approved: isApproved,
+            rejection_reason: reason, //  GỬI KÈM LÝ DO TỪ CHỐI LÊN BACKEND
           }),
         },
       );
@@ -170,29 +193,33 @@ export default function AdminBooking() {
     } catch (err) {
       alert("Lỗi kết nối máy chủ khi duyệt.");
     } finally {
-      setProcessingIds((p) => p.filter((id) => id !== reservation.id));
+      setProcessingIds((p) => [...p].filter((id) => id !== reservation.id));
     }
   };
-
   const handleDeleteReservation = async (id) => {
     if (
       !window.confirm(
-        " HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc muốn xóa đơn này?",
+        " HÀNH ĐỘNG NÀY KHÔNG THỂ HOÀN TÁC! Bạn có chắc muốn xóa đơn này và giải phóng bàn ăn liên quan?",
       )
     )
       return;
+
     try {
       const response = await fetch(`${API_BASE}/admin/reservations/${id}`, {
         method: "DELETE",
       });
       const data = await response.json();
+
       if (data.success) {
-        setReservations((prev) => prev.filter((r) => r.id !== id));
-        alert("Đã dọn dẹp dữ liệu đơn thành công.");
+        alert("Đã dọn dẹp dữ liệu đơn và cập nhật lại trạng thái sơ đồ bàn.");
+
+        //  THAY ĐỔI: Tải lại toàn bộ dữ liệu (bao gồm cả reservations và tables) để đồng bộ UI
+        await loadData();
       } else {
         alert(data.message || "Không thể xóa.");
       }
     } catch (err) {
+      console.error(err);
       alert("Lỗi kết nối khi xóa.");
     }
   };
@@ -221,8 +248,10 @@ export default function AdminBooking() {
     if (text.includes("pending") || text.includes("chờ")) return "Chờ duyệt";
     if (text.includes("confirmed") || text.includes("đã duyệt"))
       return "Đã duyệt";
+
     if (text.includes("cancelled") || text.includes("từ chối"))
       return "Từ chối";
+
     if (text.includes("completed")) return "Hoàn thành";
     return "Chờ duyệt";
   };
@@ -332,7 +361,7 @@ export default function AdminBooking() {
                                     borderTop: "2px solid #cbd5e1",
                                   }}
                                 >
-                                  🗓️ Lịch đặt bàn ngày: {currentDateStr}
+                                  Lịch đặt bàn ngày: {currentDateStr}
                                 </td>
                               </tr>
                             )}
@@ -381,19 +410,27 @@ export default function AdminBooking() {
                                 </strong>
                               </td>
                               <td className="table-actions">
+                                {/* 1. Nút Chi tiết */}
                                 <button
                                   className="btn-outline btn-details"
                                   onClick={() => openDetails(reservation)}
                                 >
                                   Chi tiết
                                 </button>
+
+                                {/* 2. Nút Xếp bàn */}
                                 <button
                                   className="btn-secondary"
                                   onClick={() => openAssignModal(reservation)}
-                                  disabled={statusText === "Từ chối"}
+                                  disabled={
+                                    statusText === "Từ chối" ||
+                                    statusText === "Hoàn thành"
+                                  }
                                 >
                                   Xếp
                                 </button>
+
+                                {/* 3. Nút Duyệt đơn */}
                                 <button
                                   className="btn-approve"
                                   onClick={() =>
@@ -403,13 +440,39 @@ export default function AdminBooking() {
                                 >
                                   Duyệt
                                 </button>
+
+                                {/* 4. 🔴 NÚT TỪ CHỐI (BỔ SUNG MỚI) */}
                                 <button
-                                  className="btn-reject btn-delete"
+                                  className="btn-reject"
+                                  onClick={() =>
+                                    handleReviewReservation(reservation, false)
+                                  }
+                                  disabled={statusText !== "Chờ duyệt"}
+                                  style={{
+                                    backgroundColor: "#f97316", // Màu cam đậm trực quan để phân biệt với nút Xóa màu đỏ
+                                    color: "#fff",
+                                    border: "none",
+                                    padding: "6px 12px",
+                                    borderRadius: "4px",
+                                    cursor:
+                                      statusText !== "Chờ duyệt"
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    opacity:
+                                      statusText !== "Chờ duyệt" ? 0.6 : 1,
+                                  }}
+                                >
+                                  Từ chối
+                                </button>
+
+                                {/* 5. Nút Xóa bản ghi lịch sử */}
+                                <button
+                                  className="btn-delete"
                                   onClick={() =>
                                     handleDeleteReservation(reservation.id)
                                   }
                                   style={{
-                                    backgroundColor: "#dc2626",
+                                    backgroundColor: "#dc2626", // Màu đỏ hủy diệt dành riêng cho xóa hoàn toàn
                                     color: "#fff",
                                   }}
                                 >
