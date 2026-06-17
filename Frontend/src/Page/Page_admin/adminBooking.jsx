@@ -25,6 +25,8 @@ export default function AdminBooking() {
 
   // State cho việc Xem chi tiết đơn
   const [viewDetailsModal, setViewDetailsModal] = useState(null);
+  const [noteText, setNoteText] = useState("");
+  const [noteSaving, setNoteSaving] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -226,6 +228,49 @@ export default function AdminBooking() {
 
   const openDetails = (reservation) => {
     setViewDetailsModal(reservation);
+  };
+
+  useEffect(() => {
+    if (viewDetailsModal) {
+      setNoteText(viewDetailsModal.note || "");
+    } else {
+      setNoteText("");
+    }
+  }, [viewDetailsModal]);
+
+  const handleSaveNote = async () => {
+    if (!viewDetailsModal) return;
+    setNoteSaving(true);
+    try {
+      const response = await fetch(
+        `${API_BASE}/admin/reservations/${viewDetailsModal.id}/note`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ note: noteText }),
+        },
+      );
+      const data = await response.json();
+      if (data.success) {
+        alert("Lưu ghi chú thành công.");
+        // Cập nhật modal và danh sách local
+        setViewDetailsModal((prev) =>
+          prev ? { ...prev, note: noteText } : prev,
+        );
+        setReservations((prev) =>
+          prev.map((r) =>
+            r.id === viewDetailsModal.id ? { ...r, note: noteText } : r,
+          ),
+        );
+      } else {
+        alert(data.message || "Lưu ghi chú thất bại.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi kết nối khi lưu ghi chú.");
+    } finally {
+      setNoteSaving(false);
+    }
   };
 
   // ── HELPERS FORMAT VĂN BẢN ──────────────────────────────────────────────────
@@ -582,44 +627,73 @@ export default function AdminBooking() {
                 }}
               >
                 <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>👤 Tên khách hàng:</strong>{" "}
+                  <strong> Tên khách hàng:</strong>{" "}
                   {viewDetailsModal.customer_name}
                 </p>
                 <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>📞 Số điện thoại:</strong> {viewDetailsModal.phone}
+                  <strong> Số điện thoại:</strong> {viewDetailsModal.phone}
                 </p>
                 <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>📧 Địa chỉ Email:</strong>{" "}
+                  <strong> Địa chỉ Email:</strong>{" "}
                   {viewDetailsModal.email || "Không cung cấp"}
                 </p>
                 <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>📅 Lịch hẹn:</strong> Ngày{" "}
+                  <strong> Lịch hẹn:</strong> Ngày{" "}
                   {formatDisplayDate(viewDetailsModal.booking_date)} vào lúc{" "}
                   {formatDisplayTime(viewDetailsModal.booking_time)}
                 </p>
                 <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>👥 Số lượng khách đến:</strong>{" "}
+                  <strong> Số lượng khách đến:</strong>{" "}
                   {viewDetailsModal.guests} người lớn
                 </p>
-                <p style={{ margin: "0 0 8px 0" }}>
-                  <strong>📝 Nội dung ghi chú:</strong>{" "}
-                  {viewDetailsModal.note ||
-                    "Không có yêu cầu đặc biệt nào từ khách"}
-                </p>
+                <div style={{ margin: "0 0 8px 0" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontWeight: 600,
+                      marginBottom: 6,
+                    }}
+                  >
+                    Nội dung ghi chú:
+                  </label>
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="Ghi chú đặc biệt cho đơn đặt..."
+                    style={{
+                      width: "100%",
+                      minHeight: 80,
+                      padding: 10,
+                      borderRadius: 8,
+                      resize: "vertical",
+                    }}
+                  />
+                </div>
                 <p style={{ margin: 0 }}>
-                  <strong>🪑 Trạng thái vị trí bàn:</strong> Bàn số{" "}
+                  <strong>🪑Trạng thái vị trí bàn:</strong> Bàn số{" "}
                   {viewDetailsModal.assigned_table ||
                     viewDetailsModal.table_number ||
                     "Chưa được điều phối"}
                 </p>
               </div>
             </div>
-            <div className="modal-actions" style={{ justifyContent: "center" }}>
+            <div
+              className="modal-actions"
+              style={{ justifyContent: "center", gap: 12 }}
+            >
               <button
-                className="btn-primary1"
+                className="btn-outline1"
                 onClick={() => setViewDetailsModal(null)}
+                disabled={noteSaving}
               >
                 Đóng cửa sổ
+              </button>
+              <button
+                className="btn-primary1"
+                onClick={handleSaveNote}
+                disabled={noteSaving}
+              >
+                {noteSaving ? "Đang lưu..." : "Lưu ghi chú"}
               </button>
             </div>
           </div>

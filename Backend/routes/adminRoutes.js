@@ -377,29 +377,29 @@ router.get("/admin/reservations", async (req, res) => {
   }
 });
 
-// 9. API: Lấy danh sách sơ đồ bàn theo NGÀY (date query param)
-// Query: /admin/restaurant_tables?date=YYYY-MM-DD
 router.get("/admin/restaurant_tables", async (req, res) => {
   try {
-    // Nếu không có date truyền lên, mặc định lấy ngày hôm nay
     const dateParam = req.query.date || new Date().toISOString().slice(0, 10);
 
     const request = new sql.Request();
+
     request.input("date", sql.Date, dateParam);
 
-    // 🌟 ĐÃ SỬA: Ưu tiên trạng thái 'Dang su dung' phục vụ tại chỗ trước, sau đó mới tính lịch đặt 'Da dat'
     const result = await request.query(`
-      SELECT 
+      SELECT
         rt.id,
         rt.table_number,
         rt.location,
         rt.capacity,
 
-        -- Ưu tiên hiển thị trạng thái đang ăn tại chỗ, nếu không có mới xét lịch đặt trước
-        CASE 
-          WHEN rt.status = N'Dang su dung' THEN N'Dang su dung'
-          WHEN r.id IS NOT NULL THEN N'Da dat' 
-          ELSE N'Con trong' 
+        CASE
+          WHEN rt.status = N'Dang su dung'
+            THEN N'Dang su dung'
+
+          WHEN r.id IS NOT NULL
+            THEN N'Da dat'
+
+          ELSE N'Con trong'
         END AS status,
 
         ts.id AS style_id,
@@ -409,7 +409,8 @@ router.get("/admin/restaurant_tables", async (req, res) => {
 
         r.customer_name,
         r.phone,
-        r.note
+        r.note,
+        r.booking_time
 
       FROM restaurant_tables rt
 
@@ -418,16 +419,22 @@ router.get("/admin/restaurant_tables", async (req, res) => {
 
       LEFT JOIN reservations r
         ON rt.id = r.table_id
-        AND CAST(r.booking_date AS DATE) = @date
+        AND CAST(r.booking_date AS DATE)=@date
 
-      ORDER BY rt.location ASC, rt.table_number ASC
+      ORDER BY
+        rt.location ASC,
+        rt.table_number ASC
     `);
 
-    res.json({ success: true, data: result.recordset });
+    res.json({
+      success: true,
+      data: result.recordset,
+    });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Lỗi Database: " + err.message });
+    res.status(500).json({
+      success: false,
+      message: "Lỗi Database: " + err.message,
+    });
   }
 });
 
@@ -840,6 +847,24 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
       success: true,
       message: `Xử lý cập nhật trạng thái đơn thành công! (${emailStatusMsg})`,
     });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 17. API: Cập nhật chỉ cột `note` của đơn đặt
+router.put("/admin/reservations/:id/note", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { note } = req.body;
+
+    const request = new sql.Request();
+    request.input("id", sql.Int, id);
+    request.input("note", sql.NVarChar, note || null);
+
+    await request.query("UPDATE reservations SET note = @note WHERE id = @id");
+
+    res.json({ success: true, message: "Cập nhật ghi chú thành công." });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

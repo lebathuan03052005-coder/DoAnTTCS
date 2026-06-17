@@ -214,6 +214,12 @@ const AdminManageTables = () => {
                         <strong>SĐT:</strong> {table.phone}
                       </p>
                     )}
+                    {table.booking_time && (
+                      <p className="time-text">
+                        <strong>Giờ đặt:</strong>{" "}
+                        {table.booking_time.split("T")[1]?.slice(0, 5)}
+                      </p>
+                    )}
 
                     {table.note && (
                       <p className="note-text">
