@@ -377,27 +377,52 @@ router.get("/admin/reservations", async (req, res) => {
   }
 });
 
-// 9. API: Lấy danh sách sơ đồ bàn (Có bổ sung rt.id làm style details)
+// 9. API: Lấy danh sách sơ đồ bàn theo NGÀY (date query param)
+// Query: /admin/restaurant_tables?date=YYYY-MM-DD
 router.get("/admin/restaurant_tables", async (req, res) => {
   try {
+    // Nếu không có date truyền lên, mặc định lấy ngày hôm nay
+    const dateParam = req.query.date || new Date().toISOString().slice(0, 10);
+
     const request = new sql.Request();
+    request.input("date", sql.Date, dateParam);
+
+    // 🌟 ĐÃ SỬA: Ưu tiên trạng thái 'Dang su dung' phục vụ tại chỗ trước, sau đó mới tính lịch đặt 'Da dat'
     const result = await request.query(`
       SELECT 
         rt.id,
         rt.table_number,
         rt.location,
         rt.capacity,
-        rt.status,
+
+        -- Ưu tiên hiển thị trạng thái đang ăn tại chỗ, nếu không có mới xét lịch đặt trước
+        CASE 
+          WHEN rt.status = N'Dang su dung' THEN N'Dang su dung'
+          WHEN r.id IS NOT NULL THEN N'Da dat' 
+          ELSE N'Con trong' 
+        END AS status,
+
         ts.id AS style_id,
         ts.style_name,
         ts.description,
         ts.image_url,
+
+        r.customer_name,
+        r.phone,
         r.note
+
       FROM restaurant_tables rt
-      LEFT JOIN table_styles ts ON rt.style_id = ts.id
-      LEFT JOIN reservations r ON rt.id = r.table_id
+
+      LEFT JOIN table_styles ts
+        ON rt.style_id = ts.id
+
+      LEFT JOIN reservations r
+        ON rt.id = r.table_id
+        AND CAST(r.booking_date AS DATE) = @date
+
       ORDER BY rt.location ASC, rt.table_number ASC
     `);
+
     res.json({ success: true, data: result.recordset });
   } catch (err) {
     res
@@ -534,6 +559,27 @@ router.put("/admin/table_styles/:id", async (req, res) => {
       `);
 
     res.json({ success: true, message: "Cập nhật style thành công" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+router.post("/admin/table_styles", async (req, res) => {
+  try {
+    const { style_name, description, image_url, bestseller } = req.body;
+
+    const request = new sql.Request();
+    await request
+      .input("style_name", sql.NVarChar, style_name)
+      .input("description", sql.NVarChar, description)
+      .input("image_url", sql.VarChar, image_url)
+      .input("bestseller", sql.Bit, bestseller ? 1 : 0).query(`
+        INSERT INTO table_styles (style_name, description, image_url, bestseller)
+        VALUES (@style_name, @description, @image_url, @bestseller)
+      `);
+
+    res
+      .status(201)
+      .json({ success: true, message: "Tạo style bàn thành công" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -778,7 +824,8 @@ router.put("/admin/reservations/:id/status", async (req, res) => {
           <p>Mọi thắc mắc vui lòng liên hệ hotline nhà hàng qua số <strong>0862680850</strong>.</p>
           <p>Trân trọng,<br/><strong>Ban quản lý The King Restaurant</strong></p>
           <p><strong>Nếu có thắc mắc hoặc cần hỗ trợ đặt lịch sang ngày khác, vui lòng 
-          thông báo cho chúng tôi thông qua email này hoặc số hotline để được phục vụ tốt nhất. Trân thành ơn!</strong></p>
+          thông báo cho chúng tôi thông qua email này hoặc số hotline để được phục vụ tốt nhất. 
+          Trân thành cảm ơn!</strong></p>
         `;
 
         await sendStatusEmail({ to: recipientEmail, subject, html });
