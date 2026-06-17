@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./adminCommon.css";
-import "./adminMenuList.css";
+import "./adminTableStyle.css";
 import Admin from "./admin";
 import Navbar from "../../components/navbar";
 
@@ -96,7 +95,7 @@ const AdminTablesList = () => {
       <div style={{ display: "flex" }}>
         <Admin />
 
-        <div style={{ flex: 1 }}>
+        <div className="main-content-table">
           <Navbar />
           <div
             className="container"
@@ -109,7 +108,7 @@ const AdminTablesList = () => {
               </Link>
             </div>
 
-            <div className="table-responsive">
+            <div className="container-fluid">
               <table className="menu-table">
                 <thead>
                   <tr>
@@ -117,7 +116,6 @@ const AdminTablesList = () => {
                     <th>Hình ảnh</th>
                     <th>Phong cách bàn</th>
                     <th>Mô tả</th>
-                    <th>Yêu thích</th>
                     <th>Hành động</th>
                   </tr>
                 </thead>
@@ -145,16 +143,6 @@ const AdminTablesList = () => {
                           <td>{table.description} </td>
                           <td>
                             <button
-                              className={`btn-bestseller ${table.bestseller ? "active" : ""}`}
-                              onClick={() =>
-                                handleToggleBestseller(id, table.bestseller)
-                              }
-                            >
-                              {table.bestseller ? "★ Đang Bật" : "☆ Tắt"}
-                            </button>
-                          </td>
-                          <td>
-                            <button
                               className="btn-edit"
                               onClick={() =>
                                 navigate(`/adminEditTableStyle/${id}`)
@@ -163,7 +151,7 @@ const AdminTablesList = () => {
                               Sửa
                             </button>
                             <button
-                              className="btn-delete"
+                              className="btn-delete2"
                               onClick={() => handleDelete(id)}
                             >
                               Xóa

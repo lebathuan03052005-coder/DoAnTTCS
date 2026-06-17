@@ -6,6 +6,9 @@ const AdminManageTables = () => {
   const [filterType, setFilterType] = useState("all");
   const [tables, setTables] = useState([]);
   const [styles, setStyles] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(() =>
+    new Date().toISOString().slice(0, 10),
+  );
 
   // State điều khiển Modal cập nhật
   const [selectedTable, setSelectedTable] = useState(null);
@@ -15,11 +18,12 @@ const AdminManageTables = () => {
   const fetchTables = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/admin/restaurant_tables",
+        `http://localhost:5000/api/admin/restaurant_tables?date=${selectedDate}`,
       );
       const result = await response.json();
 
       if (result.success) {
+        console.log("Dữ liệu bàn:", result.data);
         setTables(result.data);
       } else {
         console.error("Lỗi:", result.message);
@@ -31,7 +35,7 @@ const AdminManageTables = () => {
   // Gọi API
   useEffect(() => {
     fetchTables();
-    // fetch styles for selection
+    // fetch styles for selection (only once)
     const fetchStyles = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/admin/table_styles");
@@ -42,7 +46,7 @@ const AdminManageTables = () => {
       }
     };
     fetchStyles();
-  }, []);
+  }, [selectedDate]);
 
   // Filter theo trạng thái + khu vực
   const filteredTables = tables.filter((table) => {
@@ -81,8 +85,15 @@ const AdminManageTables = () => {
     setSelectedTable(null);
   };
 
-  // Gửi API cập nhật trạng thái lên Backend
   const handleUpdateStatus = async () => {
+    // 🌟 Chặn logic: Nếu từ Đã đặt mà cố tình chuyển về Còn trống
+    if (selectedTable.status === "Da dat" && newStatus === "Con trong") {
+      alert(
+        "Không thể chuyển trực tiếp từ trạng thái 'Đã đặt' về 'Còn trống'!",
+      );
+      return; // Dừng hàm, không gửi API lên backend
+    }
+
     try {
       const response = await fetch(
         `http://localhost:5000/api/admin/restaurant_tables/${selectedTable.table_number}`,
@@ -99,9 +110,7 @@ const AdminManageTables = () => {
       const result = await response.json();
 
       if (result.success) {
-        // gọi lại API để lấy dữ liệu mới nhất
         await fetchTables();
-
         handleCloseModal();
       } else {
         alert("Lỗi: " + result.message);
@@ -112,15 +121,26 @@ const AdminManageTables = () => {
   };
 
   return (
-    <div className="admin-layout">
+    <div className="admin-layoutTables">
       <Admin />
 
-      <div className="main-content">
+      <div className="main-content-tables">
         <Navbar />
         <main>
           <div className="admin-tables-container">
             <h2 className="admin-tables-title">Sơ Đồ Bàn Nhà Hàng</h2>
-
+            <div className="table-date-picker">
+              <label htmlFor="date-select" className="table-date-label">
+                Chọn ngày:
+              </label>
+              <input
+                id="date-select"
+                type="date"
+                className="table-date-input"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div>
             {/*  Filter */}
             <div className="filter-group">
               <button
@@ -182,6 +202,19 @@ const AdminManageTables = () => {
 
                   <div className="table-body">
                     <p className="status-text">{table.status}</p>
+
+                    {table.customer_name && (
+                      <p className="customer-text">
+                        <strong>Tên:</strong> {table.customer_name}
+                      </p>
+                    )}
+
+                    {table.phone && (
+                      <p className="phone-text">
+                        <strong>SĐT:</strong> {table.phone}
+                      </p>
+                    )}
+
                     {table.note && (
                       <p className="note-text">
                         <strong>Ghi chú:</strong> {table.note}
@@ -236,6 +269,24 @@ const AdminManageTables = () => {
                     >
                       {selectedTable.note}
                     </p>
+                    <p
+                      style={{
+                        margin: "10px 0 0 0",
+                        color: "#666",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      <strong>Khách hàng:</strong> {selectedTable.customer_name}
+                    </p>
+                    <p
+                      style={{
+                        margin: "5px 0 0 0",
+                        color: "#666",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      <strong>SĐT:</strong> {selectedTable.phone}
+                    </p>
                   </div>
                 )}
 
@@ -244,11 +295,21 @@ const AdminManageTables = () => {
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
                 >
-                  <option value="Con trong">🟢 Còn trống</option>
+                  {/* Nếu trạng thái gốc ban đầu của bàn là "Da dat", 
+    thì ẩn hoặc vô hiệu hóa (disabled) lựa chọn "Còn trống"
+  */}
+                  <option
+                    value="Con trong"
+                    disabled={selectedTable.status === "Da dat"}
+                  >
+                    🟢 Còn trống{" "}
+                    {selectedTable.status === "Da dat" &&
+                      "(Không thể chuyển về trống)"}
+                  </option>
+
                   <option value="Dang su dung">🔴 Đang sử dụng</option>
                   <option value="Da dat">🟡 Đã đặt</option>
                 </select>
-
                 <div className="modal-actions">
                   <button className="btn-cancel" onClick={handleCloseModal}>
                     Hủy

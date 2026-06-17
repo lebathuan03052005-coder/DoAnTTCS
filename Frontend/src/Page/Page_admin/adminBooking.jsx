@@ -46,7 +46,7 @@ export default function AdminBooking() {
       resData.sort((a, b) => {
         const dateA = new Date(a.booking_date || 0).getTime();
         const dateB = new Date(b.booking_date || 0).getTime();
-        if (dateA !== dateB) return dateB - dateA;
+        if (dateA !== dateB) return dateA - dateB;
 
         const timeA = a.booking_time || "00:00";
         const timeB = b.booking_time || "00:00";
@@ -266,9 +266,9 @@ export default function AdminBooking() {
   return (
     <div>
       <Navbar />
-      <div className="admin-layout">
+      <div className="admin-layoutBooking">
         <Admin />
-        <div className="admin-content admin-booking-page">
+        <div className="admin-contentBooking admin-booking-page">
           {/* Header Bảng Điều Khiển */}
           <div className="admin-panel-header">
             <div>
@@ -467,7 +467,7 @@ export default function AdminBooking() {
 
                                 {/* 5. Nút Xóa bản ghi lịch sử */}
                                 <button
-                                  className="btn-delete"
+                                  className="btn-delete5"
                                   onClick={() =>
                                     handleDeleteReservation(reservation.id)
                                   }
@@ -542,12 +542,12 @@ export default function AdminBooking() {
             </div>
             <div className="modal-actions">
               <button
-                className="btn-outline"
+                className="btn-outline1"
                 onClick={() => setSelectedReservation(null)}
               >
                 Hủy bỏ
               </button>
-              <button className="btn-primary" onClick={handleAssignTable}>
+              <button className="btn-primary1" onClick={handleAssignTable}>
                 Lưu cấu hình xếp
               </button>
             </div>
@@ -616,7 +616,7 @@ export default function AdminBooking() {
             </div>
             <div className="modal-actions" style={{ justifyContent: "center" }}>
               <button
-                className="btn-primary"
+                className="btn-primary1"
                 onClick={() => setViewDetailsModal(null)}
               >
                 Đóng cửa sổ

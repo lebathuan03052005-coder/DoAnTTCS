@@ -1,110 +1,184 @@
-/* Styles specific to Admin Add Table Style page */
+/* ===== TỔNG THỂ LAYOUT ADMIN ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 .admin-edit-page {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f7f7f8;
 }
 
 .admin-edit-main {
   flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* Đặt Sidebar và nội dung nằm song song */
 }
 
+/* ===== KHUNG CHỨA NỘI DUNG PHẢI ===== */
 .admin-edit-container {
-  padding: 20px;
-  margin-top: 90px;
-  margin-left: 250px; /* leave space for left admin menu */
+  padding: 30px;
+  margin-top: 90px; /* Tránh bị thanh Navbar đè lên */
+  margin-left: 250px; /* Chừa không gian cố định cho Sidebar Admin bên trái */
+  width: calc(
+    100% - 250px
+  ) !important; /* Chiếm trọn 100% không gian trống còn lại */
+  max-width: 100% !important; /* Phá vỡ giới hạn cũ của Bootstrap */
+  box-sizing: border-box;
   min-height: calc(100vh - 90px);
-  background-color: #f7f7f8;
 }
 
 .admin-edit-container h2 {
-  margin-bottom: 16px;
-  color: #333;
+  margin-bottom: 24px;
+  color: #1e293b;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-/* Form */
-.admin-form {
+/* ===== HỆ THỐNG FORM QUẢN TRỊ ===== */
+.admin-formStyle {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 720px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+  gap: 20px;
+  width: 100%; /* Giúp form nở to full theo màn hình xám */
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  margin-left: 20px;
 }
 
-.admin-form label {
-  font-weight: 600;
-  color: #333;
-}
-
-.admin-form input[type="text"],
-.admin-form input,
-.admin-form textarea {
-  padding: 10px 12px;
-  border: 1px solid #e2e2e2;
-  border-radius: 8px;
-  font-size: 1rem;
+/* Tách cụm label và input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
 }
 
-.admin-form textarea {
-  min-height: 120px;
+.form-group label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 15px;
+}
+
+/* Ô nhập liệu bám khít khung form */
+.admin-formStyle input[type="text"],
+.admin-formStyle textarea {
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #0f172a;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f8fafc;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-formStyle input[type="text"]:focus,
+.admin-formStyle textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background-color: #ffffff;
+}
+
+.admin-formStyle textarea {
+  min-height: 140px;
   resize: vertical;
 }
 
-/* Buttons */
-.btn-add {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
+/* ===== KHU VỰC CHECKBOX ===== */
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
 }
 
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa ô vuông và chữ */
+  cursor: pointer;
+  font-weight: 600;
+  color: #334155;
+  font-size: 15px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4f46e5; /* Đổi màu xanh checkbox cho đồng bộ */
+}
+
+/* ===== NÚT BẤM HÀNH ĐỘNG ===== */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-add,
+.btn-delete {
+  padding: 14px 36px; /* Tăng từ 12px 24px lên -> Nút dày và dài ra */
+  border-radius: 12px; /* Tăng bo góc một chút nhìn cho mượt */
+  border: none;
+  cursor: pointer;
+  font-weight: 700; /* Đổi từ 600 lên 700 để chữ đậm, rõ ràng hơn */
+  font-size: 17px; /* Tăng từ 15px lên 17px -> Chữ to hơn hẳn */
+  min-width: 140px; /* Đảm bảo nút không bao giờ bị bé quá khi chữ ngắn */
+  display: inline-flex; /* Giúp căn chữ trong nút chuẩn hơn */
+  justify-content: center;
+  align-items: center;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Thêm hiệu ứng đổ bóng nhẹ khi hover cho hai nút trông xịn hơn */
 .btn-add:hover {
   transform: translateY(-2px);
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); /* Bóng xanh cho nút Tạo */
 }
 
 .btn-delete:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); /* Bóng đỏ cho nút Hủy */
 }
 
-.form-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
+.btn-add {
+  background-color: #10b981;
+  color: white;
 }
 
-/* Small helper for file preview if needed */
-.preview-img {
-  width: 120px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #e6e6e6;
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
 }
 
-/* Responsive */
+/* ===== RESPONSIVE DI ĐỘNG ===== */
 @media (max-width: 900px) {
+  .admin-edit-main {
+    flex-direction: column;
+  }
+
   .admin-edit-container {
     margin-left: 0;
+    width: 100% !important;
     padding: 16px;
   }
-  .admin-form {
-    max-width: 100%;
-    padding: 16px;
+
+  .admin-formStyle {
+    padding: 20px;
   }
 }

@@ -1,12 +1,12 @@
 /* ==========================================================================
-   1. TỔNG QUAN TẦNG NỀN (THẺ FOOTER NGOÀI CÙNG)
+   1. TỔNG QUAN TẦNG NỀN (THÈ FOOTER NGOÀI CÙNG)
    ========================================================================== */
+footer,
 .footer {
   color: #fff;
   padding: 60px 0 20px;
   font-family: sans-serif;
   border-top: 2px solid #d4af37;
-<<<<<<< HEAD
   background-color: #0e0c09 !important; /* Đảm bảo màu đen hoàng gia */
   width: 100%;
   box-sizing: border-box;
@@ -19,16 +19,7 @@
   /* Lớp nổi */
   position: relative;
   z-index: 9995 !important;
-=======
-  z-index: 99;
-
-  /* ✅ FIX: Đảm bảo footer luôn có nền đen đặc trên MỌI trang,
-     không bị ảnh nền fixed của homepage xuyên thấu qua */
-  background-color: #000;
-  position: relative;
-  width: 100%;
->>>>>>> cf679b6a4ef43a14ab83b69125781bcf7d26acb4
-}
+} /* 🌟 ĐÃ BỔ SUNG DẤU ĐÓNG NGOẶC CÒN THIẾU TẠI ĐÂY */
 
 /* ==========================================================================
    2. KHU VỰC CHỨA CÁC CỘT THÔNG TIN
@@ -75,17 +66,30 @@
   margin-bottom: 20px;
 }
 
+/* ===== ĐỊNH DẠNG ICON TRUYỀN THÔNG (MỚI THÊM CHO FACEBOOK & INSTAGRAM) ===== */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
 .social-links a {
-  font-size: 1.5rem;
-  margin-right: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff !important;
+  font-size: 1.2rem;
   text-decoration: none;
-  filter: grayscale(100%);
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .social-links a:hover {
-  filter: grayscale(0%);
-  transform: scale(1.2);
+  background-color: #d4af37;
+  color: #0e0c09 !important;
+  transform: translateY(-3px) scale(1.1);
 }
 
 /* ===== CỘT 2: LIÊN KẾT NHANH ===== */
@@ -123,7 +127,7 @@
 }
 
 /* ==========================================================================
-   3. PHẦN BẢN QUYỀN CHỐT ĐÁY (Đã tách độc lập hoàn toàn khỏi Flexbox)
+   3. PHẦN BẢN QUYỀN CHỐT ĐÁY
    ========================================================================== */
 .footer-bottom {
   flex: 1 0 100%; /* Ép dải bản quyền luôn chiếm trọn 100% chiều ngang hàng mới */
@@ -142,10 +146,12 @@
 .footer-bottom p {
   color: #777;
   font-size: 0.9rem;
-<<<<<<< HEAD
   margin: 0;
-=======
 }
+
+/* ==========================================================================
+   4. CẤU TRÚC ĐẨY FOOTER XUỐNG ĐÁY TRANG (STICKY FOOTER)
+   ========================================================================== */
 .layout {
   display: flex;
   flex-direction: column;
@@ -153,15 +159,5 @@
 }
 
 .content {
-  flex: 1; /* 🔥 đẩy footer xuống cuối */
-}
-/* ✅ Áp dụng cho cả thẻ <footer> HTML lẫn class .footer
-   để không trang nào bị trong suốt dù dùng cách nào */
-footer,
-.footer {
-  position: relative;
-  z-index: 99;
-  width: 100%;
-  background-color: #000 !important;
->>>>>>> cf679b6a4ef43a14ab83b69125781bcf7d26acb4
+  flex: 1; /* Tự động phình to để đẩy footer luôn nằm sát đáy màn hình */
 }

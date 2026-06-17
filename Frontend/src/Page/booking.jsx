@@ -83,7 +83,10 @@ const Booking = () => {
         <main className="main-content">
           <section className="booking-section">
             <div className="container">
-              <h2 className="section-title" style={{ textAlign: "center" }}>
+              <h2
+                className="section-title"
+                style={{ textAlign: "center", marginTop: "40px" }}
+              >
                 Đặt Bàn
               </h2>
               <p className="section-description">

@@ -43,14 +43,22 @@ const BangDK = () => {
 
   return (
     <div className="BangDK">
-      <p className="BangDK_title">BẢNG ĐIỀU KHIỂN</p>
+      <p
+        className="BangDK_title"
+        style={{
+          textAlign: "center",
+          marginBottom: "20px",
+          color: "#b5b526",
+          fontSize: "20px",
+          fontWeight: "bold",
+        }}
+      >
+        BẢNG ĐIỀU KHIỂN
+      </p>
 
       <ul className="BangDK_list">
         <li>
           <a href="/adminManageTables">Quản lý bàn</a>
-        </li>
-        <li>
-          <a href="/adminAddMenu">Thêm món ăn</a>
         </li>
         <li>
           <a href="/adminTableStyle">Quản lý Style bàn</a>
@@ -61,13 +69,16 @@ const BangDK = () => {
 
         <li className="BangDK_item-booking">
           <a href="/adminBooking">
-            <span>Danh Sách khách đặt bàn</span>
+            <span>Danh sách đặt bàn</span>
 
             {/* Hiển thị số lượng đơn thực tế quét từ DB */}
             {pendingCount > 0 && (
               <span className="badge-pending">{pendingCount}</span>
             )}
           </a>
+        </li>
+        <li>
+          <a href="/adminAddMenu">Thêm món ăn</a>
         </li>
       </ul>
     </div>

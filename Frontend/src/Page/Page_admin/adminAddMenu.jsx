@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react"; // 🌟 ĐÃ SỬA: Bổ sung thêm useEffect vào đây kẻo lỗi sập trang
 import Navbar from "../../components/navbar";
 import Admin from "./admin";
-import "./adminCommon.css";
 import "./adminAddMenu.css";
 
 export default function AdminAddMenu() {
   const [categoriesList, setCategoriesList] = useState([]);
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -86,9 +84,9 @@ export default function AdminAddMenu() {
 
   return (
     <main className="admin-menu-page">
-      <div className="admin-layout">
+      <div className="admin-layoutMenu">
         <Admin />
-        <div className="main-content">
+        <div className="main-contentMenu">
           <Navbar />
 
           <div className="admin-menu-container">

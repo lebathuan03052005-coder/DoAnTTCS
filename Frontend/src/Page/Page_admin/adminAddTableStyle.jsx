@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Admin from "./admin";
 import Navbar from "../../components/navbar";
-import "./adminCommon.css";
 import "./adminAddTableStyle.css";
 
 const AdminAddTableStyle = () => {
@@ -47,51 +46,74 @@ const AdminAddTableStyle = () => {
 
   return (
     <div className="admin-edit-page">
+      {/* Sidebar Admin bên trái */}
       <Admin />
+
       <div className="admin-edit-main">
+        {/* Thanh điều hướng phía trên */}
         <Navbar />
-        <div className="container admin-edit-container">
+
+        {/* Đổi thành container-fluid để dãn tràn khung phải */}
+        <div className="container-fluid admin-edit-container">
           <h2>Thêm Style Bàn Mới</h2>
-          <form onSubmit={handleSubmit} className="admin-form">
-            <label>Phong cách bàn</label>
-            <input
-              name="style_name"
-              value={form.style_name}
-              onChange={handleChange}
-            />
 
-            <label>Mô tả</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-            />
-
-            <label>Ảnh (URL)</label>
-            <input
-              name="image_url"
-              value={form.image_url}
-              onChange={handleChange}
-            />
-
-            <label>
+          <form onSubmit={handleSubmit} className="admin-formStyle">
+            <div className="form-group">
+              <label>Phong cách bàn</label>
               <input
-                type="checkbox"
-                name="bestseller"
-                checked={form.bestseller}
+                type="text"
+                name="style_name"
+                value={form.style_name}
                 onChange={handleChange}
-              />{" "}
-              Được yêu thích
-            </label>
+                placeholder="Nhập phong cách bàn (ví dụ: Hoàng gia, Sân vườn...)"
+              />
+            </div>
 
-            <div className="form-actions">
+            <div className="form-group">
+              <label>Mô tả</label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Mô tả chi tiết về style bàn..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Ảnh (URL)</label>
+              <input
+                type="text"
+                name="image_url"
+                value={form.image_url}
+                onChange={handleChange}
+                placeholder="Nhập link ảnh (anh/concept/)"
+              />
+            </div>
+
+            {/* Khu vực checkbox thiết kế riêng không lo bị lệch hàng */}
+            <div className="checkbox-wrapper">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="bestseller"
+                  checked={form.bestseller}
+                  onChange={handleChange}
+                />
+                Được yêu thích
+              </label>
+            </div>
+
+            <div
+              style={{ marginLeft: "400px", gap: "50px" }}
+              className="form-actions"
+            >
               <button type="submit" className="btn-add">
                 Tạo
               </button>
               <button
                 type="button"
                 className="btn-delete"
-                onClick={() => navigate("/adminTablesList")}
+                onClick={() => navigate("/adminTableStyle")}
               >
                 Hủy
               </button>

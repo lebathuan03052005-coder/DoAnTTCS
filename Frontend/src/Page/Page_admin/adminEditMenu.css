@@ -1,0 +1,173 @@
+/* Bố cục cấu trúc trang */
+.dish-update-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fdfdfd;
+}
+
+.dish-update-layout {
+  display: flex;
+  width: 100%;
+}
+
+.dish-update-main {
+  flex: 1;
+  padding: 30px 20px;
+  margin-top: 50px;
+  margin-left: 90px;
+}
+
+/* Khung chứa form (Card) */
+.dish-update-container {
+  max-width: 950px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* Tiêu đề chính */
+.dish-update-title {
+  color: #d39e00;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Form block */
+.dish-update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cấu trúc Grid cho form chia cột */
+.dish-form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* Hàng gồm 3 cột (Tên, Giá, Danh mục) */
+.dish-form-grid.triple {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Hàng gồm 2 cột (Dị ứng, Khẩu phần) */
+.dish-form-grid.double {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.dish-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label chữ đậm */
+.dish-form-label {
+  font-weight: bold;
+}
+
+.dish-form-label-dark {
+  font-weight: bold;
+  color: #333333;
+}
+
+/* Định dạng Input, Select và Textarea chung */
+.dish-form-input,
+.dish-form-select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14.5px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dish-form-select {
+  cursor: pointer;
+}
+
+/* Hiệu ứng Focus làm sáng trường nhập liệu */
+.dish-form-input:focus,
+.dish-form-select:focus {
+  outline: none;
+  border-color: #ffc107;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
+.dish-form-textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Hộp lựa chọn Checkbox */
+.dish-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 5px 0;
+}
+
+.dish-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.dish-checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #ffc107; /* Đổi màu tick sang tone vàng đồng bộ */
+  cursor: pointer;
+}
+
+/* Nút gửi dữ liệu */
+.dish-submit-btn {
+  background-color: #ffc107;
+  color: #333333;
+  font-weight: bold;
+  padding: 13px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.dish-submit-btn:hover {
+  background-color: #e0a800;
+}
+
+.dish-submit-btn:active {
+  transform: scale(0.99);
+}
+
+/* Responsive cho thiết bị di động & Tablet nhỏ */
+@media (max-width: 768px) {
+  .dish-form-grid.triple,
+  .dish-form-grid.double {
+    grid-template-columns: 1fr;
+  }
+
+  .dish-update-container {
+    padding: 20px;
+  }
+}

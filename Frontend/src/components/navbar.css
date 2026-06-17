@@ -31,8 +31,8 @@ header {
   justify-content: space-around;
   align-items: center; /* Căn giữa theo chiều dọc cho toàn bộ thành phần */
   /* Make navbar semi-transparent so page background can show through */
-  background-color: rgba(14,14,14,0.6);
-  box-shadow: rgba(106,104,104,0.18) 0px 4px 12px -1px;
+  background-color: rgba(14, 14, 14);
+  box-shadow: rgba(106, 104, 104, 0.18) 0px 4px 12px -1px;
   border-radius: 20px;
   /* Use left/right inset instead of margins to avoid horizontal overflow */
   left: 20px;

@@ -123,45 +123,79 @@ const HomePage = () => {
     if (group === "gallery") {
       const img = galleryImages[index];
       if (!img) return;
+
       setSelectedImage(img);
       setSelectedGroup("gallery");
       setSelectedIndex(index);
     } else if (group === "styles") {
       const style = tableStyles[index];
       if (!style) return;
+
       setSelectedImage({
         src: style.image_url || "/anh/ban_an/default-table.jpg",
         caption: style.name,
         desc: "",
       });
+
       setSelectedGroup("styles");
+      setSelectedIndex(index);
+    } else if (group === "foods") {
+      const food = bestSellers[index];
+      if (!food) return;
+
+      setSelectedImage({
+        src: food.image_url || "/anh/mon_an/steak/default-food.jpg",
+
+        caption: food.item_name,
+
+        desc: `${Number(food.price).toLocaleString()} VNĐ`,
+      });
+
+      setSelectedGroup("foods");
       setSelectedIndex(index);
     }
   };
-
   const nextImage = () => {
     if (!selectedGroup) return;
+
     if (selectedGroup === "gallery") {
       const next = (selectedIndex + 1) % galleryImages.length;
       showImageAt("gallery", next);
     } else if (selectedGroup === "styles") {
       if (tableStyles.length === 0) return;
+
       const next = (selectedIndex + 1) % tableStyles.length;
       showImageAt("styles", next);
+    } else if (selectedGroup === "foods") {
+      if (bestSellers.length === 0) return;
+
+      const next = (selectedIndex + 1) % bestSellers.length;
+      showImageAt("foods", next);
     }
   };
 
   const prevImage = () => {
     if (!selectedGroup) return;
+
     if (selectedGroup === "gallery") {
       const prev =
         (selectedIndex - 1 + galleryImages.length) % galleryImages.length;
+
       showImageAt("gallery", prev);
     } else if (selectedGroup === "styles") {
       if (tableStyles.length === 0) return;
+
       const prev =
         (selectedIndex - 1 + tableStyles.length) % tableStyles.length;
+
       showImageAt("styles", prev);
+    } else if (selectedGroup === "foods") {
+      if (bestSellers.length === 0) return;
+
+      const prev =
+        (selectedIndex - 1 + bestSellers.length) % bestSellers.length;
+
+      showImageAt("foods", prev);
     }
   };
 
@@ -276,7 +310,7 @@ const HomePage = () => {
                 </button>
                 <div id="food-grid-display" className="food-grid">
                   {bestSellers.length > 0 ? (
-                    bestSellers.map((item) => (
+                    bestSellers.map((item, idx) => (
                       <div key={item.id} className="food-card">
                         <img
                           src={
@@ -289,6 +323,12 @@ const HomePage = () => {
                           }}
                           alt={item.item_name}
                           className="food-img"
+                          onClick={() => {
+                            showImageAt("foods", idx);
+                          }}
+                          style={{
+                            cursor: "pointer",
+                          }}
                         />
                         <h3 className="food-title">{item.item_name}</h3>
                         <p className="food-price">
@@ -321,7 +361,7 @@ const HomePage = () => {
         <section id="about" className="info-section">
           <div className="about-container-full">
             <div className="overlay-gradient"></div>
-            <div className="container">
+            <div className="container2">
               <div className="about-content box-right">
                 <span className="sub-title">— NHÀ HÀNG KING</span>
                 <h2 className="section-title" style={{ color: "#ffffff" }}>
@@ -342,7 +382,7 @@ const HomePage = () => {
           </div>
 
           <div className="overlay-gradient left"></div>
-          <div className="container">
+          <div className="container2">
             <div className="about-content box-left">
               <span className="sub-title">— TRẢI NGHIỆM</span>
               <h2 className="section-title" style={{ color: "#ffffff" }}>
@@ -366,7 +406,7 @@ const HomePage = () => {
 
         <section id="gallery" className="gallery-section">
           <h2 className="title-gallery">Không Gian Nhà Hàng</h2>
-          <div className="gallery-grid">
+          <div className="gallery-grid1">
             {galleryImages.map((img, i) => (
               <div
                 className={
@@ -427,7 +467,7 @@ const HomePage = () => {
             <img
               src={selectedImage.src || selectedImage}
               alt={selectedImage.caption || "Ảnh phóng to"}
-              className="full-size-img"
+              className="full-size-img1"
             />
             <button
               className="modal-nav-btn right"

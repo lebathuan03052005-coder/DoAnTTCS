@@ -14,9 +14,12 @@
   width: var(--sidebar-width);
   height: calc(100vh - 90px);
   background-color: var(--sidebar-color);
-  padding: 10px;
+  padding: 20px;
   overflow-y: auto;
-  border-radius: 10px;
+  border-radius: 20px;
+  z-index: 1000;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 
 /* Style cho từng thẻ a (Thay đổi display từ block sang flex để chứa badge) */

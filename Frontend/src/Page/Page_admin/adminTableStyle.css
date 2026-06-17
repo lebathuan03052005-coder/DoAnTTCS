@@ -1,0 +1,186 @@
+/* ===== PAGE WRAPPER ===== */
+.admin-menu-list-page {
+  min-height: 100vh;
+  background: #f4f6f9;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ===== MAIN LAYOUT ===== */
+/* Nhắm trúng thẻ div bao bọc Menu và vùng nội dung để tạo layout hàng ngang */
+.admin-menu-list-page > div {
+  display: flex;
+  width: 100%;
+}
+.main-content-table {
+  margin-top: 90px; /* Chừa khoảng trống phía trên cho Navbar cố định */
+  margin-left: 250px; /* Chừa khoảng trống cố định cho Menu Admin bêntrái */
+}
+/* ===== CONTENT AREA (ĐÃ SỬA ĐỂ BÁM KHÍT KHUNG) ===== */
+.container {
+  flex: 1;
+  padding: 20px;
+  background: #f4f6f9;
+  margin-top: 90px; /* Chừa khoảng trống phía trên cho Navbar cố định */
+  margin-left: 250px; /* Chừa khoảng trống cố định cho Menu Admin bên trái */
+  width: calc(
+    100% - 250px
+  ) !important; /* Buộc vùng nội dung chiếm trọn không gian còn lại */
+  max-width: 100% !important; /* Phá vỡ hoàn toàn giới hạn bóp nghẹt cũ */
+  box-sizing: border-box;
+}
+
+/* ===== HEADER ===== */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-actions h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== ADD BUTTON ===== */
+.btn-add {
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-add:hover {
+  background: #218838;
+}
+
+/* ===== TABLE WRAPPER ===== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Tạo thanh cuộn ngang nội bộ nếu bảng quá nhiều cột trên màn hình nhỏ */
+  box-sizing: border-box;
+}
+
+/* ===== TABLE ===== */
+.menu-table {
+  width: 100%; /* Bắt buộc bảng kéo dãn tràn 100% khung chứa */
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  table-layout: auto; /* Để các ô tự điều chỉnh độ rộng linh hoạt theo chữ */
+}
+
+.menu-table thead {
+  background: #343a40;
+  color: white;
+}
+
+.menu-table th,
+.menu-table td {
+  padding: 12px 10px;
+  text-align: center; /* Căn giữa toàn bộ chữ trong bảng cho ngay ngắn */
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  word-wrap: break-word; /* Chống tràn chữ ra ngoài ô */
+}
+
+/* Cố định độ rộng cột hành động cuối cùng để nút không bị méo */
+.menu-table th:last-child,
+.menu-table td:last-child {
+  width: 180px;
+  white-space: nowrap;
+}
+
+.menu-table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+/* ===== IMAGE ===== */
+.menu-img {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* ===== BUTTONS ===== */
+.btn-edit,
+.btn-delete2,
+.btn-bestseller {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  margin: 2px;
+  transition: 0.2s;
+}
+
+/* EDIT */
+.btn-edit {
+  background: #007bff;
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #0069d9;
+}
+
+/* DELETE */
+.btn-delete2 {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #c82333;
+}
+
+/* BESTSELLER TOGGLE */
+.btn-bestseller {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-bestseller.active {
+  background: #ffc107;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0; /* Xóa bỏ lùi lề khi sidebar ẩn trên di động */
+    width: 100% !important;
+    padding: 12px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .menu-table th,
+  .menu-table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .menu-img {
+    width: 50px;
+    height: 40px;
+  }
+}

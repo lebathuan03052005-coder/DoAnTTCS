@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./adminCommon.css";
+
 import "./adminMenuList.css";
 import Admin from "./admin";
 import Navbar from "../../components/navbar";
@@ -75,7 +75,7 @@ const AdminMenuList = () => {
 
   return (
     <div className="admin-menu-list-page">
-      <div style={{ display: "flex" }}>
+      <div className="admin-layoutMenuList">
         <Admin />
 
         <div style={{ flex: 1 }}>
@@ -95,7 +95,6 @@ const AdminMenuList = () => {
               <table className="menu-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Hình ảnh</th>
                     <th>Tên món</th>
                     <th>Giá</th>
@@ -107,7 +106,6 @@ const AdminMenuList = () => {
                   {menuItems.length > 0 ? (
                     menuItems.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.id}</td>
                         <td>
                           {item.image_url ? (
                             <img
@@ -147,7 +145,7 @@ const AdminMenuList = () => {
                             Sửa
                           </button>
                           <button
-                            className="btn-delete"
+                            className="btn-delete3"
                             onClick={() => handleDelete(item.id)}
                           >
                             Xóa

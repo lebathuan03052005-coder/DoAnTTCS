@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
 import Admin from "./admin";
-import "./adminCommon.css";
-import "./adminAddMenu.css";
+// Đã trỏ sang file CSS mới
+import "./adminEditMenu.css";
 
 export default function AdminEditMenu() {
   const { id } = useParams(); // Lấy ID của món ăn từ thanh địa chỉ URL
@@ -67,7 +67,6 @@ export default function AdminEditMenu() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // 🌟 ĐÃ SỬA: Trỏ chuẩn xác về cổng API quản trị chung hệ thống
         const response = await fetch(
           "http://localhost:5000/api/admin/categories",
         );
@@ -124,110 +123,100 @@ export default function AdminEditMenu() {
   };
 
   return (
-    <main className="admin-menu-page">
+    <main className="dish-update-page">
       <Navbar />
-      <div className="admin-layout">
+      <div className="dish-update-layout">
         <Admin />
-        <div className="main-content">
-          <div className="admin-menu-container">
-            <h2
-              className="admin-menu-title"
-              style={{ color: "#d39e00", textAlign: "center" }}
-            >
-              CẬP NHẬT MÓN ĂN (ID: {id})
-            </h2>
+        <div className="dish-update-main">
+          <div className="dish-update-container">
+            <h2 className="dish-update-title">CẬP NHẬT MÓN ĂN (ID: {id})</h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="admin-menu-form"
-              style={{ marginTop: "20px" }}
-            >
-              <div className="form-row">
-                <div className="form-group">
-                  <label>
-                    <b>Tên món ăn (*):</b>
-                  </label>
+            <form onSubmit={handleSubmit} className="dish-update-form">
+              <div className="dish-form-grid triple">
+                <div className="dish-form-group">
+                  <label className="dish-form-label">Tên món ăn (*):</label>
                   <input
                     type="text"
                     name="item_name"
                     value={formData.item_name}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="dish-form-input"
                   />
                 </div>
-                <div className="form-group">
-                  <label>
-                    <b>Giá tiền (*):</b>
-                  </label>
+                <div className="dish-form-group">
+                  <label className="dish-form-label">Giá tiền (*):</label>
                   <input
                     type="number"
                     name="price"
                     value={formData.price}
                     onChange={handleChange}
                     required
-                    className="form-input"
+                    className="dish-form-input"
                   />
                 </div>
-                <div className="form-group">
-                  <label>
-                    <b>Danh mục món ăn (*):</b>
+                <div className="dish-form-group">
+                  <label className="dish-form-label">
+                    Danh mục món ăn (*):
                   </label>
                   <select
                     name="category_name"
                     value={formData.category_name}
                     onChange={handleChange}
-                    className="form-input"
+                    className="dish-form-select"
                     required
-                    style={{ cursor: "pointer" }}
                   >
                     <option value="">-- Chọn danh mục --</option>
                     {categories.map((cat) => (
                       <option key={cat.id || cat.name} value={cat.name}>
-                        {cat.name} {/* Hiển thị chính xác tên chữ tiếng Việt */}
+                        {cat.name}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              <label>
-                <b style={{ color: "#333" }}>Mô tả chung:</b>
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className="form-input form-textarea"
-              />
+              <div className="dish-form-group">
+                <label className="dish-form-label-dark">Mô tả chung:</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="dish-form-input dish-form-textarea"
+                />
+              </div>
 
-              <label>
-                <b style={{ color: "#333" }}>Link Hình Ảnh (URL):</b>
-              </label>
-              <input
-                type="text"
-                name="image_url"
-                value={formData.image_url}
-                onChange={handleChange}
-                placeholder="/anh/ten-anh.jpg"
-                className="form-input"
-              />
+              <div className="dish-form-group">
+                <label className="dish-form-label-dark">
+                  Link Hình Ảnh (URL):
+                </label>
+                <input
+                  type="text"
+                  name="image_url"
+                  value={formData.image_url}
+                  onChange={handleChange}
+                  placeholder="/anh/ten-anh.jpg"
+                  className="dish-form-input"
+                />
+              </div>
 
-              <label>
-                <b style={{ color: "#333" }}>Nguyên liệu chi tiết:</b>
-              </label>
-              <textarea
-                name="ingredients"
-                value={formData.ingredients}
-                onChange={handleChange}
-                placeholder="Thịt bò, bơ, tỏi..."
-                className="form-input form-textarea"
-              />
+              <div className="dish-form-group">
+                <label className="dish-form-label-dark">
+                  Nguyên liệu chi tiết:
+                </label>
+                <textarea
+                  name="ingredients"
+                  value={formData.ingredients}
+                  onChange={handleChange}
+                  placeholder="Thịt bò, bơ, tỏi..."
+                  className="dish-form-input dish-form-textarea"
+                />
+              </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>
-                    <b style={{ color: "#333" }}>Thực phẩm gây dị ứng:</b>
+              <div className="dish-form-grid double">
+                <div className="dish-form-group">
+                  <label className="dish-form-label-dark">
+                    Thực phẩm gây dị ứng:
                   </label>
                   <input
                     type="text"
@@ -235,26 +224,24 @@ export default function AdminEditMenu() {
                     value={formData.allergy_warnings}
                     onChange={handleChange}
                     placeholder="Sữa, Đậu phộng..."
-                    className="form-input"
+                    className="dish-form-input"
                   />
                 </div>
-                <div className="form-group">
-                  <label>
-                    <b style={{ color: "#333" }}>Khẩu phần ăn:</b>
-                  </label>
+                <div className="dish-form-group">
+                  <label className="dish-form-label-dark">Khẩu phần ăn:</label>
                   <input
                     type="text"
                     name="serving_size"
                     value={formData.serving_size}
                     onChange={handleChange}
                     placeholder="VD: 1-2 người"
-                    className="form-input"
+                    className="dish-form-input"
                   />
                 </div>
               </div>
 
-              <div className="checkbox-group">
-                <label className="checkbox-label">
+              <div className="dish-checkbox-group">
+                <label className="dish-checkbox-label">
                   <input
                     type="checkbox"
                     name="is_best_seller"
@@ -263,7 +250,7 @@ export default function AdminEditMenu() {
                   />{" "}
                   ⭐ Best Seller
                 </label>
-                <label className="checkbox-label">
+                <label className="dish-checkbox-label">
                   <input
                     type="checkbox"
                     name="is_spicy"
@@ -272,7 +259,7 @@ export default function AdminEditMenu() {
                   />{" "}
                   🌶️ Món cay
                 </label>
-                <label className="checkbox-label">
+                <label className="dish-checkbox-label">
                   <input
                     type="checkbox"
                     name="is_vegetarian"
@@ -283,15 +270,7 @@ export default function AdminEditMenu() {
                 </label>
               </div>
 
-              <button
-                type="submit"
-                className="submit-btn"
-                style={{
-                  backgroundColor: "#ffc107",
-                  color: "#333",
-                  fontWeight: "bold",
-                }}
-              >
+              <button type="submit" className="dish-submit-btn">
                 LƯU THAY ĐỔI
               </button>
             </form>

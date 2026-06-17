@@ -1,357 +1,277 @@
-/* ==========================================
-   HỆ THỐNG BIẾN & THIẾT LẬP TOÀN CỤC
-========================================== */
-:root {
-  --admin-bg: #f8fafc;
-  --admin-card: #ffffff;
-  --admin-border: #e2e8f0;
-  --admin-text: #1e293b;
-  --admin-muted: #64748b;
-  --admin-primary: #3b82f6;
-  --admin-primary-hover: #2563eb;
-  --admin-secondary: #475569;
-  --admin-success: #10b981;
-  --admin-danger: #ef4444;
-  --admin-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --admin-modal-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* ==========================================
-   BOOKING PAGE SPECIFIC STYLES
-========================================== */
-.admin-booking-page {
-  padding: 10px 24px 32px 24px; /* Giảm nhẹ padding trên mobile */
+/* =========================
+   LAYOUT CHÍNH
+========================= */
+.admin-layoutBooking {
+  display: flex;
   min-height: 100vh;
-  margin-top: 90px;
-  background-color: var(--admin-bg);
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
+  width: 100%;
+  background: #f4f6f9;
 }
 
+.admin-contentBooking {
+  flex: 1;
+
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 90px;
+  margin-left: 260px;
+}
+
+/* =========================
+   HEADER PANEL
+========================= */
 .admin-panel-header {
   display: flex;
-  flex-direction: column; /* Mặc định xếp dọc trên mobile */
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-/* Khi màn hình lớn hơn, tự động dàn hàng ngang */
-@media (min-width: 768px) {
-  .admin-panel-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-}
-
-.admin-panel-header h2 {
-  margin: 0 0 8px;
-  color: var(--admin-text);
-  font-size: 1.75rem;
-  font-weight: 700;
-}
-
-.admin-panel-header p {
-  margin: 0;
-  color: var(--admin-muted);
-  max-width: 600px; /* Thay width thành max-width để không bị vỡ màn hình nhỏ */
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.action-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap; /* Cho phép rớt dòng trên thiết bị nhỏ để không tràn màn hình */
-}
-
-@media (min-width: 480px) {
-  .action-row {
-    flex-wrap: nowrap; /* Màn hình vừa trở lên giữ nguyên hàng ngang */
-  }
-}
-
-/* ==========================================
-   BLOCK GIAO DIỆN & BẢNG (CHỐNG TRÀN TOÀN TRANG)
-========================================== */
-.booking-grid-fullwidth {
-  display: block;
-  width: 100%;
-}
-
-.card-block {
-  background: var(--admin-card);
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid var(--admin-border);
-  box-shadow: var(--admin-shadow);
-}
-
-.section-title {
-  display: flex;
   justify-content: space-between;
-  gap: 12px;
   align-items: center;
+
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
 
-.section-title h3 {
+.admin-panel-header h2 {
   margin: 0;
-  color: var(--admin-text);
-  font-size: 1.2rem;
-  font-weight: 600;
+  color: #2c3e50;
 }
 
-.section-title span {
-  background-color: #f1f5f9;
-  color: var(--admin-secondary);
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.admin-panel-header p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9rem;
 }
 
-/* Bọc bảng lại để cuộn nội bộ khi màn hình quá nhỏ */
+/* =========================
+   BUTTONS
+========================= */
+.action-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary1,
+.btn-secondary,
+.btn-outline1,
+.btn-approve,
+.btn-reject,
+.btn-delete5 {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+  margin-left: 5px;
+}
+
+/* primary */
+.btn-primary1 {
+  background: #2c3e50;
+  color: #fff;
+}
+.btn-primary1:hover {
+  background: #1a252f;
+}
+
+/* secondary */
+.btn-secondary {
+  background: #3498db;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #217dbb;
+}
+
+/* outline */
+.btn-outline {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+}
+.btn-outline:hover {
+  border-color: #2c3e50;
+  color: #2c3e50;
+}
+
+/* approve */
+.btn-approve {
+  background: #2ecc71;
+  color: #fff;
+}
+.btn-approve:hover {
+  background: #27ae60;
+}
+
+/* reject */
+.btn-reject {
+  background: #f97316;
+  color: #fff;
+}
+.btn-reject:hover {
+  opacity: 0.9;
+}
+
+/* delete */
+.btn-delete5 {
+  background: #dc2626;
+  color: #fff;
+}
+.btn-delete5:hover {
+  background: #b91c1c;
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--admin-border);
+  background: #fff;
   border-radius: 12px;
-  background-color: var(--admin-card);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .booking-table {
   width: 100%;
-  min-width: 1200px; /* Tăng độ rộng tối thiểu để hiển thị đầy đủ hành động */
   border-collapse: collapse;
-}
-
-.booking-table th,
-.booking-table td {
-  padding: 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--admin-border);
-  color: var(--admin-text);
-  font-size: 0.95rem;
-  vertical-align: middle;
+  min-width: 1100px;
 }
 
 .booking-table th {
-  background-color: #f8fafc;
-  color: var(--admin-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  background: #2c3e50;
+  color: #fff;
+  padding: 12px;
+  text-align: left;
+  font-size: 0.9rem;
 }
 
-.booking-table tbody tr:hover {
-  background-color: #f1f5f9;
+.booking-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-/* Dòng phân cách Ngày tháng */
-.date-separator-row {
-  background-color: #f1f5f9;
-  border-top: 2px solid #cbd5e1;
+.booking-table tr:hover {
+  background: #f8fafc;
 }
 
-.date-separator-cell {
-  font-weight: 600;
-  color: #0f172a;
-  padding: 12px 16px;
-  font-size: 0.95rem;
-}
-
-/* Cột Ghi chú */
-.note-cell {
-  max-width: 200px; /* Đổi thành max-width */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--admin-muted);
-}
-
-/* ==========================================
-   TRẠNG THÁI (BADGES)
-========================================== */
+/* =========================
+   STATUS BADGE
+========================= */
 .status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
 }
 
 .status-approved {
-  color: #047857;
   background: #d1fae5;
-  border: 1px solid #a7f3d0;
+  color: #065f46;
 }
 
 .status-rejected {
-  color: #b91c1c;
   background: #fee2e2;
-  border: 1px solid #fecaca;
+  color: #991b1b;
 }
 
 .status-pending {
-  color: #b45309;
   background: #fef3c7;
-  border: 1px solid #fde68a;
+  color: #92400e;
 }
 
-/* ==========================================
-   ANIMATIONS (MODAL SPECIFIC)
-========================================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* =========================
+   DATE SEPARATOR
+========================= */
+.date-separator-row td {
+  background: #edf4fc;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.admin-modal-backdrop {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.admin-modal {
-  animation: slideUp 0.3s ease-out;
-}
-
-/* Empty state */
+/* =========================
+   EMPTY STATE
+========================= */
 .empty-state {
+  padding: 30px;
   text-align: center;
-  padding: 40px 20px;
-  color: var(--admin-muted);
-  font-size: 1rem;
+  color: #666;
 }
 
-/* Modal feedback */
-.modal-feedback {
-  color: var(--admin-danger);
-  font-size: 0.9rem;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #fee2e2;
-  border-radius: 6px;
-  border-left: 3px solid var(--admin-danger);
-}
-
-/* ==========================================
-   MODAL TÙY CHỈNH (RESPONSIVE MODAL)
-========================================== */
+/* =========================
+   MODAL
+========================= */
 .admin-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
-  display: grid;
-  place-items: center;
-  z-index: 999;
-  padding: 16px; /* Khoảng cách an toàn chống dính viền màn hình mobile */
-  animation: fadeIn 0.2s ease-out;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
 .admin-modal {
-  width: 100%;
-  max-width: 500px; /* Đổi width thành max-width */
-  background: white;
-  border-radius: 20px;
-  box-shadow: var(--admin-modal-shadow);
-  overflow: hidden;
-  animation: slideUp 0.3s ease-out;
-}
-
-.details-modal {
-  max-width: 600px;
-}
-
-/* Khu vực thông tin trong Modal Chi tiết */
-.details-info-box {
-  background-color: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  padding: 16px 20px;
+  background: #fff;
+  width: 450px;
+  max-width: 95%;
   border-radius: 12px;
-  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
-.details-info-box p {
+.modal-header {
   display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 10px 0;
-  color: var(--admin-secondary);
-  font-size: 0.95rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
 }
 
-.details-info-box p:last-child {
-  margin-bottom: 0;
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
 }
 
-.details-info-box strong {
-  color: var(--admin-text);
-  display: inline-block;
-  width: 130px;
-  flex-shrink: 0;
+.close-button {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-.details-label {
-  font-weight: 600;
-  color: var(--admin-text);
-  margin-bottom: 8px;
-  display: block;
-}
-
-.details-textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--admin-border);
-  background-color: white;
-  font-family: inherit;
-  font-size: 0.95rem;
-  resize: none;
-  min-height: 100px;
-}
-
-.details-textarea:focus {
-  outline: none;
-  border-color: var(--admin-primary);
+.modal-body {
+  padding: 20px;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
 }
 
-.empty-state {
-  padding: 40px;
-  text-align: center;
-  color: var(--admin-muted);
-  font-style: italic;
-  background-color: #f8fafc;
-  border-radius: 12px;
-  border: 2px dashed #cbd5e1;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .admin-contentBooking {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .admin-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .booking-table {
+    min-width: 900px;
+  }
 }
